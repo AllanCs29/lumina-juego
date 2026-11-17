@@ -1078,10 +1078,79 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 })(typeof window!=='undefined'?(window.Lumina=window.Lumina||{}):(globalThis.Lumina=globalThis.Lumina||{}));
 
 </script><script>
+/* Narrative logic and signal diagnostics are deterministic and separate from presentation. */
+(function(root){'use strict';
+ const BEATS=Object.freeze({
+  metro:[
+   'ESTACIÓN UMBRAL · DOS CAMINOS',
+   'Iris: «La luz volvió a Aurora, pero el tren del norte no acepta la ruta. El protocolo UMBRAL cerró todos los enlaces la noche de la tormenta».',
+   'NIX (eco): «Reactiva los dos relés y entra al Archivo de Ecos. El Centinela conserva la autorización que nos falta».'
+  ],
+  archive:[
+   'ARCHIVO DE ECOS · MEMORIAS DIVIDIDAS',
+   'NIX: «Aquí guardaron tres partes del último registro. Si los unimos sabremos por qué dejaron de transmitir los faros».',
+   'Iris: «Los lectores están separados. Recuperémoslos antes de pedir acceso al Centinela».'
+  ],
+  guardian:[
+   'EL CENTINELA BAJA SU ESCUDO',
+   'CENTINELA: «Autorización concedida. No protegía un secreto: impedía que una orden sin verificar se propagara por todas las islas».',
+   'NIX: «El tren ya puede cruzar. Pero primero encuentra mi cuerpo de mantenimiento en el puerto; mi eco de Aurora no puede reparar el faro».'
+  ],
+  harbor:[
+   'PUERTO DE LA BRUMA · EL HIELO NO CEDE',
+   'Iris: «Aquí terminan las vías. Al otro lado del arco está el faro, pero hay máquinas detenidas bajo la nieve».',
+   'NIX (eco): «Mi unidad física quedó en el taller. Lo que te acompañó en Aurora es una copia de mis instrucciones; por eso aún puedo hablar contigo».'
+  ],
+  workshop:[
+   'TALLER DE NIX · UNA MEMORIA POR RECUPERAR',
+   'NIX (eco): «Mi cuerpo está junto al banco de reparación. Las rutas no se arreglan con deseos: cada paso tiene que ejecutarse en orden».',
+   'Iris: «Recuperaremos la batería. Después podremos leer qué ocurrió en la torre».'
+  ],
+  nix:[
+   'NIX-07 · UNIDAD RESTAURADA',
+   'NIX: «Ahora tengo brazos. Y recuerdo algo: yo ordené apagar el enlace del norte».',
+   'Iris: «¿Tú apagaste los faros?» NIX: «Para impedir que una alarma defectuosa viajara a todas las islas. Debí dejarte una forma de repararlo».'
+  ],
+  bridge:[
+   'PASARELA BOREAL · EL CAMINO ROTO',
+   'NIX: «Las balizas aún guardan la posición de cada viajero. La barrera de cristal es una protección, no una trampa».',
+   'Iris: «No basta con alcanzar el faro. Tendremos que decidir qué señal puede cruzar y cuál debe quedarse aislada».'
+  ],
+  tower:[
+   'FARO DEL SILENCIO · LA ÚLTIMA REGLA',
+   'NIX: «Primero recupera los tres pulsos del generador con REPETIR. Después revisaremos las señales antes de encender toda la red».',
+   'Iris: «Una condición equivocada causó el aislamiento. Esta vez no enviaremos nada sin probarlo».'
+  ]
+ });
+ const ARCHIVE_LOGS=Object.freeze([
+  ['REGISTRO 01 · SENSOR DE TORMENTA','Las lecturas del hielo cambiaban de una isla a otra. El circuito de Aurora recibió una alarma mientras el resto de la red seguía funcionando.','Iris: «Una condición no puede suponer que todos los lugares tienen el mismo estado».'],
+  ['REGISTRO 02 · DECISIÓN DE NIX','NIX-07 aisló el enlace del norte antes de que una lectura defectuosa se copiara en cada faro. Su memoria se dividió entre la ciudad y el taller.','NIX (eco): «La orden protegió a las islas, pero bloqueó también sus rutas seguras».'],
+  ['REGISTRO 03 · PROTOCOLO UMBRAL','Para restablecer la red hay que transmitir solo por los canales conectados y sin alarma. Los demás deben permanecer aislados; apagarlo todo tampoco es una solución.','Iris: «Entonces el problema no se resuelve encendiendo todas las luces. Se resuelve con una regla que distinga cada caso».']
+ ]);
+ const FINAL_CASES=Object.freeze([
+  {name:'AURORA',network:true,alarm:false,expected:'TRANSMITIR'},
+  {name:'BOREAL',network:true,alarm:true,expected:'AISLAR'},
+  {name:'PUERTO',network:false,alarm:false,expected:'AISLAR'}
+ ]);
+ function evaluateFinal(operator,negateAlarm){
+  if(!['AND','OR'].includes(operator)||typeof negateAlarm!=='boolean')return {valid:false,passed:false,cases:[]};
+  const cases=FINAL_CASES.map(entry=>{
+   const second=negateAlarm?!entry.alarm:entry.alarm;
+   const allowed=operator==='AND'?entry.network&&second:entry.network||second;
+   const actual=allowed?'TRANSMITIR':'AISLAR';
+   return {...entry,actual,correct:actual===entry.expected,expression:'red '+(operator==='AND'?'Y':'O')+' '+(negateAlarm?'NO alarma':'alarma')};
+  });
+  return {valid:true,passed:cases.every(c=>c.correct),cases};
+ }
+ function canBoard(save){return !!save?.metroRelays?.[0]&&!!save?.metroRelays?.[1]&&!!save.guardianDefeated;}
+ root.Narrative=Object.freeze({BEATS,ARCHIVE_LOGS,FINAL_CASES,evaluateFinal,canBoard});
+})(window.Lumina=window.Lumina||{});
+
+</script><script>
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,refugePowered:false,learningLanguage:'pseudo',started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,refugePowered:false,learningLanguage:'pseudo',storyBeats:{},signalBalanced:false,started:false});
   function sanitizeLabDrafts(value){
    const drafts={},ops=['SET0','SET2','SET3','READ_CHARGE','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
@@ -1108,6 +1177,8 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
          // Previous v0.6 users who completed lessons keep their existing access.
          labDiscovered:!!data.labDiscovered||(Array.isArray(data.labCompleted)&&data.labCompleted.length>0),
          learningLanguage:['pseudo','python','cpp','javascript'].includes(data.learningLanguage)?data.learningLanguage:'pseudo',
+         signalBalanced:!!data.signalBalanced,
+         storyBeats:Object.fromEntries(Object.keys(root.Narrative?.BEATS||{}).filter(k=>data.storyBeats?.[k]===true).map(k=>[k,true])),
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
   }
@@ -2910,13 +2981,13 @@ root.Academy=Academy;root.Lessons=LESSONS;
 /* Original animated interactive opening, not an imitation of an existing game's scenes. */
 (function(root){'use strict';
 const CHAPTERS=[
- {scene:'city',name:'23:41 · DISTRITO AURORA',speaker:'IRIS',text:'Aurora se apagó. Nadie sabe por qué.',lesson:'',},
- {scene:'signal',name:'UNA SEÑAL DESCONOCIDA',speaker:'TRANSMISIÓN',text:'«Las máquinas obedecen reglas. Descúbrelas».',lesson:'',},
- {scene:'nix',name:'EL ROBOT PERDIDO',speaker:'ARCHIVO · NIX-07',text:'NIX conoce la verdad. Pero está dormido.',lesson:'',},
- {scene:'start',name:'TU PRIMERA MISIÓN',speaker:'IRIS',text:'Si entiendo los sensores, podré abrir la puerta.',lesson:'',}
+ {scene:'city',name:'23:41 · DISTRITO AURORA',speaker:'IRIS',text:'La luz de Aurora se apagó la misma noche que desaparecieron las señales de los faros. Desde entonces las islas permanecen separadas por el hielo.',lesson:''},
+ {scene:'signal',name:'TRANSMISIÓN INTERRUMPIDA',speaker:'ARCHIVO DE UMBRAL',text:'«ALERTA EN UN CANAL. PROTOCOLO DE AISLAMIENTO ACTIVADO». No fue un accidente: una instrucción ordenó cerrar la red.',lesson:''},
+ {scene:'nix',name:'ÚLTIMO PAQUETE · NIX-07',speaker:'NIX (ECO)',text:'«Mi memoria está incompleta. Si sigues las señales hasta el norte, encontraremos la orden que falta».',lesson:''},
+ {scene:'start',name:'UNA PREGUNTA ANTES DE PARTIR',speaker:'IRIS',text:'Si una regla pudo apagar los faros, otra puede distinguir qué es seguro encender. Empezaré por los sensores de Aurora.',lesson:''}
 ];
 class Prologue{
- constructor(game){this.game=game;this.el=document.getElementById('prologue');this.canvas=document.getElementById('prologue-canvas');this.ctx=this.canvas.getContext('2d');this.index=0;this.started=0;this.active=false;this.duration=3150;this.autoAdvance=true;this.after=null;this.raf=0;this.hero=new Image();this.hero.src=window.LuminaHeroAtlas||'assets/iris-expedicion-atlas.png';
+ constructor(game){this.game=game;this.el=document.getElementById('prologue');this.canvas=document.getElementById('prologue-canvas');this.ctx=this.canvas.getContext('2d');this.index=0;this.started=0;this.active=false;this.duration=5500;this.autoAdvance=true;this.after=null;this.raf=0;this.hero=new Image();this.hero.src=window.LuminaHeroAtlas||'assets/iris-expedicion-atlas.png';
   const act=id=>document.getElementById(id);
   act('prologue-next').addEventListener('click',()=>this.next());
   act('prologue-skip').addEventListener('click',()=>this.finish());
