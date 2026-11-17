@@ -2089,7 +2089,14 @@ class Renderer{
    {edge:'#303e58',back:'#40516a',body:'#52697e',light:'#6f8799',tip:'#869da8',snow:'#93a6b0',trunk:'#37475e'}:
    {edge:'#183449',back:'#294b60',body:'#3a6474',light:'#719e9e',tip:'#a2c7c2',snow:'#bdd6d1',trunk:'#556b67'};
   const q=v=>Math.max(1,Math.round(v*s)),cy=y+2;
+  // Pixel-art volumes meet the snow instead of looking pasted over the landscape.
+  this.contactShadow(x,cy+1,q(far?16:23),q(far?2:4),far?.16:.35);
   this.r(x-q(15),cy-q(3),q(30),q(4),far?'#263b5966':'#162d4666');
+  if(!far){
+   this.poly([[x-q(19),cy-q(4)],[x-q(9),cy-q(9)],[x+q(13),cy-q(9)],
+    [x+q(22),cy-q(3)],[x+q(13),cy-q(1)],[x-q(18),cy-q(1)]],'#8bb5b7');
+   this.r(x-q(13),cy-q(5),q(25),q(2),'#d1eae0');
+  }
   this.r(x-q(5),cy-q(29),q(10),q(30),p.edge);
   this.r(x-q(3),cy-q(27),q(4),q(28),p.trunk);
   this.r(x+q(3),cy-q(23),q(2),q(22),p.back);
