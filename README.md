@@ -1,22 +1,21 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.4.5 · Claridad y control**. Aventura educativa para aprender programación desde cero mientras exploras Distrito Aurora, Estación Umbral, Puerto de la Bruma y el faro.
+**Versión 0.4.6 — Profundidad visual global**
 
-## Jugar
-https://allancs29.github.io/lumina-juego/
+[**Jugar desde iPhone o PC**](https://allancs29.github.io/lumina-juego/)
 
-## Novedades v0.4.5
-- Contadores de progreso en conversaciones, independientes del progreso global.
-- Consola de NIX estable: lista con desplazamiento interno y botones fijos.
-- Parallax de montañas con geometría constante al caminar.
-- Árboles solo sobre suelo real y cajas claramente distinguibles como obstáculos.
+Aventura educativa de plataformas para aprender programación desde cero. Explora Distrito Aurora, el metro, el Archivo de Ecos, el puerto, las montañas y el faro. Programa condiciones, variables y secuencias para modificar el mundo.
 
-El aprendizaje mantiene experimentación directa y explicaciones opcionales; se conservan las partidas anteriores.
+## Qué cambió
+- Faro del Silencio reconstruido con profundidad 3/4 y escena físicamente integrada.
+- Entornos con jerarquía visual: fondos suaves, plataformas con espesor, obstáculos con volumen y sombras de contacto.
+- Mejora global en ciudad, metro, archivo, azoteas, puerto, taller y paisaje nevado.
+- Se conservan los guardados, los controles móviles, NIX y las misiones anteriores.
 
-## Verificaciones
-109 tests unitarios, simulación móvil de órdenes, comprobación de montañas y suelo, regresión del capítulo del faro.
+**Validación:** 119 pruebas unitarias aprobadas, recorrido completo del faro y diez escenas verificadas en Chromium. **Pendiente:** Safari físico.
 
-- [Cambios detallados](CHANGELOG-v0.4.5.md)
-- [Guía de pruebas en iPhone](QUE-PROBAR-v0.4.5.md)
+- [Registro de cambios](CHANGELOG-v0.4.6.md)
+- [Dirección de arte](GUIA-ARTE-Y-PROFUNDIDAD.md)
+- [Lista de pruebas](QUE-PROBAR-v0.4.6.md)
 
-El repositorio publica `index.html` para GitHub Pages. El ZIP del proyecto modular incluye `src/`, `styles/`, `tests/`, y `scripts/build.py`.
+El archivo `index.html` es la compilación jugable. El ZIP de código fuente de la entrega de ChatGPT incluye `src/`, `styles/`, `tests/` y `scripts/build.py`.
