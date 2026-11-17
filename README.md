@@ -1,38 +1,25 @@
 # Lúmina — Distrito Aurora
 
-**Versión actual: v0.3.8 (Mobile First).**
+Videojuego educativo de plataformas y lógica de programación para **móvil horizontal** y PC.
 
-Juego de plataformas y lógica protagonizado por Iris, una exploradora informática. Ciudad nocturna, puzles de puertas y el capítulo anterior de NIX y el faro.
+**Versión actual: 0.3.9.** Iris investiga un apagón urbano y aprende programación desde cero para abrir accesos, recuperar la energía y reactivar un transporte. Los conceptos se introducen mediante misiones: lógica booleana, variables numéricas y secuencias para NIX.
 
-## 🎮 Jugar desde iPhone y PC
+## Jugar
+https://allancs29.github.io/lumina-juego/
 
-**https://allancs29.github.io/lumina-juego/**
+Abre el enlace en Safari horizontal o en un navegador de escritorio, no en un visor de archivos HTML.
 
-- **iPhone:** abre el enlace en Safari, gira a horizontal y pulsa «Nueva expedición».
-- **Controles móviles:** joystick, Saltar, Usar e Impulso cuando esté disponible.
-- **Personalización:** Menú → ⚙ Ajustes de juego y controles → ✥ Personalizar controles táctiles. Arrastra los botones, selecciona uno y cambia su tamaño con el deslizador. Pulsa «Listo».
-- **Velocidad:** Menú → Ajustes → Velocidad de movimiento en móvil (60–110 %, de fábrica 78 %). También encontrarás el control de sonido.
-- **PC:** A/D o flechas para moverte; Espacio para saltar; Shift para impulso; E para interactuar.
-
-## Cambios en v0.3.8
-
-- Escenario horizontal adaptable sin deformar personajes ni dejar barras laterales.
-- Botones Pista y Menú dentro del área de juego.
-- Título Distrito Aurora temporal al entrar, con fundido después de ~2 segundos.
-- Tamaño/posición individuales de botones táctiles, guardados localmente.
-- Movimiento táctil suavizado y velocidad configurable.
-- Menú móvil compacto con ajustes plegables.
-- Se conservan las misiones anteriores de NIX, puertas lógicas y faro.
-
-## Validación y pendientes
-
-- 63 pruebas unitarias aprobadas.
-- Pruebas de navegador en Chromium móvil emulado (844×390, 740×360, 390×844) y PC.
-- Puzle urbano, consola NIX y recorrido del faro comprobados con pruebas automatizadas.
-- **Pendiente:** prueba manual de la comodidad, rendimiento y persistencia de controles en Safari de un iPhone físico.
-
-El código completo modular y los tests están disponibles en el ZIP v0.3.8 entregado en el chat.
+## Características
+- Historia introductoria omitible y Cuaderno para repasar lecciones.
+- Consolas visuales: condiciones Y/NO con valores VERDADERO/FALSO, variable `carga` con ejecución paso a paso, NIX.
+- Mundo urbano extendido con fragmentos opcionales y cambios de día/noche.
+- Controles táctiles personalizables y cámara adaptada para no tapar a Iris.
+- Capítulo anterior del faro conservado.
 
 ## Desarrollo
+El archivo `index.html` es la versión HTML independiente que se publica en GitHub Pages. El proyecto modular, pruebas y documentación se distribuyen en el ZIP de cada entrega de ChatGPT.
 
-El archivo `index.html` es una versión autocontenida del juego. Los commits de la rama `main` se utilizan para publicar GitHub Pages.
+Consulta [cambios](CHANGELOG-v0.3.9.md) y [lista de pruebas](QUE-PROBAR-v0.3.9.md).
+
+## Estado de pruebas
+77 unitarias aprobadas y pruebas de interfaz en Chromium móvil emulado y escritorio. Falta una partida manual en Safari físico.
