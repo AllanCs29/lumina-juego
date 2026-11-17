@@ -24,7 +24,9 @@ assert.equal(next('district',{cityGate:true,cityPowered:true,cityVariableSolved:
 assert.equal(next('district',{cityGate:true,cityPowered:true,cityVariableSolved:true,cityNixAwake:true}).x,2240);
 assert.equal(next('metro',{},600).x,710,'Nearest unfinished relay rather than first on map');
 assert.equal(next('metro',{metroRelays:[false,true]},800).x,340,'Do not guide back to completed relay');
-assert.equal(next('metro',{metroRelays:[true,true]}).x,1230);
+assert.equal(next('metro',{metroRelays:[true,true]}).x,934,'Archive is part of the story before the northern train');
+assert.equal(next('metro',{metroRelays:[true,true],guardianDefeated:true}).x,1230,'The train becomes the next goal after the Centinela');
+assert.equal(next('metro',{metroRelays:[true,true],beacon:true}).x,1230,'Previously finished runs retain their northern route');
 assert.equal(next('rooftops',{},700).x,805);
 assert.equal(next('rooftops',{roofAntennas:[true,true]}).x,75);
 assert.equal(next('archive',{},480).x,520);
