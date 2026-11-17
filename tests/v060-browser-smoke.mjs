@@ -81,6 +81,34 @@ try{
  assert.equal(cleanMenu.debugHidden,true,'Development scenes hidden in player mode');
  assert.equal(cleanMenu.advancedClosed,true,'Rare technical settings remain collapsed');
  assert.equal(cleanMenu.prefs.join(','),'guidance-mode,reading-scale','Essential settings remain discoverable');
+ const toolsUi=await evalJs(`(()=>{
+  const g=window.Lumina.game,tools=window.Lumina.PlayerTools;
+  const pack=tools.pack(g.save),raw=JSON.stringify(pack),copy=tools.unpack(JSON.parse(raw));
+  let invalid=false;try{tools.unpack({app:'other',format:1,data:g.save});}catch{invalid=true;}
+  const exported=pack.app==='lumina'&&pack.format===1&&copy.version===1;
+  const importButton=!!document.getElementById('save-import');
+  const exportButton=!!document.getElementById('save-export');
+  const replayInitiallyHidden=document.getElementById('guardian-replay').hidden;
+  document.getElementById('journey-recap').click();
+  const modal=document.getElementById('journey-recap-modal');
+  const visible=!modal.hidden;
+  const noSpoilers=document.querySelectorAll('#journey-recap-entries .recap-entry').length===1;
+  const recapTitle=document.getElementById('journey-recap-title').textContent;
+  document.getElementById('journey-recap-close').click();
+  return {exported,invalid,importButton,exportButton,replayInitiallyHidden,visible,noSpoilers,
+   recapTitle,closed:modal.hidden};
+ })()`);
+ for(const [key,desc] of Object.entries({
+  exported:'Save export and import round-trip validates the save format',
+  invalid:'An unrelated file is rejected before replacing progress',
+  importButton:'Menu provides manual import',
+  exportButton:'Menu provides private export',
+  replayInitiallyHidden:'Boss replay is unavailable until defeat',
+  visible:'Journey recap can be read from Options',
+  noSpoilers:'Journal only reveals discovered scenes',
+  closed:'Journal can be closed without interrupting the game'
+ }))assert.equal(toolsUi[key],true,desc);
+ assert.match(toolsUi.recapTitle,/Bitácora/);
  const audioPrefs=await evalJs(`(()=>{
   const g=window.Lumina.game,score=g.soundEngine,defs=window.Lumina.Soundtrack;
   const music=document.getElementById('music-button'),effects=document.getElementById('audio-button');
@@ -149,7 +177,8 @@ try{
  assert.equal(first.done,true);assert.match(first.title,/Instrucciones en orden/);
  const program=await evalJs(`(()=>{
   const g=window.Lumina.game,lab=g.logicLab;lab.index=3;lab.render();
-  for(let n=0;n<3;n++)document.getElementById('lab-guide-next').click();
+  document.getElementById('lab-guide-skip').click();
+  const skippedGuide=!lab.guideOpen&&!document.getElementById('lab-run').disabled;
   const add=op=>{const button=document.querySelector('#lab-palette button[data-op="'+op+'"]');
    if(!button)throw Error('Missing palette operation '+op);button.click();};
   for(const op of ['SET2','ADD3','OUTPUT'])add(op);
@@ -170,8 +199,9 @@ try{
   renderer.refugeHeater=function(x,y,active){renderState={x,y,active};return orig.call(this,x,y,active);};
   try{renderer.world(g);}finally{renderer.refugeHeater=orig;}
   lab.open(true);lab.index=3;lab.render();
-  return {fixedFails,fixedDetail,trace,completed,powered,blocks,worldButton,returned,physicalPrompt,renderState};
+  return {skippedGuide,fixedFails,fixedDetail,trace,completed,powered,blocks,worldButton,returned,physicalPrompt,renderState};
  })()`);
+ assert.equal(program.skippedGuide,true,'Players can skip extra lesson pages and start coding');
  assert.equal(program.fixedFails,true,'Fixed output cannot pass both inputs');
  assert.match(program.fixedDetail,/A ✓.*B ✕/,'First input passes but transfer fails');
  assert.match(program.trace,/entrada 4.*meta 7/,'Second input is documented');
