@@ -98,7 +98,20 @@ try{
  await delay(320);
  const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-distrito-movil.png',Buffer.from(image.data,'base64'));
+
+ // Wait for the real service worker to cache the app shell, then reload offline.
+ const offlineReady=await evalJs("Promise.race([navigator.serviceWorker.ready.then(()=>true),new Promise(r=>setTimeout(()=>r(false),10000))])");
+ assert.equal(offlineReady,true,'PWA worker should activate after opening on localhost');
+ await send('Network.enable');
+ await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
+ await send('Page.reload',{ignoreCache:false});
+ await until(async()=>await evalJs("document.documentElement.dataset.luminaReady==='true'"),12000);
+ const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice()})");
+ assert.equal(offline.ready,true,'Lúmina should start without network');
+ assert.equal(offline.levels.includes(3),true,'Lab progress survives offline restart');
+ await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
+ await delay(150);
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
- console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape and screenshots');
+ console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape offline navigation and screenshots');
 }catch(error){console.error('BROWSER SMOKE FAILURE:',error);process.exitCode=1;}
 finally{try{socket?.close()}catch{}chrome.kill('SIGKILL');app.close();rmSync(dir,{recursive:true,force:true});}
