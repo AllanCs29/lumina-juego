@@ -263,4 +263,67 @@
  };
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')storeOnExit();});
  window.addEventListener('pagehide',storeOnExit);
+ // Opt-in, private playtest feedback: nothing leaves the device until the player chooses to share it.
+ const advanced=document.querySelector('#menu-settings .menu-settings-content');
+ if(advanced){
+  const openButton=document.createElement('button');
+  openButton.id='feedback-open';openButton.className='secondary';openButton.type='button';
+  openButton.textContent='✎ Compartir comentario de la partida';
+  advanced.append(openButton);
+  const feedbackModal=document.createElement('div');feedbackModal.id='feedback-modal';
+  feedbackModal.className='modal backdrop';feedbackModal.hidden=true;
+  feedbackModal.setAttribute('role','dialog');feedbackModal.setAttribute('aria-modal','true');
+  feedbackModal.setAttribute('aria-labelledby','feedback-title');
+  feedbackModal.innerHTML=`<section class="feedback-panel" tabindex="-1">
+   <header class="feedback-head"><h2 id="feedback-title">Tu experiencia en Lúmina</h2><button id="feedback-close" class="secondary" type="button" aria-label="Cerrar comentarios">×</button></header>
+   <p>¿Algo fue confuso, difícil o no funcionó? Cuenta lo que pasó. La información se copia para que puedas enviársela a quien compartió el juego. <strong>No se envía automáticamente.</strong></p>
+   <label for="feedback-category">¿Qué te ocurrió?</label>
+   <select id="feedback-category"><option value="No supe adónde ir">No supe adónde ir</option><option value="No entendí una misión">No entendí una misión</option><option value="Controles o movimiento">Controles o movimiento</option><option value="Error técnico">Error técnico</option><option value="Historia y ritmo">Historia y ritmo</option><option value="Algo que me gustó">Algo que me gustó</option></select>
+   <label for="feedback-description">¿Qué parte y qué cambiarías?</label>
+   <textarea id="feedback-description" rows="4" maxlength="2000" placeholder="Describe lo que ocurrió o lo que esperabas que pasara..."></textarea>
+   <p id="feedback-message" role="status" aria-live="polite"></p>
+   <pre id="feedback-result" class="feedback-result" hidden></pre>
+   <div class="feedback-actions"><button id="feedback-copy" class="primary" type="button">Copiar comentario</button><button id="feedback-cancel" class="secondary" type="button">Volver al juego</button></div>
+  </section>`;
+  document.body.append(feedbackModal);
+  const feedbackStyle=document.createElement('style');
+  feedbackStyle.textContent=`
+   #feedback-modal .feedback-panel{max-height:94dvh;overflow:auto;width:min(520px,95vw);padding:15px 18px;color:#f1f8ee;background:#102d41;border:2px solid #8fcebd;border-radius:12px}
+   #feedback-modal .feedback-head{display:flex;justify-content:space-between;gap:10px;align-items:start}#feedback-modal .feedback-head h2{margin:0 0 8px;font:900 23px/1.2 system-ui}#feedback-modal .feedback-head button{min-width:44px;min-height:44px}
+   #feedback-modal p{font:500 13px/1.5 system-ui}#feedback-modal label{display:block;font:800 13px/1.4 system-ui;margin:10px 0 5px}
+   #feedback-modal select,#feedback-modal textarea{width:100%;padding:9px;background:#193d52;color:#effff4;border:1px solid #8fc4c0;border-radius:6px;font:500 15px/1.5 system-ui}
+   #feedback-modal .feedback-actions{display:flex;flex-wrap:wrap;gap:9px}#feedback-modal .feedback-actions button{flex:1 1 160px;min-height:46px}
+   #feedback-modal .feedback-result{white-space:pre-wrap;overflow-wrap:anywhere;background:#061c30;padding:10px;color:#ceeedd;font:12px/1.5 monospace;max-height:25dvh;overflow:auto}
+   #feedback-modal button:focus-visible,#feedback-modal textarea:focus-visible,#feedback-modal select:focus-visible{outline:3px solid #ffde9e;outline-offset:2px}
+   @media (orientation:landscape) and (max-height:500px){#feedback-modal .feedback-panel{max-height:99dvh;padding:8px 12px}#feedback-modal p{margin:5px 0}#feedback-modal label{margin:4px 0 2px}}
+  `;
+  document.head.append(feedbackStyle);
+  const closeFeedback=()=>{feedbackModal.hidden=true;openButton.focus();};
+  openButton.addEventListener('click',()=>{
+   feedbackModal.hidden=false;document.getElementById('feedback-result').hidden=true;
+   document.getElementById('feedback-message').textContent='';
+   feedbackModal.querySelector('.feedback-panel')?.focus();
+  });
+  document.getElementById('feedback-close').addEventListener('click',closeFeedback);
+  document.getElementById('feedback-cancel').addEventListener('click',closeFeedback);
+  feedbackModal.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();closeFeedback();}});
+  document.getElementById('feedback-copy').addEventListener('click',async()=>{
+   const area=document.getElementById('feedback-description');
+   const content=area.value.trim();const message=document.getElementById('feedback-message');
+   if(content.length<5){message.textContent='Cuéntanos qué ocurrió con al menos una frase breve.';area.focus();return;}
+   const g=root.game,scene=g?.scene||'sin iniciar',mode=document.body.classList.contains('touch-enabled')?'táctil':'teclado';
+   const text=[
+    'Lúmina — Comentario de juego',
+    'Lugar: '+scene,
+    'Tipo: '+document.getElementById('feedback-category').value,
+    'Pantalla: '+Math.round(window.innerWidth)+'×'+Math.round(window.innerHeight),
+    'Control: '+mode,
+    'Comentario: '+content
+   ].join('\n');
+   const result=document.getElementById('feedback-result');result.textContent=text;result.hidden=false;
+   try{if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(text);message.textContent='✓ Copiado. Ya puedes compartirlo cuando quieras.';
+   }catch{message.textContent='No pude copiar automáticamente. Selecciona el texto de abajo y cópialo manualmente.';}
+  });
+ }
 })(window.Lumina=window.Lumina||{});
