@@ -17,3 +17,10 @@ Regiones revisadas: Distrito Aurora, Estación Umbral, Archivo de Ecos, Azoteas,
 No se cambiaron los puzles, coordenadas de colisión, historia, guardado ni habilidades por motivos de arte.
 
 Revisa la imagen en iPhone horizontal y pantalla de PC antes de aceptar nuevas escenas.
+
+## Actualización v0.4.8
+- Los pinos ya no comparten una silueta de tres triángulos lisos: ramas por niveles con planos delanteros y traseros, nieve y remates de agujas. Permanecen detrás del terreno.
+- La roca, fachadas, taller, academia y cajas usan microtexturas deterministas que no cambian al mover el personaje. Solo se pintan dentro de la franja visible de cámara.
+- El faro añade ventanas hundidas, piedra texturizada y una linterna de varios componentes.
+- Para evaluar la nueva versión, comparar una misma escena en Retro y Nítida, observar FPS efectivos y compartir capturas de objetos que aún se lean planos.
+- **Importante:** triplicar el raster no crea nuevos dibujos automáticamente; estos microdetalles añadidos sí son contenido artístico adicional. El objetivo siguiente es redibujar más fotogramas y elementos a mano.
