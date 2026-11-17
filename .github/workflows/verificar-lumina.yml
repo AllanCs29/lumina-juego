@@ -14,4 +14,6 @@ jobs:
         with:
           node-version: '22'
       - name: Probar build autónomo y escenas
-        run: node tests/v048-art-smoke.mjs
+        run: |
+          node tests/v048-art-smoke.mjs
+          node tests/v050-progress-smoke.mjs
