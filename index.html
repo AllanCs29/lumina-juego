@@ -3270,8 +3270,21 @@ function translateProgram(lang,program,taskCode=''){
  if(program.includes('READ_CHARGE'))lines.push(isPython?'entrada = int(input("Carga inicial: "))':
    isCpp?'int entrada; std::cout << "Carga inicial: "; std::cin >> entrada;':
    'const entrada = Number(prompt("Carga inicial: "));');
- if(program.some(op=>op.startsWith('SENSOR')))lines.push(isPython?'sensores = [3, 7, 11]':isCpp?'int sensores[] = {3, 7, 11};':'const sensores = [3, 7, 11];');
- if(program.some(op=>['ENERGY','NETWORK','NOT_ALARM'].includes(op)))lines.push(isPython?'energia, red, alarma = True, True, False':isCpp?'bool energia = true, red = true, alarma = false;':'const energia = true, red = true, alarma = false;');
+ if(program.some(op=>op.startsWith('SENSOR')))lines.push(
+   isPython?'sensores = [int(input(f"Sensor {i}: ")) for i in range(3)]':
+   isCpp?'int sensores[3]; for (int i=0; i<3; ++i) { std::cout << "Sensor " << i << ": "; std::cin >> sensores[i]; }':
+   'const sensores = [0, 1, 2].map(i => Number(prompt("Sensor " + i + ": ")));');
+ if(program.some(op=>['ENERGY','NETWORK','NOT_ALARM'].includes(op))){
+   if(isPython)lines.push('energia = bool(int(input("Energía (1=sí, 0=no): ")))',
+    'red = bool(int(input("Red (1=sí, 0=no): ")))',
+    'alarma = bool(int(input("Alarma (1=sí, 0=no): ")))');
+   else if(isCpp)lines.push('bool energia, red, alarma;',
+    'std::cout << "Energía, red, alarma (cada una 1 o 0): ";',
+    'std::cin >> energia >> red >> alarma;');
+   else lines.push('const energia = Number(prompt("Energía (1=sí, 0=no): ")) === 1;',
+    'const red = Number(prompt("Red (1=sí, 0=no): ")) === 1;',
+    'const alarma = Number(prompt("Alarma (1=sí, 0=no): ")) === 1;');
+  }
  for(const op of program){
   if(op==='READ_CHARGE'){lines.push(initVar('entrada'));hasCarga=true;}
   else if(['SET0','SET2','SET3'].includes(op)){lines.push(initVar(op.slice(3)));hasCarga=true;}
