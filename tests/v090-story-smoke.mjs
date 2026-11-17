@@ -12,7 +12,7 @@ const ctx={window:{Lumina:{}}};
 vm.runInNewContext(narrative,ctx);
 vm.runInNewContext(persistence,ctx);
 const {Narrative:N,Save}=ctx.window.Lumina;
-assert.equal(Object.keys(N.BEATS).length,7);
+assert.equal(Object.keys(N.BEATS).length,8);
 assert.equal(N.ARCHIVE_LOGS.length,3);
 assert.equal(N.FINAL_CASES.length,3);
 assert.ok(N.BEATS.nix.join(' ').includes('eco'),'Restoring NIX explains the urban echo');
