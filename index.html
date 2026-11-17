@@ -593,7 +593,7 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.5</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.6</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -625,7 +625,7 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.5</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.6</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -1150,7 +1150,8 @@ function windows(r,x,y,w,h,day,kind){
   if(kind==='lift'&&cx>1730&&cx<1810)continue; // relay has its own alcove
   const isLit=(!day && (k*7+j*5+Math.floor(cx/16))%4!==0);
   const glass=day?'#779aaf':isLit?(k+j)%2?'#f6be91':'#86dfd4':'#284d68';
-  r.r(cx-4,cy-5,27,30,'#17283e');r.r(cx,cy,20,23,glass);
+  r.r(cx-5,cy-6,29,31,'#0e2438');r.r(cx-3,cy-4,25,27,'#496279');r.r(cx,cy,20,23,glass);
+  r.r(cx+18,cy,2,23,'#1e384d');
   r.r(cx+9,cy,2,23,'#466177');r.r(cx,cy+10,20,2,'#466177');
   if(isLit){r.r(cx+2,cy+2,4,2,'#ffedd2');r.glow(cx+10,cy+12,21,'#efb58a16')}
   r.r(cx-7,cy+24,31,4,'#78889a');
@@ -1188,9 +1189,12 @@ function facade(r,b,day,powered){const {x,y,w,kind}=b;const h=307-y;
  const side=kind==='homes'?'#2e3f56':kind==='lab'?'#314559':kind==='gate'?'#2b4052':'#283a53';
  const face=kind==='homes'?'#49526a':kind==='lab'?'#405d69':kind==='gate'?'#39516a':'#3a4b65';
  // Full-width inset shadow, side wall, real roof depth and foundation.
- r.r(x+9,y+8,w,h+5,'#14273d');r.r(x,y,w,h,side);r.r(x+10,y+12,w-18,h-12,face);
+ r.r(x+11,y+10,w,h+5,'#15253c');r.r(x,y,w,h,side);r.r(x+10,y+12,w-18,h-12,face);
+ // Architectural light and side return, shared across every district facade.
+ r.r(x+10,y+12,6,h-20,'#7594a21c');r.r(x+w-17,y+12,9,h-18,'#0e233b55');
+ r.r(x+12,y+13,w-31,2,'#a1bdb02d');
  r.r(x-7,y-10,w+14,15,'#26384b');r.r(x-5,y-14,w+10,6,'#9eb2b7');r.r(x+7,y+4,w-14,4,'#728d99');
- r.r(x+3,296,w-6,12,'#24374b');
+ r.r(x+3,294,w-6,14,'#182c41');r.r(x+8,298,w-16,3,'#59798a');
  windows(r,x,y,w,h,day,kind);
  if(kind==='homes'){
   r.r(x+21,272,89,29,'#1d3848');r.r(x+29,278,75,6,'#bb90b7');r.text('CAFÉ LUNA',x+66,285,'#ffdfd8',8,'center');
@@ -1277,11 +1281,12 @@ function anchoredPlatforms(r,level){
    r.text('↑',o.x+o.w/2,o.y-10,'#fff0b6',10,'center');
  }
 }
-function utility(r,x,day){r.r(x-2,240,5,67,'#304d63');r.r(x-7,234,15,7,'#c0a991');r.r(x-4,232,10,6,'#ffddaa');if(!day)r.glow(x,235,35,'#f1b87340')}
-function info(r,x,y,day){r.r(x-19,y-35,38,36,'#23354b');r.r(x-16,y-33,32,26,day?'#82b5c0':'#66bfbb');r.r(x-12,y-29,24,18,'#113d54');r.text('?',x,y-16,'#eaf6d6',16,'center');r.r(x-2,y+1,5,22,'#3d5366');r.r(x-14,y+20,29,3,'#708796');if(!day)r.glow(x,y-20,32,'#71d8e644')}
-function terminal(r,x,y){r.glow(x,y-35,39,'#65edd04c');r.r(x-18,y-40,36,34,'#59748a');r.r(x-15,y-38,30,27,'#0a3148');r.r(x-12,y-32,24,4,'#7be8cb');r.text('∧',x,y-16,'#faf0b8',16,'center');r.r(x-2,y-5,5,18,'#354a61');r.r(x-16,y+11,32,5,'#637f87')}
+function utility(r,x,day){r.contactShadow(x,307,13,2,.24);r.r(x-2,240,5,67,'#304d63');r.r(x-7,234,15,7,'#c0a991');r.r(x-4,232,10,6,'#ffddaa');if(!day)r.glow(x,235,35,'#f1b87340')}
+function info(r,x,y,day){r.contactShadow(x,y+23,23,3,.39);r.r(x-19,y-35,38,36,'#23354b');r.r(x-16,y-33,32,26,day?'#82b5c0':'#66bfbb');r.r(x-12,y-29,24,18,'#113d54');r.text('?',x,y-16,'#eaf6d6',16,'center');r.r(x-2,y+1,5,22,'#3d5366');r.r(x-14,y+20,29,3,'#708796');if(!day)r.glow(x,y-20,32,'#71d8e644')}
+function terminal(r,x,y){r.contactShadow(x,y+17,21,3,.40);r.glow(x,y-35,39,'#65edd04c');r.r(x-18,y-40,36,34,'#59748a');r.r(x-15,y-38,30,27,'#0a3148');r.r(x-12,y-32,24,4,'#7be8cb');r.text('∧',x,y-16,'#faf0b8',16,'center');r.r(x-2,y-5,5,18,'#354a61');r.r(x-16,y+11,32,5,'#637f87')}
 function door(r,x,y,open,progress=1,fail=0){
  const pulse=(Math.sin(r.t*7)+1)*.5,slide=open?Math.min(1,Math.max(0,progress)):0;
+ r.contactShadow(x,y+5,81,8,.55);
  // Protruding vestibule has a ground footprint, solid pilasters and an inset passage.
  r.r(x-63,y-14,129,13,'#0c2237');r.poly([[x-60,y-14],[x+60,y-14],[x+69,y+5],[x-68,y+5]],'#31485d');
  r.r(x-60,y-143,120,142,'#192b42');r.r(x-55,y-140,110,136,'#536b81');
@@ -1317,6 +1322,7 @@ function door(r,x,y,open,progress=1,fail=0){
 }
 function relay(r,x,y,active,day){
  const breathe=Math.sin(r.t*3)*.5+.5;
+ r.contactShadow(x,y+4,60,5,.44);
  // Electrical switchgear on a concrete footing with real cable entry and side face.
  r.r(x-44,y-10,90,14,'#1b3249');r.r(x-49,y-8,100,8,'#70879a');
  r.poly([[x-39,y-111],[x-29,y-120],[x+37,y-120],[x+49,y-110]],'#526b80');
@@ -1349,12 +1355,14 @@ function foreground(r,cam,day){
  }
 }
 function energyGate(r,x,y,opened){
+  r.contactShadow(x,y+3,21,3,.38);
   if(opened){r.r(x-6,y-67,12,67,'#33586e');r.r(x-9,y-71,18,7,'#a6c6bd');r.r(x-3,y-59,6,51,'#79d9c0');return;}
   r.glow(x,y-68,36,'#eabf9a44');r.r(x-12,y-91,24,94,'#172a45');r.r(x-10,y-88,20,88,'#71495c');r.r(x-8,y-85,16,84,'#ba6c86');for(let j=0;j<4;j++)r.r(x-7,y-75+j*19,14,5,'#ffe0ac');
   r.r(x-36,y-100,72,15,'#243f56');r.text('SIN ENERGÍA',x,y-90,'#ffe5b1',9,'center');
 }
 function numberStation(r,x,y,game){
  const active=!!game.save.cityPowered,blink=.5+.5*Math.sin(r.t*5);
+ r.contactShadow(x,y+2,48,5,.45);
  // An industrial programming terminal mounted to a floor pedestal, not a flat sticker.
  r.r(x-39,y-6,80,9,'#142a3d');r.poly([[x-38,y-9],[x+38,y-9],[x+31,y-14],[x-30,y-14]],'#6b8992');
  r.r(x-13,y-26,26,22,'#344f63');r.r(x-18,y-22,36,5,'#9ebbb8');
@@ -1372,6 +1380,7 @@ function numberStation(r,x,y,game){
 }
 function numberGate(r,x,y,opened,progress=0){
  const p=opened?Math.min(1,Math.max(0,progress)):0;
+ r.contactShadow(x,y+4,112,6,.46);
  const pulse=(Math.sin(r.t*5)+1)*.5, left=1728,span=84;
  // A genuine pit: dark interior, front retaining wall and exposed reinforced ribs.
  r.r(left,y-3,span,100,'#0b182b');r.r(left+5,y+9,span-10,84,'#13243a');
@@ -1404,6 +1413,7 @@ function numberGate(r,x,y,opened,progress=0){
  if(!opened){r.glow(left-3,y-39,20+pulse*6,'#f099a23a');r.r(left-17,y-24,9,4,'#d48695');}
 }
 function dayNightControl(r,x,y,day,active){
+ r.contactShadow(x,y+4,42,5,.44);
  // This is a small street-side control panel attached to a utility plinth.
  r.r(x-28,y-6,58,9,'#162d42');r.r(x-32,y-9,66,5,'#8ca3a8');
  r.poly([[x-22,y-92],[x-14,y-99],[x+27,y-99],[x+21,y-92]],'#7795a0');
@@ -1440,7 +1450,7 @@ function nix(r,x,y,awake,time,wake=0){
  }else{r.glow(x-4,yy-32,15,'#75ffe134');if(wake>0){const w=Math.min(1,wake);r.glow(x,yy-17,35+w*15,'#f9e2a052');}}
 }
 
-function routeEnd(r,x,y,day,completed){r.glow(x,y-75,completed?94:42,completed?'#b3ffe857':'#ad9aee35');r.r(x-42,y-94,85,90,'#203652');r.r(x-34,y-87,69,74,'#5a718e');r.r(x-28,y-81,57,60,completed?'#4ad7b3':'#243e5a');r.r(x-22,y-77,45,48,completed?'#d0ffee':'#527091');
+function routeEnd(r,x,y,day,completed){r.contactShadow(x,y+4,54,6,.44);r.glow(x,y-75,completed?94:42,completed?'#b3ffe857':'#ad9aee35');r.r(x-42,y-94,85,90,'#203652');r.r(x-34,y-87,69,74,'#5a718e');r.r(x-28,y-81,57,60,completed?'#4ad7b3':'#243e5a');r.r(x-22,y-77,45,48,completed?'#d0ffee':'#527091');
  r.text(completed?'SIGUE LA LUZ':'FIN DE PRUEBA',x,y-48,completed?'#194551':'#dcfbf5',9,'center');r.r(x-44,y-7,89,9,'#91a9b5');
 }
 function draw(r,game){const cam=game.camera.x,day=!!game.save.cityDay,ctx=r.ctx,level=root.Physics.levels.district;
@@ -1495,7 +1505,7 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
   // Underground memory vault: racks, suspended walkways, shafts, and interactive readers.
   for(let i=0;i<7;i++){
     const x=42+i*155;
-    r.r(x-6,82,132,216,'#0c2438');r.r(x,89,117,202,'#2c465d');
+    r.r(x-6,82,132,216,'#0c2438');r.r(x+8,89,117,208,'#10273b');r.r(x,89,117,202,'#2c465d');r.r(x+3,90,5,192,'#708b9b55');r.r(x+106,94,8,188,'#10283e66');
     r.r(x+5,94,106,9,'#729ca2');
     for(let j=0;j<5;j++){
       const yy=109+j*32;
@@ -1506,12 +1516,12 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
   }
   r.r(0,307,lv.width,115,'#14273a');r.r(0,305,lv.width,6,'#a7d1cb');
   r.r(0,323,lv.width,5,'#39576d');for(let x=0;x<lv.width;x+=44)r.r(x+14,345,22,4,'#456c79');
-  for(const p of lv.ledges){r.r(p.x,p.y+5,p.w,16,'#1c3449');r.r(p.x,p.y,p.w,7,'#a5c4be');r.r(p.x+10,p.y+17,5,23,'#42667c');r.r(p.x+p.w-15,p.y+17,5,23,'#42667c')}
-  for(const b of lv.hurdles){r.r(b.x-3,b.y+b.h-2,b.w+6,4,'#0a1c30');r.r(b.x,b.y,b.w,b.h,'#4a6378');r.r(b.x+4,b.y+3,b.w-8,b.h-7,'#92aaad');r.r(b.x+5,b.y+6,b.w-10,2,'#d5f2e5')}
+  for(const p of lv.ledges){r.r(p.x-2,p.y+5,p.w+4,16,'#1c3449');r.r(p.x,p.y,p.w,7,'#d1e5db');r.r(p.x,p.y+7,p.w,4,'#719eaa');r.r(p.x+10,p.y+17,5,23,'#42667c');r.r(p.x+p.w-15,p.y+17,5,23,'#42667c')}
+  for(const b of lv.hurdles){r.contactShadow(b.x+b.w/2,b.y+b.h, b.w/2+8,3,.40);r.r(b.x,b.y,b.w,b.h,'#4a6378');r.poly([[b.x,b.y],[b.x+b.w,b.y],[b.x+b.w-5,b.y+6],[b.x+5,b.y+6]],'#c4d9d1');r.r(b.x+4,b.y+6,b.w-8,b.h-7,'#92aaad');r.r(b.x+5,b.y+9,b.w-10,2,'#d5f2e5')}
   const scans=REGIONS.archive.switches;
   for(const [i,x] of scans.entries()){
     const active=!!game.save.archiveNodes?.[i],bob=Math.sin(t*3.5+i)*2;
-    r.r(x-24,256,48,46,'#112e43');r.r(x-19,260,38,32,'#415b70');
+    r.contactShadow(x,303,33,5,.42);r.r(x-24,256,48,46,'#112e43');r.r(x-19,260,38,32,'#415b70');
     r.r(x-15,264,30,22,active?'#83e6c6':'#684f76');
     r.glow(x,273+bob,active?27:18,active?'#8affd440':'#df9ff031');
     r.text(active?'✓':String(i+1),x,279,'#ecfff7',15,'center');
@@ -1526,9 +1536,9 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
  }else if(metro){
   for(let i=0;i<11;i++){const x=i*132;r.r(x+19,74,17,221,'#304762');r.r(x+25,75,5,211,'#71919b');r.r(x,220,130,9,'#536f83');r.r(x+24,170,81,29,'#1a344a')}
   r.r(0,292,lv.width,22,'#38475b');r.r(0,305,lv.width,90,'#182c41');r.r(0,307,lv.width,5,'#95b3b4');r.r(0,327,lv.width,5,'#17263a');r.r(0,346,lv.width,4,'#c0a56f');for(let x=0;x<lv.width;x+=38)r.r(x,346,7,17,'#758895');
-  for(const p of lv.ledges){r.r(p.x-5,p.y+6,p.w+10,23,'#1a2b42');r.r(p.x,p.y,p.w,p.h,'#5d8e99');r.r(p.x,p.y,p.w,4,'#b7e1d5');for(let x=p.x+8;x<p.x+p.w;x+=23)r.r(x,p.y+10,4,23,'#557586')}
-  for(const b of lv.hurdles){r.r(b.x,b.y,b.w,b.h,'#6d8193');r.r(b.x+5,b.y+3,b.w-10,b.h-8,'#a5b6b4');r.text('↑',b.x+b.w/2,b.y-6,'#f6de9d',11,'center')}
-  for(const [i,x] of REGIONS.metro.switches.entries()){const on=!!game.save.metroRelays?.[i];r.r(x-23,263,46,39,'#26465c');r.r(x-17,269,34,25,on?'#7bdfbf':'#9c5875');r.text(on?'ON':'?',x,286,'#fff7d6',13,'center');r.text('RELÉ '+(i+1),x,247,'#e5dec8',10,'center');}
+  for(const p of lv.ledges){r.r(p.x-5,p.y+6,p.w+10,23,'#152b42');r.r(p.x,p.y,p.w,p.h,'#5d8e99');r.r(p.x,p.y,p.w,4,'#d9ece4');r.r(p.x,p.y+5,p.w,4,'#648f98');for(let x=p.x+8;x<p.x+p.w;x+=23)r.r(x,p.y+10,4,23,'#557586')}
+  for(const b of lv.hurdles){r.contactShadow(b.x+b.w/2,b.y+b.h,b.w/2+5,3,.5);r.r(b.x,b.y,b.w,b.h,'#6d8193');r.poly([[b.x,b.y],[b.x+b.w,b.y],[b.x+b.w-5,b.y+6],[b.x+4,b.y+6]],'#e1dac4');r.r(b.x+5,b.y+6,b.w-10,b.h-9,'#a5b6b4');r.text('↑',b.x+b.w/2,b.y-6,'#f6de9d',11,'center')}
+  for(const [i,x] of REGIONS.metro.switches.entries()){const on=!!game.save.metroRelays?.[i];r.contactShadow(x,307,31,4,.52);r.r(x-23,263,46,39,'#26465c');r.r(x-17,269,34,25,on?'#7bdfbf':'#9c5875');r.text(on?'ON':'?',x,286,'#fff7d6',13,'center');r.text('RELÉ '+(i+1),x,247,'#e5dec8',10,'center');}
   const open=complete(game.save,'metro');r.r(965,177,75,128,'#39465a');r.r(974,185,57,112,open?'#164b54':'#70455f');r.text(open?'ABIERTO':'2 RELÉS',1002,215,'#f8eac6',10,'center');
   r.r(1200,178,110,120,'#27445b');r.r(1209,188,90,107,'#5a7c8e');r.r(1215,190,78,97,'#132d44');r.text('NORTE',1253,226,'#aaf7d9',14,'center');r.text('TREN 07',1253,247,'#e7c695',12,'center');
   r.text('← CIUDAD',55,255,'#a6eddb',11,'center');r.text('SIGUE LA SEÑAL →',1160,125,'#fbdfa2',13,'center');
@@ -1536,7 +1546,7 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
   for(let i=0;i<7;i++){let x=i*160-36;r.r(x,185-(i%3)*23,146,124,'#2e405d');r.r(x,185-(i%3)*23,146,7,'#8aa8b6');for(let j=0;j<4;j++)r.r(x+18+j*28,210-(i%3)*23,10,18,'#7ba8bc')}
   r.r(0,305,lv.width,110,'#243347');r.r(0,301,lv.width,7,'#a8c1ba');for(let x=0;x<lv.width;x+=65)r.r(x+22,322,25,3,'#536b80');
   for(const p of lv.ledges){r.r(p.x,p.y+4,p.w,22,'#293d54');r.r(p.x-3,p.y,p.w+6,7,'#b1bfb5');r.r(p.x+12,p.y+12,5,39,'#526f80');r.r(p.x+p.w-16,p.y+12,5,39,'#526f80')}
-  for(const b of lv.hurdles){r.r(b.x,b.y,b.w,b.h,'#476878');r.r(b.x+4,b.y+4,b.w-8,b.h-8,'#82a5ac')}
+  for(const b of lv.hurdles){r.contactShadow(b.x+b.w/2,b.y+b.h,b.w/2+8,3,.42);r.r(b.x,b.y,b.w,b.h,'#476878');r.poly([[b.x,b.y],[b.x+b.w,b.y],[b.x+b.w-4,b.y+5],[b.x+4,b.y+5]],'#d1e4d9');r.r(b.x+4,b.y+5,b.w-8,b.h-9,'#82a5ac')}
   for(const [i,x] of REGIONS.rooftops.switches.entries()){const on=!!game.save.roofAntennas?.[i];r.r(x-3,201,7,105,'#59788c');r.r(x-18,198,37,6,'#abc1c0');r.line(x,198,x+44,182,'#76a8b7',2);r.glow(x,191,on?30:16,on?'#77fad35e':'#bca7fc3d');r.r(x-20,278,41,23,on?'#5bd5ad':'#885c87');r.text(on?'OK':'?',x,291,'#0e2635',13,'center')}
   const sync=complete(game.save,'rooftops');r.text(sync?'SEÑAL AL FARO: RECIBIDA':'SINCRONIZA 2 ANTENAS',570,166,'#ffedab',14,'center');r.text('← VOLVER A LA CIUDAD',85,254,'#c5ece0',10,'center');
  }
@@ -1582,19 +1592,105 @@ class Renderer{
    const scroll=camX*s,first=Math.floor(scroll/220)-1,last=first+Math.ceil(this.w/220)+2;
    for(let i=first;i<=last;i++){const x=i*220-scroll,peak=b-55-(Math.abs(i)%2)*16;
     this.poly([[x,b+65],[x+21,b-2],[x+57,peak],[x+86,b-30],[x+115,b-66],[x+157,b-9],[x+202,b+8],[x+220,b+65]],c);
-    this.poly([[x+38,b-24],[x+57,peak],[x+72,b-41],[x+63,b-42],[x+56,b-47],[x+47,b-31]],'#b6bbc8')}
+    this.poly([[x+38,b-24],[x+57,peak],[x+72,b-41],[x+63,b-42],[x+56,b-47],[x+47,b-31]],'#8298ab')}
+  }
+ }
+ // Shared visual grammar: scenery is muted, collision geometry is sharp, objects touch the ground.
+ contactShadow(x,y,rx=24,ry=5,opacity=.35){
+  const c=this.ctx;c.save();c.globalAlpha=opacity;c.fillStyle='#091c31';c.beginPath();c.ellipse(x,y,Math.max(2,rx),Math.max(1,ry),0,0,Math.PI*2);c.fill();c.restore();
+ }
+ // A ledge is tangible: visible snow cap, underside, truss and fasteners, never just a strip in the sky.
+ ledge(f){const x=f.x,y=f.y,w=f.w,h=f.h||10;
+  this.r(x-3,y+5,w+6,15,'#1b344a');this.poly([[x-3,y+5],[x+w+3,y+5],[x+w-2,y+15],[x+2,y+15]],'#37566c');
+  for(const anchor of [x+17,x+w-17]){
+   this.r(anchor-3,y+15,7,22,'#425b71');this.poly([[anchor,y+16],[anchor+4,y+16],[anchor+22,y+33],[anchor+17,y+35]],'#253e54');
+   this.r(anchor+1,y+14,3,3,'#a9d7d0');
+  }
+  this.r(x,y,w,5,'#f0f5eb');this.r(x,y+5,w,4,'#adcbd0');this.r(x+1,y+9,w-2,3,'#648f9d');
+  this.r(x+8,y+2,Math.min(20,w-14),1,'#fffdf6');
+  for(let i=0;i<Math.min(8,Math.floor(w/10));i++){const xx=x+10+i*10,tip=5+(i*5)%9;
+   this.poly([[xx,y+12],[xx+5,y+12],[xx+1,y+12+tip]],'#9dcad0');
   }
  }
  terrain(f,seed){const x=f.x,y=f.y,w=f.w;
-  this.r(x,y,w,400-y,'#27394f');this.r(x,y,w,7,'#e9e8ed');this.r(x,y+7,w,5,'#a4cdd0');this.r(x,y+12,w,6,'#60899c');
-  for(let j=0;j<8;j++){const xx=x+((j*73+seed*19)%(Math.max(20,w-18))),yy=y+22+(j*19)%85;
-   this.r(xx,yy,19,7,j%2?'#3a526b':'#35536a');this.r(xx+4,yy+7,12,3,'#20344c');this.r(xx+17,yy+3,3,3,'#506d80')}
-  for(let xx=x+7;xx<x+w-12;xx+=26){this.r(xx,y+3,3,2,'#fffaff');if((xx/26|0)%2===0)this.r(xx+5,y+8,12,2,'#d8f4eb')}
+  // Three readable material planes: contact snow, vertical stone face, lower shadow.
+  this.r(x,y,w,400-y,'#142a42');
+  this.r(x,y+13,w,48,'#344b63');this.r(x,y+61,w,56,'#20374d');
+  this.r(x,y,w,4,'#ffffff');this.r(x,y+4,w,4,'#e4f1ee');
+  this.r(x,y+8,w,5,'#aacbd0');this.r(x,y+13,w,5,'#547f95');
+  this.r(x,y+18,w,5,'#20384e');this.r(x,y+23,w,3,'#6e9ca4');
+  // Edge strata are embedded into the rock, not white floating lines.
+  for(let i=0;i<Math.max(3,Math.ceil(w/63));i++){
+   const xx=x+9+i*62;
+   if(xx+24>=x+w)break;
+   this.r(xx,y+29+i%3*5,19,3,i%2?'#53758a':'#435f76');
+   this.r(xx+9,y+46+i%4*4,3,11,'#20364e');
+   this.r(xx+22,y+48+i%3*5,20,2,'#678695');
+  }
+  this.r(x,y+67,w,4,'#152940');
+  for(let xx=x+7;xx<x+w-12;xx+=30){this.r(xx,y+3,5,2,'#fffbef');if((xx/30|0)%2===0)this.r(xx+9,y+9,12,2,'#c2e0dd')}
  }
- pine(x,y,s=1){const q=(v)=>Math.round(v*s);this.r(x-q(15),y-q(2),q(30),q(3),'#14283d89');this.r(x-q(3),y-q(18),q(7),q(20),'#38435c');this.poly([[x-q(24),y-q(4)],[x,y-q(62)],[x+q(24),y-q(4)]],'#1b5167');
-  this.poly([[x-q(20),y-q(17)],[x,y-q(70)],[x+q(20),y-q(17)]],'#2d6b79');this.poly([[x-q(14),y-q(40)],[x,y-q(78)],[x+q(14),y-q(40)]],'#43888b');
-  this.poly([[x-q(13),y-q(38)],[x,y-q(78)],[x-q(1),y-q(54)],[x-q(9),y-q(52)]],'#cde9e6');this.r(x-q(19),y-q(18),q(13),q(4),'#c1e4e8');
-  this.r(x+q(7),y-q(18),q(10),q(3),'#92c7ce')}
+
+ pine(x,y,s=1,depth='mid'){
+  // These are BACKGROUND evergreen trees, never physical jump obstacles.
+  // Two hand-picked palettes encode depth: distant trees are hazy/low-contrast;
+  // mid-distance trees have soft cool highlights, unlike warm cargo crates.
+  const far=depth==='far';
+  const p=far?{edge:'#35445f',shadow:'#3c5067',base:'#4b6177',light:'#61788b',snow:'#8499a6',trunk:'#384a60'}:
+              {edge:'#20374f',shadow:'#355268',base:'#486d7d',light:'#608c96',snow:'#9ab4b7',trunk:'#435b65'};
+  const q=v=>Math.max(1,Math.round(v*s)),cy=y+2;
+  // Backside trunk is partly concealed by the foreground snowbank, so the
+  // tree reads as living BEHIND the playable road, not glued to its face.
+  this.r(x-q(4),cy-q(26),q(8),q(27),p.edge);
+  this.r(x-q(2),cy-q(24),q(4),q(25),p.trunk);
+  const tiers=[{top:74,base:43,half:16},{top:60,base:28,half:23},{top:43,base:9,half:29}];
+  for(let i=0;i<tiers.length;i++){
+    const t=tiers[i],b=cy-q(t.base),top=cy-q(t.top),w=q(t.half);
+    this.poly([[x,top-q(3)],[x-w-q(2),b+q(3)],[x+w+q(2),b+q(3)]],p.edge);
+    this.poly([[x,top],[x-w,b],[x,b-q(3)]],p.light);
+    this.poly([[x,top],[x,b-q(3)],[x+w,b]],p.shadow);
+    // Thin snow only on upper-left planes, never the bright white silhouette
+    // that previously made a decorative pine look like a collision surface.
+    if(i<2){
+      this.poly([[x,top+q(2)],[x-q(6),top+q(10)],[x-q(9),top+q(18)],[x-q(3),top+q(11)]],p.snow);
+    }
+    this.r(x-q(9)+(i%2)*q(4),b-q(5),q(3),q(2),p.base);
+  }
+  // A tiny foot/shadow behind the front curb, mostly hidden by terrain.
+  this.r(x-q(12),cy-q(2),q(24),q(3),far?'#34466066':'#1a314b66');
+ }
+ drawWinterForest(scene,level){
+  // All scenery is rendered BEFORE solid ground, ledges, crates and Iris.
+  // Positions are world-anchored to prevent popping or artificial scaling.
+  const rooted=(x,margin)=>level.ground.find(f=>x>=f.x+margin&&x<=f.x+f.w-margin);
+  const byCrate=x=>(level.hurdles||[]).some(h=>Math.abs(x-(h.x+h.w/2))<72);
+  if(scene==='bridge'){
+    const far=[146,252,487,590,853,959,1198,1375,1551,1769];
+    for(const x of far){const f=rooted(x,24);if(f&&!byCrate(x))this.pine(x,f.y,.42+(x%3)*.035,'far');}
+    // Mid-distance silhouettes use reduced scale, softened contrast and
+    // deliberate spacing so crates remain the only ground-level hazards.
+    for(const x of [95,558,822,932,1308,1500,1720]){
+      const f=rooted(x,25);if(f&&!byCrate(x))this.pine(x,f.y,.65+(x%3)*.035,'mid');
+    }
+    return;
+  }
+  if(scene==='harbor'){
+    for(const [x,k] of [[60,.62],[185,.59],[728,.64],[1002,.73],[1232,.62]]){
+      const f=rooted(x,4);if(f&&!byCrate(x))this.pine(x,f.y,k,'mid');
+    }
+    return;
+  }
+  if(scene==='tower'){
+    for(const [x,k] of [[210,.74],[730,.77]]){
+      const f=rooted(x,12);if(f)this.pine(x,f.y,k,'mid');
+    }
+    return;
+  }
+  for(let x=48;x<level.width;x+=168){
+    const f=rooted(x,46);if(f&&!byCrate(x))this.pine(x,f.y,.52+(Math.floor(x/168)%3)*.04,'far');
+  }
+ }
+
  lamp(x,base){this.r(x-2,base-61,5,61,'#3c4d63');this.r(x-6,base-68,13,7,'#96a7a6');this.r(x-4,base-65,9,11,'#ffd99e');this.r(x-8,base-70,17,4,'#d9b78c');this.glow(x,base-59,36,'#ffbb5960')}
  icicles(x,y,n=6){for(let i=0;i<n;i++){let len=5+(i*11)%12;this.poly([[x+i*10,y],[x+i*10+5,y],[x+i*10+1,y+len]],'#b9edeb')}}
  pipes(x,y){this.r(x,y,6,70,'#405568');this.r(x,y,6,4,'#ddc18c');this.r(x+6,y,32,5,'#405568');this.r(x+31,y,7,26,'#506a78');this.r(x+10,y+2,18,2,'#7892a0')}
@@ -1761,10 +1857,51 @@ class Renderer{
   this.poly([[x+13,y-11+breath],[x+21,y-16+breath],[x+22,y-5+breath]],'#b9c7bd');
   if(active&&wake>0){for(let i=0;i<4;i++)this.r(x-23+i*14,y-22-i%2*8,3,3,'#ebf7bf')}
  }
- tower(x,y,active){this.glow(x,y-112,active?135:60,active?'#8cebbd66':'#e2aa7444');this.r(x-46,y-10,90,20,'#39485b');this.r(x-37,y-135,75,126,'#a3b5b5');this.r(x-29,y-121,60,110,'#e4d6c6');
-  for(let i=0;i<6;i++){this.r(x-35,y-119+i*20,69,3,'#afadae');this.r(x-21+i%3*9,y-118+i*20,4,18,'#c6b7af')}
-  this.r(x-27,y-163,56,31,'#3a4b64');this.r(x-33,y-170,68,8,'#cbd1cb');this.r(x-26,y-158,54,24,active?'#7aead2':'#edbd7e');this.r(x-21,y-154,44,15,active?'#d1fff2':'#fee6b1');this.r(x-4,y-189,8,20,'#d4d0c6');
-  this.r(x-16,y-42,32,38,'#354a61');this.r(x-11,y-37,22,33,'#182e49');this.r(x-45,y-19,90,11,'#788b92');}
+ tower(x,y,active){
+  const pulse=.78+.22*Math.sin(this.t*2.3),beam=active?'#80f5d7':'#f5bc85';
+  // A true 3/4-view building: solid foundation, shadow, side return and recessed entrance.
+  this.contactShadow(x+5,y+2,74,8,.50);
+  this.r(x-75,y-13,151,17,'#162c44');this.poly([[x-75,y-13],[x-60,y-22],[x+61,y-22],[x+76,y-13]],'#819ba2');
+  this.r(x-60,y-16,119,8,'#405e71');this.r(x-52,y-26,103,8,'#b5c8c1');
+  // Cast shadow falls across snowy foreground, showing the tower standing ON the landscape.
+  this.poly([[x+49,y-17],[x+101,y-5],[x+126,y+2],[x+54,y+2]],'#14263e99');
+  // Vertical stone core with dark right return: thickness is visible at all times.
+  this.poly([[x-45,y-22],[x-32,y-142],[x+31,y-142],[x+43,y-22]],'#344c63');
+  this.poly([[x+31,y-142],[x+46,y-133],[x+57,y-22],[x+43,y-22]],'#1c354b');
+  this.poly([[x-32,y-142],[x-45,y-22],[x+43,y-22],[x+31,y-142]],'#a5b9ba');
+  this.poly([[x-27,y-135],[x-38,y-29],[x+29,y-29],[x+26,y-135]],'#c4cdc3');
+  this.poly([[x+26,y-135],[x+29,y-29],[x+39,y-28],[x+34,y-134]],'#8299a3');
+  this.r(x-35,y-98,6,50,'#7e969e');this.r(x+23,y-97,5,55,'#93a6a9');
+  // Masonry courses and a few stepped recesses, not an undifferentiated poster texture.
+  for(let i=0;i<5;i++){const sy=y-122+i*20;this.r(x-29+i%2*3,sy,54-i%3*2,2,'#8fa7a9');
+   this.r(x-14+(i%3)*8,sy+2,2,16,'#a7b9b4');}
+  // Ground-floor door is behind the stairs, visibly inset from the outer wall.
+  this.r(x-25,y-66,49,49,'#486778');this.r(x-21,y-62,42,45,'#172b42');
+  this.r(x-16,y-58,32,40,active?'#1e695f':'#30445e');
+  this.r(x-13,y-54,27,34,'#132d42');this.r(x-10,y-50,21,26,'#24485d');
+  this.r(x-19,y-20,42,4,'#abc4c3');this.r(x-17,y-18,36,3,'#516f7e');
+  this.r(x-39,y-12,78,5,'#8aa8ae');this.r(x-34,y-8,69,5,'#c5d4cd');
+  this.r(x-27,y-4,56,3,'#e5efdf');
+  // Side masonry buttresses anchor the shaft to the physical foundation.
+  this.poly([[x-49,y-84],[x-36,y-87],[x-42,y-15],[x-55,y-14]],'#677f8a');
+  this.poly([[x+39,y-87],[x+48,y-80],[x+56,y-14],[x+43,y-17]],'#4a6678');
+  this.r(x-55,y-14,17,6,'#aabbb6');this.r(x+41,y-14,17,6,'#9fb7b5');
+  // The lantern is supported by a projecting architectural crown.
+  this.r(x-42,y-149,85,9,'#425d71');this.r(x-40,y-153,79,5,'#cad5ce');
+  for(const bx of [-29,-13,12,27])this.r(x+bx,y-181,5,31,'#40586c');
+  this.r(x-34,y-181,69,33,'#283f58');this.r(x-27,y-178,55,25,active?'#65cbb4':'#c5a47c');
+  this.r(x-23,y-173,47,15,active?'#b8fff1':'#f8d9a4');
+  this.r(x-30,y-181,4,33,'#647e8e');this.r(x+25,y-181,4,33,'#647e8e');
+  this.r(x-47,y-187,95,8,'#708c95');this.r(x-41,y-191,82,5,'#e2e9df');
+  this.poly([[x-28,y-191],[x,y-207],[x+30,y-191]],'#465e73');this.r(x-4,y-218,8,11,'#b4c4be');
+  // Light spill touches the tower face, so active state reads as physical illumination.
+  if(active){this.glow(x,y-167,95,'#9cffe54a');this.poly([[x+28,y-169],[x+160,y-112],[x+173,y-100],[x+25,y-148]],'#9dfce10b');
+   this.r(x-14,y-128,26,6,'#8dd8bc');this.r(x-12,y-78,22,3,'#7cbead');}
+  else this.glow(x,y-166,56,'#f4bc8437');
+  this.r(x-48,y-14,8,8,'#233c50');this.r(x+42,y-14,8,8,'#233c50');
+  this.r(x-50,y-9,100,2,active?'#c5f3da':'#d6d4c6');
+ }
+
  terminal(x,y,active=false){this.glow(x,y-25,36,active?'#5bfee55b':'#f2b96b3c');this.r(x-19,y-28,38,26,'#647d85');this.r(x-17,y-30,34,20,'#c4d0c8');this.r(x-13,y-26,26,14,'#183c4b');this.r(x-10,y-23,20,3,active?'#ffe7ad':'#83f6d7');this.r(x-10,y-18,14,2,'#5ea89e');this.r(x-3,y-2,7,17,'#4b5669');this.r(x-14,y+14,29,5,'#293a53')}
  beacon(x,y,active){this.glow(x,y-25,active?67:39,active?'#7df7e366':'#eaa35e44');this.r(x-13,y-8,26,10,'#5b7a84');this.r(x-7,y-34,14,26,'#6a7a8a');this.r(x-9,y-39,18,12,active?'#7eeed9':'#eaba86');this.r(x-4,y-45,8,5,'#d0e9e0');this.r(x-9,y+1,18,6,'#33495e')}
  player(p,time){
@@ -1774,7 +1911,7 @@ class Renderer{
   const pose=root.Poses.forPlayer(p);
   const {lead,trail,bob,arm,lean,stretch,squash,mode}=pose;
   this.ctx.save();this.ctx.translate(x+8,y);if(f<0)this.ctx.scale(-1,1);
-  if(p.onGround){this.r(-10,27,21,2,'#1a263899');this.r(-5,26,12,1,'#d9ecdf55')}
+  if(p.onGround){this.contactShadow(0,26,13,3,.60);this.r(-5,26,12,1,'#d9ecdf55')}
   if(mode==='dash'){
    for(let i=1;i<=3;i++){this.ctx.globalAlpha=.18/i;this.r(-i*8,4,13,19,'#b3f4e3')}
    this.ctx.globalAlpha=1;this.r(-22,12,14,2,'#d3fae6');this.r(-16,18,10,2,'#75e4d2')
@@ -1859,27 +1996,23 @@ class Renderer{
  }
  atmosphere(){for(const s of this.snow){const xx=((s.x+this.t*s.speed)%500),yy=((s.y+this.t*s.speed*1.4)%270);this.r(xx,yy,s.r,s.r,'#e3f1f280')} }
  world(game){const level=root.Physics.levels[game.scene]||root.Physics.levels.tower,camX=game.camera.x,camY=game.camera.y;
-  if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}
-  if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
+  if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}  if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
   if(game.scene==='workshop'){
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
     this.player(game.player,this.t);game.fx.draw(this);this.interiorForeground();
   }else{
-    // Distant pines are scenery, not colliders; never place their roots over a gap.
-    if(game.scene!=='bridge'){for(let x=48;x<level.width;x+=168){const floor=level.ground.find(f=>x>=f.x+46&&x<=f.x+f.w-46);const nearCrate=(level.hurdles||[]).some(h=>Math.abs(x-(h.x+h.w/2))<64);if(floor&&!nearCrate)this.pine(x,floor.y,.72+(Math.floor(x/168)%3)*.07)}}
+    // Background-only pines, occluded by the road and its interactive props.
+    this.drawWinterForest(game.scene,level);
     for(let i=0;i<level.ground.length;i++)this.terrain(level.ground[i],i);
-    for(let i=0;i<level.ledges.length;i++){const f=level.ledges[i];this.r(f.x,f.y,f.w,f.h,'#50657c');this.r(f.x,f.y,f.w,4,'#e7f8f0');this.r(f.x+7,f.y+10,f.w-14,2,'#a0d4cd');this.icicles(f.x+7,f.y+f.h,Math.min(8,Math.floor(f.w/10)))}
+    for(const ledge of level.ledges)this.ledge(ledge);
     for(const f of root.Physics.movingAt(game.scene,game.worldTime||0))this.movingIce(f);
     for(const h of level.hurdles||[])this.hurdle(h);
     if(game.scene==='harbor'){
      const doorOpening=game.transition?.scene==='workshop'?Math.min(1,game.transition.elapsed/.35):0;
      this.workshopExterior(doorOpening);if(!game.save.orbs.includes('move'))this.orb(185,285,'move');this.lamp(160,307);this.lamp(698,307);this.lamp(925,307);
-     for(const [x,y] of [[60,307],[185,307],[728,307],[1002,307],[1232,307]])this.pine(x,y,x===1002?1.3:.85);
      this.arch(1140,307,game.save.robot);
     }else if(game.scene==='bridge'){
-     // Individually art-directed snowy trees stand on safe ground, away from jump crates.
-     for(const x of [95,558,822,932,1308,1500,1720]){const floor=level.ground.find(f=>x>=f.x+25&&x<=f.x+f.w-25);if(floor)this.pine(x,floor.y,.88)}
      for(const x of [180,515,940,1300,1680])this.lamp(x,this.floorAt(level,x));
      this.beacon(432,295,game.save.bridgeMiniCheckpoint);if(!game.save.orbs.includes('jump'))this.orb(310,239,'jump');if(!game.save.orbs.includes('dash'))this.orb(1290,281,'dash');if(game.save.orbs.includes('dash')&&!game.save.gateBroken)this.charger(1380,305);this.seal(608,302,!game.save.orbs.includes('jump'));this.seal(1389,305,!game.save.orbs.includes('dash'));this.beacon(817,295,game.save.bridgeCheckpoint);
      for(const [i,pos] of [[0,[319,228]],[1,[697,224]],[2,[1060,217]]])if(!game.save.shards.includes(i))this.memoryShard(pos[0],pos[1]);
@@ -1890,7 +2023,7 @@ class Renderer{
      this.text('SALTA LA CAJA',490,238,'#fce6b3',10,'center');
      for(const xx of [307,660,1055])for(let j=0;j<5;j++)this.poly([[xx+j*13,398],[xx+j*13+7,360-(j%2)*19],[xx+j*13+15,398]],'#75a9c2');
     }else{
-     this.lamp(107,308);this.lamp(570,308);this.pine(210,308,1.05);this.pine(730,308,1.25);
+     this.lamp(107,308);this.lamp(570,308);
      this.terminal(350,294,game.save.beacon);this.bot(455,281,true);this.tower(975,305,game.save.beacon);
     }
     this.player(game.player,this.t);game.fx.draw(this);
@@ -1996,7 +2129,8 @@ class Editor{
   document.getElementById('program-reset').addEventListener('click',()=>{this.blocks=[];this.message.textContent='Ruta despejada. Toca las casillas para volver a comenzar.';this.refresh()});
   this.claim.addEventListener('click',()=>{this.close();this.game.solved(this.id)});
   document.getElementById('program-quick-pick').addEventListener('click',()=>{if(this.opened&&!this.tracing&&this.id==='nix'){this.append('PICK');this.execute()}});
-  this.el.addEventListener('click',e=>this.handleClick(e));  this.board.addEventListener('click',e=>this.clickBoard(e));this.board.tabIndex=0;
+  this.el.addEventListener('click',e=>this.handleClick(e));
+  this.board.addEventListener('click',e=>this.clickBoard(e));this.board.tabIndex=0;
   document.getElementById('program-hint').addEventListener('click',()=>this.hint());
   document.getElementById('program-how').addEventListener('click',()=>this.help());
   for(const tab of document.querySelectorAll('[data-editor-tab]'))tab.addEventListener('click',()=>this.view(tab.dataset.editorTab));
