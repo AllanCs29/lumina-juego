@@ -1142,7 +1142,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
   });
   return {valid:true,passed:cases.every(c=>c.correct),cases};
  }
- function canBoard(save){return !!save?.metroRelays?.[0]&&!!save?.metroRelays?.[1]&&!!save.guardianDefeated;}
+ function canBoard(save){return !!save?.metroRelays?.[0]&&!!save?.metroRelays?.[1]&&(!!save.guardianDefeated||!!save.beacon||!!save.completed);}
  root.Narrative=Object.freeze({BEATS,ARCHIVE_LOGS,FINAL_CASES,evaluateFinal,canBoard});
 })(window.Lumina=window.Lumina||{});
 
@@ -1903,7 +1903,8 @@ root.Regions={REGIONS,draw,status,complete};
   }
   if(scene==='metro'){
    const pending=[340,710].filter((_,i)=>!save.metroRelays?.[i]);
-   return pending.length?goal(nearest(pending,x),'Relé pendiente'):goal(1230,'Tren hacia el norte');
+   return pending.length?goal(nearest(pending,x),'Relé pendiente'):
+    !save.guardianDefeated&&!save.beacon&&!save.completed?goal(934,'Archivo de Ecos'):goal(1230,'Tren hacia el norte');
   }
   if(scene==='rooftops'){
    const pending=[420,805].filter((_,i)=>!save.roofAntennas?.[i]);
@@ -1933,7 +1934,7 @@ root.Regions={REGIONS,draw,status,complete};
    if(!save.gateBroken)return goal(1440,'Barrera de cristal');
    return goal(1693,'Arco al faro');
   }
-  if(scene==='tower')return save.beacon?goal(975,'Encender el faro'):goal(350,'Consola de pulsos');
+  if(scene==='tower')return save.beacon?goal(975,save.signalBalanced?'Señal del norte lista':'Verificar la señal'):goal(350,'Consola de pulsos');
   return null; // Training and guardian already provide their own guidance.
  }
  function direction(scene,save,x){
@@ -3524,7 +3525,7 @@ root.LogicLab=LogicLab;root.LogicLabModel={TASKS,GUIDES,OPS,MAX_BLOCKS,REFUGE_CA
   leave(){if(!this.active)return;const g=this.game;this.active=false;document.getElementById('guardian-hud').hidden=true;
    const scene=this.returnScene==='guardian'?'archive':this.returnScene;g.scene=scene;g.player=root.Physics.spawn(Math.min(root.Physics.levels[scene]?.width-40||900,this.returnX),280);g.energy=g.save.energy||0;g.input.reset();g.locked=false;g.persist();g.updateHud();g.updateObjective();g.camera.x=Math.max(0,g.player.x-220);
    if(this.replay){g.el.menu.hidden=false;g.locked=true;g.updateMenuState();}
-   else if(g.save.guardianDefeated)g.toast('✦ El Centinela reconoce tu lógica. Nueva memoria registrada.');
+   else if(g.save.guardianDefeated){g.toast('✦ El Centinela libera la ruta al norte.');g.storyBeat?.('guardian');}
   }
  }
 
@@ -3654,7 +3655,7 @@ class Game{
  switchMode(scene){if(this.editor.opened||!this.el.story.hidden)return;document.getElementById('ending').hidden=true;this.sceneChange(scene,scene==='district'?82:80);this.el.menu.hidden=true;this.save.started=true;this.locked=false;this.persist();this.showSceneIntro();if(scene==='district')this.introduceDistrict();else if(scene==='metro'&&!this.save.metroVisited)this.introduceMetro();}
  introduceDistrict(){if(this.save.cityIntroSeen)return;this.prologue.open(()=>this.flashCaption('🎯 Abre Z02 · Prueba los sensores',3));}
  refreshNotebook(){const el=document.getElementById('open-notebook'),n=document.getElementById('notebook-locked');if(!el)return;const available=root.StoryProgress.discovered(this.save);el.textContent=available.length?'📓 Cuaderno · '+available.length+'/4 descubrimientos':'🔒 Cuaderno · aprende jugando';if(n)n.hidden=available.length>0;document.getElementById('prologue-replay').hidden=!this.save.cityIntroSeen;}
- introduceMetro(){if(this.save.metroVisited)return;this.save.metroVisited=true;this.persist();this.flashCaption('🎯 Enciende 2 relés y toma el tren →',3);}
+ introduceMetro(){if(this.save.metroVisited)return;this.save.metroVisited=true;this.persist();this.flashCaption('🎯 Dos relés → Archivo → tren al norte',3);this.storyBeat('metro');}
  introduceRoofs(){if(this.save.roofsVisited)return;this.save.roofsVisited=true;this.persist();this.flashCaption('🎯 Activa 2 antenas',3);}
  flashCaption(text,time=2.2){this.vignette={text,time};}
  showSceneIntro(){const e=document.getElementById('scene-intro');if(!e)return;e.textContent=this.scene==='district'?'DISTRITO AURORA':this.scene==='archive'?'ARCHIVO DE ECOS':this.scene==='metro'?'ESTACIÓN UMBRAL':this.scene==='rooftops'?'AZOTEAS DE AURORA':this.scene==='bridge'?'PASARELA BOREAL':this.scene==='workshop'?'TALLER DE NIX':this.scene==='tower'?'FARO DEL SILENCIO':'PUERTO DE LA BRUMA';e.classList.remove('play');void e.offsetWidth;e.classList.add('play');}
@@ -3672,6 +3673,7 @@ class Game{
   const debug=document.querySelector('[data-dev-only]');if(debug)debug.hidden=!new URLSearchParams(window.location.search).has('dev');
   const extras=document.getElementById('menu-extras');if(extras)extras.hidden=!([button,notebook,opening].some(el=>el&&!el.hidden));
  }
+ storyBeat(id,after=null){const lines=root.Narrative.BEATS[id];if(!lines){if(after)after();return false;}this.save.storyBeats=this.save.storyBeats||{};if(this.save.storyBeats[id]){if(after)after();return false;}this.save.storyBeats[id]=true;this.persist();this.say(lines,after);return true;}
  openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();document.getElementById('menu-more')?.removeAttribute('open');document.getElementById('menu-settings')?.removeAttribute('open');this.sfx('menu')}
  say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
  nextDialogue(){if(this.dialogue.length){this.dialogueShown=(this.dialogueShown||0)+1;this.el.storyText.textContent=this.dialogue.shift();const counter=document.getElementById('dialogue-progress');if(counter)counter.textContent=this.dialogueShown+' / '+(this.dialogueTotal||this.dialogueShown);this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
@@ -3740,7 +3742,7 @@ class Game{
  }
  updateTransition(dt){const t=this.transition;if(!t)return;
   t.elapsed+=dt;if(!t.swapped&&t.elapsed>=t.duration/2){t.swapped=true;this.sceneChange(t.scene,t.spawnX);}
-  if(t.elapsed>=t.duration){this.transition=null;this.locked=false;if(t.dialogue)this.say(t.dialogue);else if(t.scene==='metro')this.introduceMetro();else if(t.scene==='rooftops')this.introduceRoofs();else if(t.scene==='archive')this.introduceArchive();}
+  if(t.elapsed>=t.duration){this.transition=null;this.locked=false;if(t.dialogue)this.say(t.dialogue);else if(t.scene==='metro')this.introduceMetro();else if(t.scene==='rooftops')this.introduceRoofs();else if(t.scene==='archive')this.introduceArchive();else this.storyBeat(t.scene);}
  }
  near(x,range){return Math.abs(this.player.x-x)<range&&this.player.y>165}
  scenePrompt(){if(this.scene==='workshop'&&this.near(631,43))
@@ -3750,7 +3752,7 @@ class Game{
   if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
   if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(425,56)?'E · VERDADERO':null;
   if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?(this.save.guardianDefeated?'E · Consultar memoria':'E · Desafiar Centinela de lógica'):null;
-  if(this.scene==='metro')return this.near(934,78)?(root.Regions.complete(this.save,'metro')?'E · Entrar al Archivo de Ecos':'Archivo cerrado · faltan relés'):this.near(58,60)?'E · Volver al Distrito Aurora':this.near(1230,95)?(root.Regions.complete(this.save,'metro')?'E · Tomar el tren al norte':'Primero activa ambos relés'):this.near(340,67)?'E · Activar relé uno':this.near(710,67)?'E · Activar relé dos':null;
+  if(this.scene==='metro')return this.near(934,78)?(root.Regions.complete(this.save,'metro')?'E · Entrar al Archivo de Ecos':'Archivo cerrado · faltan relés'):this.near(58,60)?'E · Volver al Distrito Aurora':this.near(1230,95)?(root.Narrative.canBoard(this.save)?'E · Tomar el tren al norte':'Primero termina los relés y recupera el permiso del Archivo'):this.near(340,67)?'E · Activar relé uno':this.near(710,67)?'E · Activar relé dos':null;
   if(this.scene==='rooftops')return this.near(75,70)?'E · Regresar a la calle':this.near(420,70)?'E · Conectar antena uno':this.near(805,70)?'E · Conectar antena dos':null;
   if(this.scene==='district')return this.near(215,65)?'E · Leer registro de la ciudad':this.near(425,55)&&this.save.cityPowered?'E · Subir a las azoteas':this.near(606,75)?'E · Simular sensores (Y / NO)':this.near(766,48)?(this.save.cityGate?'Puerta autorizada':'Acceso bloqueado · usa la consola'):
    this.near(1090,78)?(this.save.cityPowered?'Nodo de luz · encendido':'E · Devolver energía al barrio'):
@@ -3758,10 +3760,10 @@ class Game{
    this.near(1505,85)?(this.save.cityPowered?'E · Programar variable carga':'Estación sin energía · activa el nodo'):
    this.near(1770,52)?(this.save.cityVariableSolved?'Puente abierto':'Puente cerrado · necesitas carga = 5'):
    this.near(2040,77)?(this.save.cityNixAwake?'E · Conversar con NIX':'E · Despertar a NIX'):
-   this.near(2240,78)?(this.save.cityCompleted?'Fin del tramo · explorar':'E · Activar ruta al próximo distrito'):null;
+   this.near(2240,78)?(this.save.cityCompleted?'E · Ir a Estación Umbral':'E · Habilitar acceso a Estación Umbral'):null;
   if(this.scene==='harbor')return this.near(65,55)&&this.save.metroVisited?'E · Volver en tren al Metro Umbral':this.near(473,69)?'E · Entrar al taller de NIX':this.near(1140,95)?'E · Cruzar el arco':null;
   if(this.scene==='workshop')return this.near(95,80)?'E · Salir al puerto':this.near(435,72)?'E · Usar banco de programación NIX':null;
-  if(this.scene==='tower')return this.near(350,73)?'E · Programar los tres pulsos':this.near(975,90)?'E · Encender el faro':null;
+  if(this.scene==='tower')return this.near(350,73)?'E · Programar los tres pulsos':this.near(975,90)?(this.save.beacon?'E · Comprobar transmisión segura':'Primero programa los tres pulsos'):null;
   if(this.scene==='bridge')return this.player.x>1625?'E · Entrar a la torre':this.player.x>1330&&!this.save.gateBroken?'SHIFT · Rompe el cristal con impulso':this.player.x>560&&this.player.x<810?'Sube a la plataforma móvil':'ESPACIO / SALTAR · SHIFT / IMPULSO';return null}
  interact(){if(this.scene==='workshop'&&this.near(631,43)){
    if(this.save.refugePowered){
@@ -3799,7 +3801,7 @@ class Game{
   else if(this.scene==='tower'){if(this.near(350,73)){this.editor.show('beacon');return}if(this.near(975,90)){if(!this.save.beacon)this.say(['No hay luz en la lente. La consola de pulsos aún está encendida al oeste.']);else this.finish()}}
  }
  interactRegion(){if(this.scene==='archive'){this.interactArchive();return;}const metro=this.scene==='metro';if(this.near(metro?58:75,65)){this.startTransition('district','REGRESANDO A AURORA',metro?2240:425);return;}if(metro&&this.near(1230,95)){if(!root.Regions.complete(this.save,'metro')){this.flashCaption('Enciende los dos relés antes de abordar',2.8);return;}this.startTransition('harbor','EL TREN CRUZA EL TÚNEL',80,['Iris: «La señal viene del norte… NIX, sigamos el rastro».']);return;}if(metro&&this.near(934,78)){if(!root.Regions.complete(this.save,'metro')){this.flashCaption('Los relés deben estar activos para abrir el archivo',2.8);this.sfx?.('deny');return;}this.startTransition('archive','BAJANDO AL ARCHIVO DE ECOS',90);return;}const xs=metro?root.Regions.REGIONS.metro.switches:root.Regions.REGIONS.rooftops.switches;for(let i=0;i<xs.length;i++){if(this.near(xs[i],68)){const p=metro?this.save.metroRelays:this.save.roofAntennas;if(!p[i]){p[i]=true;this.persist();this.updateObjective();this.lightFlash=.55;this.fx.burst(xs[i],257,'dash',15);this.beep(820,.12);if(root.Regions.complete(this.save,this.scene)){this.flashCaption(metro?'✓ Dos relés: tren disponible →':'✓ Antenas sincronizadas. Vuelve a Aurora ←',3);}else this.flashCaption('✦ Relé '+(i+1)+' activado · falta el otro',2.4);}else this.flashCaption('Ya está conectado ✓',1.6);return;}}}
- introduceArchive(){if(this.save.archiveVisited)return;this.save.archiveVisited=true;this.persist();this.flashCaption('🎯 Recupera 3 memorias',3);}
+ introduceArchive(){if(this.save.archiveVisited)return;this.save.archiveVisited=true;this.persist();this.flashCaption('🎯 Recupera tres registros y habla con el Centinela',3);this.storyBeat('archive');}
  interactArchive(){
   if(this.near(68,70)){this.startTransition('metro','REGRESANDO A ESTACIÓN UMBRAL',930);return;}
   for(let i=0;i<3;i++)if(this.near(root.Regions.REGIONS.archive.switches[i],65)){
