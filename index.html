@@ -603,6 +603,22 @@ body.touch-enabled .energy-hud{
  background:#0b253ad9;
 }
 
+/* v0.6.0 — real educational block-editor / touch-first landscape */
+.lab-panel{width:min(730px,98vw);max-height:96dvh;overscroll-behavior:contain;scrollbar-gutter:stable}
+.lab-panel .lab-story{margin:7px 0;background:#132f45;border-left:4px solid #f1c982;padding:8px 11px;color:#ffe4b4;font:12px/1.5 monospace}
+.lab-progress{display:flex;gap:4px;margin:8px 0 12px}.lab-progress i{height:6px;flex:1;background:#385667;border:1px solid #668b93}.lab-progress i.done{background:#6fe5c5}.lab-progress i.current{outline:2px solid #f2d497}
+.lab-sublabel{margin:8px 0 6px!important;color:#b9d8d2!important;font:800 10px monospace!important;letter-spacing:.06em}
+.lab-blocks{display:flex;flex-direction:column;gap:6px;min-height:52px;padding:9px;border:2px dashed #6d91a1;background:#091f32;margin:7px 0}
+.lab-blocks:empty::after{content:'Tu programa está vacío. Agrega una instrucción de abajo.';color:#9cb8b9;font:12px/1.5 monospace;align-self:center}
+.lab-block{display:flex;gap:5px;align-items:center;background:#294a60;border-left:5px solid #9ae5cd;padding:5px;font:800 11px monospace;min-height:36px}
+.lab-block .lab-line{color:#f4d099;min-width:23px;text-align:center}.lab-block .lab-op{flex:1}.lab-block button{min-width:30px;min-height:29px;padding:2px 5px;background:#133044;color:#effff1;border:1px solid #8aaab3;font-weight:900}
+.lab-palette{display:flex;flex-wrap:wrap;gap:7px;padding:7px 0}.lab-palette button{background:#346277;color:#f6ffef;border:1px solid #94c4bc;min-height:40px;padding:7px 11px;font:800 11px monospace}
+.lab-tips{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:7px 0}.lab-tips button{padding:6px 12px;min-height:32px}.lab-tips span{color:#a5bac1;font-size:10px}
+.lab-meter{display:flex;align-items:center;gap:4px;min-height:10px;margin:8px 0}.lab-meter span{width:11px;height:9px;background:#638498}.lab-meter span.active{background:#80eac9}
+.lab-answer-wrap{margin:13px 0}.lab-feedback{font-size:12px!important}
+.lab-modal button:focus-visible{outline:3px solid #ffe0a1;outline-offset:2px}
+@media(orientation:landscape) and (max-height:540px){.lab-panel{max-height:96dvh;padding:8px 13px}.lab-panel h2{font-size:18px;margin:4px 0}.lab-panel .lab-story{padding:5px 8px;margin:4px 0}.lab-blocks{max-height:98px;overflow:auto}.lab-code{max-height:73px}.lab-palette button{min-height:32px}.lab-progress{margin:3px 0}.lab-tips{margin:3px 0}.lab-actions button,.lab-nav button{min-height:32px;padding:5px}}
+@media(prefers-reduced-motion:reduce){.lab-modal *, .lab-modal *::after{transition:none!important;animation:none!important}}
 /* v0.5.0 interactive annex; scrolls on short landscape screens. */
 .lab-modal{z-index:280}.lab-panel{width:min(625px,96vw);max-height:94dvh;overflow:auto;border:3px solid #8ccdbb;background:linear-gradient(165deg,#193249,#0a2035);box-shadow:7px 9px #07121f;padding:18px 21px;color:#eff6ed}
 .lab-top{display:flex;align-items:center;justify-content:space-between;color:#9be8d6;font:800 10px monospace;letter-spacing:.1em}.lab-top button{background:#294960;color:#fff;border:1px solid #7ca5a6;padding:7px 12px}
@@ -645,15 +661,28 @@ body.touch-enabled .energy-hud{
 <div id="rotate-overlay" class="rotate-overlay" hidden role="status" aria-live="polite"><div class="rotate-card"><div class="phone-rotate">▯ <span>↻</span></div><h2>Gira tu teléfono</h2><p>Lúmina se juega en horizontal. El progreso no se pierde al girar.</p><small>Si tu teléfono no gira, desactiva el bloqueo de orientación.</small></div></div>
 <div id="training-offer" class="modal backdrop training-offer" role="dialog" aria-modal="true" aria-labelledby="training-offer-title" hidden><div class="training-offer-card"><div class="training-crest">✦</div><small>ANTES DE COMENZAR · OPCIONAL</small><h2 id="training-offer-title">¿Practicamos los controles?</h2><p>Una zona breve para caminar, saltar, usar el impulso y activar una máquina. Aprendes jugando.</p><div class="training-offer-buttons"><button id="training-offer-play" type="button" class="primary">▶ Aprender controles</button><button id="training-offer-skip" type="button" class="secondary">Ahora no</button></div><small>Podrás repetirlo desde el menú cuando quieras.</small></div></div>
 <div id="logic-lab" class="modal backdrop lab-modal" role="dialog" aria-modal="true" aria-labelledby="lab-title" hidden>
- <section class="lab-panel">
-  <div class="lab-top"><span>ACADEMIA DE IRIS · ANEXO</span><button id="lab-exit" type="button" aria-label="Salir del laboratorio">✕</button></div>
-  <div id="lab-counter" class="lab-counter">MISIÓN 1 / 3</div><h2 id="lab-title">Laboratorio de lógica</h2>
-  <p id="lab-description"></p><pre id="lab-code" class="lab-code"></pre>
-  <label for="lab-answer">¿Cuál es el resultado? <input id="lab-answer" type="number" inputmode="numeric" placeholder="Número" autocomplete="off"/></label>
-  <p id="lab-feedback" class="lab-feedback" role="status" aria-live="polite"></p>
-  <div class="lab-actions"><button id="lab-hint" type="button" class="secondary">? Pista</button><button id="lab-run" type="button" class="primary">▶ Ejecutar</button></div>
-  <div id="lab-step" class="lab-step" hidden></div>
-  <div class="lab-nav"><button id="lab-prev" type="button" class="secondary">← Anterior</button><button id="lab-next" type="button" class="primary">Siguiente →</button></div>
+ <section class="lab-panel" tabindex="-1">
+  <div class="lab-top"><span>ACADEMIA DE IRIS · EXPEDICIÓN DE NIX</span><button id="lab-exit" type="button" aria-label="Cerrar laboratorio">✕</button></div>
+  <div class="lab-counter" id="lab-counter">MISIÓN 1 / 8</div>
+  <div class="lab-progress" id="lab-progress" aria-label="Progreso de misiones"></div>
+  <h2 id="lab-title">Laboratorio de programación</h2>
+  <p id="lab-story" class="lab-story"></p>
+  <p id="lab-description"></p>
+  <pre class="lab-code" id="lab-code"></pre>
+  <div id="lab-answer-wrap" class="lab-answer-wrap">
+   <label for="lab-answer">¿Qué valor produce? <input id="lab-answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Número"/></label>
+  </div>
+  <div id="lab-builder" class="lab-builder" hidden>
+   <p class="lab-sublabel">1. ELIGE BLOQUES · 2. ORDÉNALOS · 3. EJECUTA</p>
+   <div id="lab-blocks" class="lab-blocks" aria-label="Tu programa, reordenable" aria-live="polite"></div>
+   <div id="lab-palette" class="lab-palette" aria-label="Bloques disponibles"></div>
+   <div class="lab-tips"><button id="lab-clear" type="button" class="secondary">↻ Borrar borrador</button><span>Hasta 14 bloques; guarda automáticamente</span></div>
+  </div>
+  <p class="lab-feedback" id="lab-feedback" role="status" aria-live="polite">Observa cada cambio en la máquina.</p>
+  <div class="lab-meter" id="lab-meter" aria-label="Estado de la máquina"></div>
+  <div class="lab-actions"><button id="lab-hint" type="button" class="secondary">? Pista</button><button id="lab-run" type="button" class="primary">▶ Ejecutar programa</button></div>
+  <div class="lab-step" id="lab-step" hidden></div>
+  <div class="lab-nav"><button id="lab-prev" type="button" class="secondary">← Anterior</button><button id="lab-next" type="button" class="primary">Siguiente misión →</button></div>
  </section>
 </div>
 <div id="orb-modal" class="modal backdrop orb-modal" role="dialog" aria-modal="true" aria-labelledby="orb-title" hidden><div class="orb-panel"><div class="orb-emblem" id="orb-icon">✦</div><small>MEMORIA DE LÚMINA · HABILIDAD DESBLOQUEADA</small><h2 id="orb-title">Nuevo conocimiento</h2><p id="orb-text"></p><div class="orb-actions"><button id="orb-skip" type="button" class="secondary">Seguir jugando</button><button id="orb-continue" type="button" class="primary">Entendido ✓</button></div></div></div>
