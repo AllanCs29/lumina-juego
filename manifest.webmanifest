@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "Lúmina — Señales del Norte",
+  "short_name": "Lúmina",
+  "description": "Aventura original de programación, exploración y lógica. Juega y aprende con Iris y NIX.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#071b2d",
+  "theme_color": "#0b2035",
+  "lang": "es-MX",
+  "orientation": "landscape",
+  "categories": [
+    "games",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
