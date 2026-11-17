@@ -5,7 +5,7 @@
  const html=`<section class="route-panel" tabindex="-1">
   <header class="route-top"><div><small>PROTOCOLO UMBRAL · TRANSMISIÓN FINAL</small><h2 id="route-title">Una señal segura</h2></div><button id="route-close" type="button" aria-label="Volver al faro" class="secondary">×</button></header>
   <p>El generador tiene energía. Ahora necesitas una regla que mantenga aislados los canales con alarma y conecte solo los seguros.</p>
-  <p class="route-rule">Un canal debe transmitir cuando tiene <b>red</b> y <b>NO hay alarma</b>. La regla se probará en tres lugares con estados distintos.</p>
+  <p class="route-rule">Hay canales conectados, otros sin red y otros con alarmas activadas. Una orden que encienda todo sería peligrosa. Diseña una condición que funcione en situaciones distintas.</p>
   <div class="route-fields">
    <label for="route-operator">1 · Combina las condiciones
     <select id="route-operator"><option value="">Elige un operador...</option><option value="AND">Y · ambas condiciones</option><option value="OR">O · al menos una condición</option></select></label>
@@ -17,9 +17,13 @@
 SINO
   AISLAR canal
 FIN SI</pre>
-  <p id="route-status" class="route-status" role="status" aria-live="polite">Construye tu condición y ejecútala.</p>
+  <div class="route-prediction"><p><b>Antes de ejecutar:</b> Boreal tiene red, pero su sensor de alarma está activo. ¿Qué debería hacer tu programa?</p>
+   <label for="route-prediction">Predice el resultado
+    <select id="route-prediction"><option value="">Selecciona el comportamiento...</option><option value="TRANSMITIR">Transmitir</option><option value="AISLAR">Aislar</option></select></label></div>
+   <details class="route-hints"><summary>¿Necesitas repasar el problema?</summary><p>En el Archivo descubriste que una condición mal diseñada propagó una alarma por la red. Compara los casos con y sin conexión, y verifica qué significa NO.</p></details>
+   <p id="route-status" class="route-status" role="status" aria-live="polite">Construye tu condición, predice y ejecútala.</p>
   <pre class="route-trace" id="route-trace" hidden></pre>
-  <div class="route-buttons"><button id="route-run" type="button" class="primary">▶ Probar los tres canales</button><button id="route-finish" type="button" class="primary" hidden>✦ Transmitir señal segura →</button></div>
+  <div class="route-buttons"><button id="route-run" type="button" class="primary">▶ Comprobar las cuatro señales</button><button id="route-finish" type="button" class="primary" hidden>✦ Transmitir señal segura →</button></div>
  </section>`;
  const style=`<style>
  #route-modal .route-panel{width:min(660px,95vw);max-height:95dvh;overflow:auto;background:linear-gradient(155deg,#193b4f,#0b253b);border:3px solid #8ed2be;border-radius:12px;padding:18px 21px;color:#eff7ed;box-shadow:8px 10px #061727}
@@ -28,10 +32,10 @@ FIN SI</pre>
  .route-rule{border-left:4px solid #f1c991;background:#23485a;padding:9px 12px}
  .route-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.route-fields label{display:flex;flex-direction:column;gap:7px;font:800 13px/1.5 system-ui}
  .route-fields select{width:100%;min-height:46px;border:1px solid #a0d6cd;border-radius:8px;background:#09263b;color:#f4fff1;padding:9px;font:700 13px system-ui}
- .route-code,.route-trace{white-space:pre-wrap;background:#071e33;color:#bdf9e4;border:1px solid #698d97;padding:10px;font:700 13px/1.55 monospace;max-height:27dvh;overflow:auto;overflow-wrap:anywhere}
+ .route-prediction{background:#12394d;padding:9px 12px;margin:10px 0;border:1px solid #5d8793;border-radius:7px}.route-prediction p{margin:2px 0 9px}.route-prediction label{display:flex;align-items:center;justify-content:space-between;gap:10px;font:800 13px/1.5 system-ui}.route-prediction select{min-height:44px;min-width:150px;border:1px solid #9bd8c7;background:#112d42;color:#f0faee;padding:7px;font:700 13px system-ui}.route-hints summary{cursor:pointer;padding:7px;color:#c9eed9}.route-code,.route-trace{white-space:pre-wrap;background:#071e33;color:#bdf9e4;border:1px solid #698d97;padding:10px;font:700 13px/1.55 monospace;max-height:27dvh;overflow:auto;overflow-wrap:anywhere}
  .route-status{border-left:4px solid #e9bf86;background:#193f50;padding:9px 12px;font-weight:700}.route-status[data-success="true"]{border-color:#6be8ac;color:#b4ffda}
  .route-buttons{display:flex;flex-wrap:wrap;gap:8px}.route-buttons button{flex:1 1 220px;min-height:48px}
- #route-modal button:focus-visible,#route-modal select:focus-visible{outline:3px solid #fce0a5;outline-offset:2px}
+ #route-modal button:focus-visible,#route-modal select:focus-visible,#route-modal summary:focus-visible{outline:3px solid #fce0a5;outline-offset:2px}
  @media(max-width:620px){.route-fields{grid-template-columns:1fr}#route-modal .route-panel{padding:11px 14px}}
  @media(orientation:landscape) and (max-height:500px){#route-modal .route-panel{max-height:98dvh;padding:9px 12px}.route-panel p{font-size:12px;margin:5px 0}.route-top h2{font-size:21px}.route-code{max-height:63px;font-size:11px;padding:6px}.route-trace{max-height:72px;font-size:11px}.route-fields{margin:6px 0}}
  </style>`;
@@ -88,9 +92,9 @@ FIN SI</pre>
  Game.prototype.openRouting=function(){
   if(!this.save.beacon){this.toast('Primero restaura el generador de pulsos.');return false;}
   this.locked=true;this.input.reset();
-  modal.hidden=false;el('route-operator').value='';el('route-alarm').value='';
+  modal.hidden=false;el('route-operator').value='';el('route-alarm').value='';el('route-prediction').value='';
   el('route-code').textContent='SI [red ... alarma] ENTONCES\n  TRANSMITIR canal\nSINO\n  AISLAR canal\nFIN SI';
-  el('route-status').textContent='Construye tu condición y pruébala en los tres canales.';
+  el('route-status').textContent='Construye la condición, predice Boreal y comprueba las cuatro señales.';
   el('route-status').dataset.success='false';
   el('route-trace').hidden=true;el('route-finish').hidden=true;
   modal.querySelector('.route-panel').focus();return true;
@@ -100,26 +104,29 @@ FIN SI</pre>
   modal.hidden=true;this.locked=false;this.input.reset();
  };
  Game.prototype.runRouting=function(){
-  const op=el('route-operator').value,alarm=el('route-alarm').value,status=el('route-status'),trace=el('route-trace');
-  if(!op||!alarm){status.textContent='Elige Y u O y qué valor de alarma leer antes de ejecutar.';status.dataset.success='false';trace.hidden=true;return false;}
+  const op=el('route-operator').value,alarm=el('route-alarm').value,prediction=el('route-prediction').value,status=el('route-status'),trace=el('route-trace');
+  if(!op||!alarm||!prediction){status.textContent='Elige Y u O, cómo comprobar la alarma y predice el caso de Boreal.';status.dataset.success='false';trace.hidden=true;el('route-finish').hidden=true;return false;}
   const report=Narrative.evaluateFinal(op,alarm==='negate');
   el('route-code').textContent='SI red '+(op==='AND'?'Y':'O')+' '+(alarm==='negate'?'NO alarma':'alarma')+' ENTONCES\n  TRANSMITIR canal\nSINO\n  AISLAR canal\nFIN SI';
   trace.hidden=false;
   trace.textContent=report.cases.map((c,i)=>'CANAL '+(i+1)+' · '+c.name+
    '\nred: '+(c.network?'VERDADERO':'FALSO')+' · alarma: '+(c.alarm?'VERDADERO':'FALSO')+
    '\n'+c.expression+' → '+c.actual+' · esperado: '+c.expected+' '+(c.correct?'✓':'✕')).join('\n\n');
-  status.dataset.success=String(report.passed);
-  if(report.passed){
+  const correctPrediction=prediction===Narrative.FINAL_CASES[1].expected;
+  const passed=report.passed&&correctPrediction;
+  status.dataset.success=String(passed);
+  if(passed){
    this.save.signalBalanced=true;this.persist();this.updateObjective();this.lightFlash=2;
    this.fx.burst(975,157,'dash',32);this.sfx('gate');
-   status.textContent='✓ Los tres canales responden correctamente. Ahora podemos transmitir sin propagar la alarma.';
+   status.textContent='✓ La predicción y las cuatro comprobaciones coinciden. El protocolo está listo para recuperar las rutas seguras.';
    el('route-finish').hidden=false;
   }else{
    const bad=report.cases.find(c=>!c.correct);this.sfx('deny');
-   status.textContent='En '+bad.name+' el programa decidió '+bad.actual+', pero necesita '+bad.expected+'. Revisa el valor de cada sensor.';
+   status.textContent=report.passed?'Tu condición funciona, pero tu predicción de Boreal no coincide con la protección requerida. ¿Se puede transmitir mientras suena la alarma?':
+    'En '+bad.name+' el programa decidió '+bad.actual+', pero necesita '+bad.expected+'. Revisa el valor de cada sensor.';
    el('route-finish').hidden=true;
   }
-  return report.passed;
+  return passed;
  };
  Game.prototype.finish=function(){
   if(!this.save.signalBalanced){this.openRouting();return;}
@@ -136,7 +143,11 @@ FIN SI</pre>
   finale.push('Las luces llegan al horizonte como una conversación recuperada. La tormenta sigue allí, pero las islas ya no están solas.');
   this.say(finale,show);
  };
- el('route-close').addEventListener('click',()=>root.game?.closeRouting());
+ for(const id of ['route-operator','route-alarm','route-prediction'])el(id).addEventListener('change',()=>{
+   el('route-finish').hidden=true;el('route-status').dataset.success='false';
+   el('route-status').textContent='Regla modificada. Vuelve a comprobarla antes de transmitir.';
+  });
+  el('route-close').addEventListener('click',()=>root.game?.closeRouting());
  el('route-run').addEventListener('click',()=>root.game?.runRouting());
  el('route-finish').addEventListener('click',()=>{const g=root.game;if(!g)return;g.closeRouting();g.finish();});
  modal.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();root.game?.closeRouting();}});
