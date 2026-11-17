@@ -1,12 +1,20 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.6.0 · Expedición de NIX: programación jugable y mundo con profundidad**
+**Versión 0.6.1 · Capa corregida, aprendizaje gradual y lenguajes opcionales**
 
 [**Jugar desde iPhone, Mac o PC**](https://allancs29.github.io/lumina-juego/) · [**Descargar todo el código ZIP**](https://github.com/AllanCs29/lumina-juego/archive/refs/heads/main.zip)
 
 Lúmina es una aventura 2D original para aprender lógica de programación desde cero mediante exploración, plataformas, misiones y narrativa. Iris y NIX recorren Distrito Aurora, Estación Umbral, Archivo de Ecos, Puerto de la Bruma, Pasarela Boreal y Faro del Silencio.
 
-## Nuevo en v0.6.0
+## Nuevo en v0.6.1
+- **Capa de Iris:** corrigió la dirección de la capa y bufanda al correr y saltar a izquierda/derecha, sin cambiar colisiones.
+- **Retos por descubrimiento:** el laboratorio se desbloquea al encontrar la estación LAB en el **Taller de NIX**, después de completar la lógica/variable de Aurora y reparar a NIX. En una nueva partida está bloqueado en el menú y oculto fuera del taller. Se preserva acceso de partidas antiguas con misiones completadas.
+- **Tutor de tres pasos para cada desafío:** primero explica con analogías, después muestra un ejemplo, finalmente deja practicar. En desafíos nuevos no puedes ejecutar hasta terminar la introducción.
+- **Primero lógica, después sintaxis:** las primeras tres misiones enseñan secuencias, variables y condiciones usando pseudocódigo. Las consolas originales de Aurora también explican su programa con pseudocódigo y trazas, sin pedir leer JavaScript.
+- **Lenguaje elegible más adelante:** al superar las primeras cuatro misiones puedes elegir Pseudocódigo, Python, C++ o JavaScript para **ver una traducción** del programa construido. Es una vista didáctica, no un entorno que ejecute esos lenguajes.
+- **Más pruebas:** cobertura con navegador real de desbloqueo, enseñanzas, ambas direcciones de la capa, traducciones, consola de variables y recarga sin conexión.
+
+## Se conserva de v0.6.0
 
 - **Ocho misiones progresivas:** funciones, arreglos, depuración, variables, bucles, operaciones booleanas y condiciones. Las últimas cinco se resuelven **construyendo programas con bloques**; no se limitan a responder un número.
 - **Editor didáctico:** agregar, ordenar, eliminar y ejecutar instrucciones. Muestra una traza del estado de las variables; los borradores y los logros se guardan.
@@ -52,6 +60,6 @@ Los workflows de CI comprueban sintaxis, escenas, intérprete de bloques, migrac
 
 ## Entrega y próximos pasos
 
-[**Cambios completos v0.6.0**](CHANGELOG-v0.6.0.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.6.0.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
+[**Cambios completos v0.6.1**](CHANGELOG-v0.6.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.6.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
 
-**Pendiente para el siguiente hito:** validación física en iPhone Safari, más fotogramas completamente redibujados, ampliación de campaña después del faro y mayor integración de programas construidos dentro de mecanismos y combates. Consulta el changelog para una distinción exacta entre implementado y pendiente.
+**Pendiente para el siguiente hito:** validación física en iPhone Safari, más fotogramas completamente redibujados, cursos especializados interactivos para cada lenguaje, ampliación de campaña después del faro y mayor integración de programas construidos dentro de mecanismos y combates. Consulta el changelog para una distinción exacta entre implementado y pendiente.
