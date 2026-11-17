@@ -58,6 +58,29 @@ try{
  assert.equal(await evalJs("!!window.Lumina.game"),true);
  assert.equal(await evalJs("window.Lumina.LogicLabModel.TASKS.length"),8);
  assert.equal(await evalJs("document.querySelector('link[rel=manifest]')?.getAttribute('href')"),'./manifest.webmanifest');
+ const cleanMenu=await evalJs(`(()=>{
+  const root=document.querySelector('#menu .menu-controls');
+  const top=[...root.children].filter(el=>el.matches('button,details')).map(el=>el.id);
+  const more=document.getElementById('menu-more');
+  const initialClosed=!more.open;
+  const visibleLab=!document.getElementById('lab-open').hidden;
+  const visibleNotebook=!document.getElementById('open-notebook').hidden;
+  const visibleNew=!document.getElementById('restart').hidden;
+  const debugHidden=document.querySelector('[data-dev-only]').hidden;
+  more.open=true;
+  const advancedClosed=!document.getElementById('menu-settings').open;
+  const prefs=[...document.querySelectorAll('.menu-quick-preferences select')].map(el=>el.id);
+  more.open=false;
+  return {top,initialClosed,visibleLab,visibleNotebook,visibleNew,debugHidden,advancedClosed,prefs};
+ })()`);
+ assert.equal(cleanMenu.top.join(','),'start,training-open,menu-more','Only play, tutorial and options at menu root');
+ assert.equal(cleanMenu.initialClosed,true,'Options start collapsed');
+ assert.equal(cleanMenu.visibleLab,false,'Undiscovered LAB does not appear');
+ assert.equal(cleanMenu.visibleNotebook,false,'Undiscovered notebook does not appear');
+ assert.equal(cleanMenu.visibleNew,false,'No new-game reset on fresh save');
+ assert.equal(cleanMenu.debugHidden,true,'Development scenes hidden in player mode');
+ assert.equal(cleanMenu.advancedClosed,true,'Rare technical settings remain collapsed');
+ assert.equal(cleanMenu.prefs.join(','),'guidance-mode,reading-scale','Essential settings remain discoverable');
  const first=await evalJs(`(()=>{
    document.getElementById('training-offer-skip').click();
    const game=window.Lumina.game,lab=game.logicLab;
