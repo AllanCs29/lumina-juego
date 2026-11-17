@@ -143,4 +143,12 @@ try{
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
  console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape offline navigation and screenshots');
 }catch(error){console.error('BROWSER SMOKE FAILURE:',error);process.exitCode=1;}
-finally{try{socket?.close()}catch{}chrome.kill('SIGKILL');app.close();rmSync(dir,{recursive:true,force:true});}
+finally{
+ try{socket?.close()}catch{}
+ try{chrome.kill('SIGKILL')}catch{}
+ app.close();
+ // Chrome can finish flushing its profile after the smoke assertions pass.
+ // Cleanup must never turn a successful test into a false failure.
+ try{rmSync(dir,{recursive:true,force:true,maxRetries:10,retryDelay:150});}
+ catch(e){console.warn('Temporary browser profile cleanup:',e.code);}
+}
