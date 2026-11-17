@@ -1,28 +1,20 @@
-# Lúmina — Señales del Norte
+# LÚMINA — Señales del Norte
 
-**v0.4.2.1** · Videojuego educativo de programación desde cero para iPhone horizontal y PC.
+**v0.4.3 · La señal comienza**. Videojuego de aventura y aprendizaje de programación desde cero para Safari (iPhone horizontal) y PC.
 
 ## Jugar
 https://allancs29.github.io/lumina-juego/
 
-## Historia
-Iris llega al Distrito Aurora persiguiendo una señal desconocida. Debe restaurar la energía, entender las instrucciones que controlan las máquinas y recuperar a NIX. La ruta atraviesa una estación de metro, un puerto helado y un faro. El **Archivo de Ecos**, mapa opcional nuevo, contiene tres registros que explican parte del misterio.
+## Novedades
+- Cinemática original de seis escenas al iniciar esta versión por primera vez, incluida la continuidad de partidas antiguas. Nueva partida la reproduce de nuevo; botón del menú permite revisarla.
+- Puerta Z02, central, control día/noche, consola de variables y puente mecánico rediseñados para tener volumen, profundidad y función.
+- NIX animado, fragmentos flotantes, prompts compactos y cámara móvil segura.
+- Mapas conectados: Aurora → Estación Umbral → Puerto de la Bruma → Faro, con Azoteas y Archivo de Ecos opcionales.
+- Aprendizaje: lógica Y/NO, variable `carga`, secuencias y bucles; Cuaderno progresivo.
 
-## Programación en la aventura
-Condiciones Y/NO y sensores; variable numérica `carga` y su puente mecánico; secuencias para NIX; bucle del faro; Datos en el Archivo de Ecos. El Cuaderno solo muestra lecciones descubiertas. Introducción original de seis escenas.
+## Desarrollo
+El archivo `index.html` de este repositorio es el HTML autónomo para GitHub Pages. El ZIP de código fuente incluye `src/`, `styles/`, `tests/` y `scripts/build.py`. Ejecuta `npm run verify` para probar y compilar.
 
-## Controles
-Móvil horizontal: joystick y botones personalizables. PC: A/D o flechas, Espacio, E y Shift. Audio activado por defecto (Safari requiere el primer toque). 60 FPS estándar; 120 FPS experimental.
+[Registro de cambios](CHANGELOG-v0.4.3.md) · [Pruebas para iPhone](QUE-PROBAR-v0.4.3.md)
 
-## Estructura
-- `index.html` — página generada para GitHub Pages.
-- [Cambios v0.4.2](CHANGELOG-v0.4.2.md)
-- [Lista de pruebas v0.4.2](QUE-PROBAR-v0.4.2.md)
-
-El proyecto modular, las pruebas y los sprites se distribuyen en el ZIP de la entrega de ChatGPT.
-
-**Validación:** 92 pruebas unitarias aprobadas y pruebas de navegador en Chromium PC y móvil emulado. Pendiente validación en Safari físico.
-
-
-### Parche móvil v0.4.2.1
-Corregido el zoom involuntario por doble toque en iPhone. [Detalles y pruebas](CHANGELOG-v0.4.2.1.md).
+**Validación:** 101 tests unitarios, regresión móvil emulada y capítulo anterior del faro automatizado. Pendiente validar personalmente en Safari físico.
