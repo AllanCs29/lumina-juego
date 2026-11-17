@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.9.0</title>
+<title>Lúmina — Juega para aprender | v0.9.1</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="./icon.svg"/>
@@ -806,7 +806,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.9.0</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.9.1</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -4058,7 +4058,8 @@ root.Game=Game;
 })(window.Lumina=window.Lumina||{});
 
 </script>
-<script src="./story-finale.js"></script><script>
+<script src="./story-finale.js"></script>
+<script src="./audio-system.js"></script><script>
 (function(){
  'use strict';
  function boot(){try{window.Lumina.device=new window.Lumina.Device();window.Lumina.game=new window.Lumina.Game(document.getElementById('game'));window.Lumina.device.refresh();const guard=document.getElementById('js-preview-guard');if(guard)guard.remove();document.documentElement.dataset.luminaReady='true';}
