@@ -1771,6 +1771,65 @@ root.Regions={REGIONS,draw,status,complete};
 })(window.Lumina=window.Lumina||{});
 
 </script><script>
+/* LÚMINA v0.7.1 · Quiet wayfinding. Goals are world anchors, never invented routes. */
+(function(root){'use strict';
+ const goal=(x,label,kind='main')=>({x,label,kind});
+ const nearest=(values,x)=>values.reduce((a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a);
+ function pick(scene,save,x=0){
+  if(!save||!Number.isFinite(x))return null;
+  const orbs=save.orbs||[];
+  if(scene==='district'){
+   if(!save.cityGate)return goal(606,'Consola de sensores');
+   if(!save.cityPowered)return goal(1090,'Nodo eléctrico');
+   if(!save.cityVariableSolved)return goal(1505,'Estación de variables');
+   if(!save.cityNixAwake)return goal(2040,'Despertar a NIX');
+   return goal(2240,save.cityCompleted?'Acceso al metro':'Ruta a Estación Umbral');
+  }
+  if(scene==='metro'){
+   const pending=[340,710].filter((_,i)=>!save.metroRelays?.[i]);
+   return pending.length?goal(nearest(pending,x),'Relé pendiente'):goal(1230,'Tren hacia el norte');
+  }
+  if(scene==='rooftops'){
+   const pending=[420,805].filter((_,i)=>!save.roofAntennas?.[i]);
+   return pending.length?goal(nearest(pending,x),'Antena pendiente'):goal(75,'Regresar a Aurora');
+  }
+  if(scene==='archive'){
+   const pending=[275,520,765].filter((_,i)=>!save.archiveNodes?.[i]);
+   return pending.length?goal(nearest(pending,x),'Lector de memoria'):
+    save.guardianDefeated?goal(68,'Volver a Estación Umbral'):goal(925,'Centinela del Archivo');
+  }
+  if(scene==='harbor'){
+   if(!orbs.includes('move'))return goal(185,'Orbe azul');
+   if(!save.robot)return goal(473,'Taller de NIX');
+   return goal(1140,'Arco a Pasarela Boreal');
+  }
+  if(scene==='workshop'){
+   if(!orbs.includes('code'))return goal(292,'Orbe violeta');
+   if(!save.robot)return goal(435,'Banco de NIX');
+   if(!save.labDiscovered&&save.cityVariableSolved)return goal(733,'Conocer el laboratorio','discovery');
+   return goal(95,'Regresar al Puerto');
+  }
+  if(scene==='bridge'){
+   if(!orbs.includes('jump'))return goal(310,'Orbe de salto');
+   if(!save.bridgeMiniCheckpoint)return goal(432,'Primera baliza');
+   if(!save.bridgeCheckpoint)return goal(817,'Punto de control');
+   if(!orbs.includes('dash'))return goal(1290,'Orbe de impulso');
+   if(!save.gateBroken)return goal(1440,'Barrera de cristal');
+   return goal(1693,'Arco al faro');
+  }
+  if(scene==='tower')return save.beacon?goal(975,'Encender el faro'):goal(350,'Consola de pulsos');
+  return null; // Training and guardian already provide their own guidance.
+ }
+ function direction(scene,save,x){
+  const target=pick(scene,save,x);
+  if(!target)return null;
+  const distance=target.x-(x+8);
+  if(Math.abs(distance)<64)return null; // Interaction prompts take over nearby.
+  return {...target,side:Math.sign(distance),distance:Math.abs(distance)};
+ }
+ root.Guidance={pick,direction};
+})(window.Lumina=window.Lumina||{});
+
 /* LÚMINA v0.3 · bespoke pixel-art scene renderer. No third-party art. */
 (function(root){'use strict';
 class Renderer{
