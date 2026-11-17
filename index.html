@@ -3717,7 +3717,16 @@ class Game{
  }
  solved(id){if(id==='cityNix'&&!this.save.cityNixAwake){this.save.cityNixAwake=true;this.nixX=2040;this.nixWake=3.1;this.sfx('robot');this.persist();this.updateObjective();this.fx.burst(2040,279,'dash',20);this.beep(880,.12);this.flashCaption('✓ NIX despierto · el orden de tus pasos funcionó',3);return;}if(id==='nix'&&!this.save.robot){this.save.robot=true;this.nixWake=3;this.sfx('robot');this.fx.burst(518,267,'dash',16);this.persist();this.updateObjective();this.flashCaption('✓ NIX listo · completaste una secuencia',3)}
   if(id==='beacon'&&!this.save.beacon){this.save.beacon=true;this.persist();this.updateObjective();this.lightFlash=1.9;this.flashCaption('✦ Faro encendido · tres pulsos completados',3);this.fx.burst(975,152,'dash',28);this.beep(900,.23)}}
- hint(){if(this.guidanceMode==='hint')this.guidancePulse=8;
+ hint(){if(this.guidanceMode==='hint'){
+    this.guidancePulse=8;
+    // A full dialogue would pause the game and hide the requested arrow.
+    // Use a brief in-world caption instead, preserving free movement.
+    const target=root.Guidance.direction(this.scene,this.save,this.player.x);
+    if(target&&!['training','guardian','district'].includes(this.scene)){
+     this.flashCaption((target.side<0?'← ':'→ ')+target.label,2.8);
+     return;
+    }
+   }
    if(this.scene==='training'){this.flashCaption('Sigue la marca dorada y practica el control indicado.',2);return;}if(this.scene==='guardian'){this.flashCaption('FALSO a la izquierda · VERDADERO a la derecha. Salta para esquivar ondas.',2.5);return;}if(this.scene==='district'){const tip=!this.save.cityGate?'Primero: usa la consola del acceso y prueba energía Y red Y NO alarma.':!this.save.cityPowered?'Activa el nodo eléctrico detrás de la puerta.':!this.save.cityVariableSolved?'Estación de datos: programa carga hasta que valga 5, paso a paso.':!this.save.cityNixAwake?'Busca a NIX al otro lado del puente.':'Llega hasta la plaza al este.';this.flashCaption(tip,4);return;}this.say([this.scene==='harbor'?'Acércate a la puerta de madera bajo el cartel NIX y pulsa E para entrar al taller.':this.scene==='workshop'?'NIX duerme al fondo del taller. Pulsa E en la consola iluminada y construye el programa que recupera su batería.':this.scene==='bridge'?'Primer tramo: salta a una repisa alta. Segundo: usa la plataforma móvil. Después salta las cajas y utiliza SHIFT para romper la barrera de cristal. La baliza guarda tu avance.':'Ve a la consola naranja a la izquierda del faro. Dentro de REPETIR 3, coloca AVANZAR y ACTIVAR.'])}
  updateHud(){
   const icons={move:'🔹',code:'🔮',jump:'🟢',dash:'🟠'};
