@@ -145,8 +145,12 @@
    g.fx.burst(765,264,'dash',20);g.refreshNotebook();
   }
   g.persist();g.updateObjective();g.sfx('gate');close();
-  if(scene==='archive')g.say(root.Narrative.ARCHIVE_LOGS[2]);
-  else g.flashCaption('✓ Segundo relé programado. Ahora entra al Archivo de Ecos →',3.6);
+  if(scene==='archive')g.say([...root.Narrative.ARCHIVE_LOGS[2],
+   'NIX: «Antes guardábamos respuestas. Ahora podemos leer datos nuevos y calcular sin saber de antemano qué traerá el hielo».']);
+  else g.say([
+   'IRIS: «No le dijimos al relé que se encendiera siempre. Le enseñamos a comprobar si era seguro hacerlo».',
+   'NIX: «Eso significa que, si cambian los sensores mañana, la misma instrucción todavía podrá protegernos. El acceso al Archivo está listo».'
+  ]);
  };
  el('world-code-close').addEventListener('click',close);
  el('world-code-palette').addEventListener('click',event=>{
