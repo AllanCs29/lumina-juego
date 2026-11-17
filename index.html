@@ -1577,6 +1577,7 @@ function draw(r,game){const cam=game.camera.x,day=!!game.save.cityDay,ctx=r.ctx,
   // Ground signage tells the player what each station actually teaches.
   // Variable station and bridge have their own physically mounted displays; no overlays across the sidewalk.
   r.r(1489,213,4,11,'#3c6574');r.r(1508,213,4,11,'#3c6574');
+  r.labStation(root.LabStations.district,307,(game.save.labCompleted||[]).length);
   r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
  for(let i=0;i<18;i++){const x=(i*83+r.t*(17+i%3*5))%(r.w+8),y=(i*73+r.t*(24+i%5*4))%267;r.r(x,y,1,4,day?'#edf7ff19':'#97c8ec35')}
 }
@@ -1655,7 +1656,8 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
   for(const [i,x] of REGIONS.rooftops.switches.entries()){const on=!!game.save.roofAntennas?.[i];r.r(x-3,201,7,105,'#59788c');r.r(x-18,198,37,6,'#abc1c0');r.line(x,198,x+44,182,'#76a8b7',2);r.glow(x,191,on?30:16,on?'#77fad35e':'#bca7fc3d');r.r(x-20,278,41,23,on?'#5bd5ad':'#885c87');r.text(on?'OK':'?',x,291,'#0e2635',13,'center')}
   const sync=complete(game.save,'rooftops');r.text(sync?'SEÑAL AL FARO: RECIBIDA':'SINCRONIZA 2 ANTENAS',570,166,'#ffedab',14,'center');r.text('← VOLVER A LA CIUDAD',85,254,'#c5ece0',10,'center');
  }
- r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
+ if(root.LabStations?.[scene])r.labStation(root.LabStations[scene],307,(game.save.labCompleted||[]).length);
+  r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
  if(metro){for(let i=0;i<8;i++){const x=(i*84+t*13)%w;r.r(x,28,22,2,'#94ddc322')}}
 }
 root.Regions={REGIONS,draw,status,complete};
@@ -1707,6 +1709,19 @@ class Renderer{
    this.poly([[x,base+21],[x+60,base-12],[x+98,base-10],[x+130,base-28],[x+205,base+23]],scene==='bridge'?'#778ca627':'#9b9dad19');
    this.r(x+28,base-11,38,2,'#d8edf71c');
   }
+ }
+ labStation(x,y,completed=0){
+  const active=completed>=8,ink=active?'#8ff4c8':'#d7b883';
+  this.contactShadow(x,y+1,31,5,.49);
+  this.r(x-22,y-52,45,55,'#162b41');
+  this.poly([[x-23,y-54],[x+19,y-54],[x+25,y-48],[x-18,y-48]],'#7c9ca6');
+  this.r(x-18,y-46,35,30,'#6b8b98');this.r(x-15,y-43,29,24,'#122e45');
+  this.r(x-12,y-38,23,13,active?'#7ceac3':'#86b9bb');
+  this.r(x-9,y-36,7,2,'#ebf5d8');this.r(x-19,y-12,39,3,'#2e5266');
+  for(let i=0;i<8;i++)this.r(x-16+i*4,y-10,3,4,i<completed?'#7cf7ca':'#4e6073');
+  this.r(x-23,y-2,48,5,'#9ab2b2');this.r(x-17,y+3,36,2,'#2f4b61');
+  this.text('LAB '+completed+'/8',x,y-58,ink,9,'center');
+  if(active){this.glow(x,y-30,32,'#78fbd233');this.r(x-3,y-67,6,5,'#c7ffe6');}
  }
  // Shared visual grammar: scenery is muted, collision geometry is sharp, objects touch the ground.
  contactShadow(x,y,rx=24,ry=5,opacity=.35){
@@ -2249,6 +2264,7 @@ class Renderer{
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
   if(game.scene==='workshop'){
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
+   this.labStation(root.LabStations.workshop,307,(game.save.labCompleted||[]).length);
     this.player(game.player,this.t);game.fx.draw(this);this.interiorForeground();
   }else{
     // Background-only pines, occluded by the road and its interactive props.
@@ -2260,7 +2276,7 @@ class Renderer{
     if(game.scene==='harbor'){
      const doorOpening=game.transition?.scene==='workshop'?Math.min(1,game.transition.elapsed/.35):0;
      this.workshopExterior(doorOpening);if(!game.save.orbs.includes('move'))this.orb(185,285,'move');this.lamp(160,307);this.lamp(698,307);this.lamp(925,307);
-     this.arch(1140,307,game.save.robot);
+     this.arch(1140,307,game.save.robot);this.labStation(root.LabStations.harbor,307,(game.save.labCompleted||[]).length);
     }else if(game.scene==='bridge'){
      for(const x of [180,515,940,1300,1680])this.lamp(x,this.floorAt(level,x));
      this.beacon(432,295,game.save.bridgeMiniCheckpoint);if(!game.save.orbs.includes('jump'))this.orb(310,239,'jump');if(!game.save.orbs.includes('dash'))this.orb(1290,281,'dash');if(game.save.orbs.includes('dash')&&!game.save.gateBroken)this.charger(1380,305);this.seal(608,302,!game.save.orbs.includes('jump'));this.seal(1389,305,!game.save.orbs.includes('dash'));this.beacon(817,295,game.save.bridgeCheckpoint);
@@ -2274,6 +2290,7 @@ class Renderer{
     }else{
      this.lamp(107,308);this.lamp(570,308);
      this.terminal(350,294,game.save.beacon);this.bot(455,281,true);this.tower(975,305,game.save.beacon);
+   this.labStation(root.LabStations.tower,307,(game.save.labCompleted||[]).length);
     }
     this.player(game.player,this.t);game.fx.draw(this);
   }
@@ -2940,6 +2957,7 @@ class LogicLab{
   this.drawMeter(null);this.drawBlocks();this.renderNav();
  }
 }
+root.LabStations=Object.freeze({district:1360,metro:1100,archive:625,harbor:828,workshop:733,tower:631});
 root.LogicLab=LogicLab;root.LogicLabModel={TASKS,OPS,MAX_BLOCKS,evaluate,runProgram,sanitizedDraft};
 })(window.Lumina=window.Lumina||{});
 
@@ -3181,7 +3199,8 @@ class Game{
   if(t.elapsed>=t.duration){this.transition=null;this.locked=false;if(t.dialogue)this.say(t.dialogue);else if(t.scene==='metro')this.introduceMetro();else if(t.scene==='rooftops')this.introduceRoofs();else if(t.scene==='archive')this.introduceArchive();}
  }
  near(x,range){return Math.abs(this.player.x-x)<range&&this.player.y>165}
- scenePrompt(){if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
+ scenePrompt(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&this.near(root.LabStations[this.scene],42))return 'E · Laboratorio de programación · '+this.save.labCompleted.length+'/8';
+  if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
   if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(425,56)?'E · VERDADERO':null;
   if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?(this.save.guardianDefeated?'E · Consultar memoria':'E · Desafiar Centinela de lógica'):null;
   if(this.scene==='metro')return this.near(934,78)?(root.Regions.complete(this.save,'metro')?'E · Entrar al Archivo de Ecos':'Archivo cerrado · faltan relés'):this.near(58,60)?'E · Volver al Distrito Aurora':this.near(1230,95)?(root.Regions.complete(this.save,'metro')?'E · Tomar el tren al norte':'Primero activa ambos relés'):this.near(340,67)?'E · Activar relé uno':this.near(710,67)?'E · Activar relé dos':null;
@@ -3197,7 +3216,8 @@ class Game{
   if(this.scene==='workshop')return this.near(95,80)?'E · Salir al puerto':this.near(435,72)?'E · Usar banco de programación NIX':null;
   if(this.scene==='tower')return this.near(350,73)?'E · Programar los tres pulsos':this.near(975,90)?'E · Encender el faro':null;
   if(this.scene==='bridge')return this.player.x>1625?'E · Entrar a la torre':this.player.x>1330&&!this.save.gateBroken?'SHIFT · Rompe el cristal con impulso':this.player.x>560&&this.player.x<810?'Sube a la plataforma móvil':'ESPACIO / SALTAR · SHIFT / IMPULSO';return null}
- interact(){if(this.scene==='training'){this.controlsTutorial.action();return;}if(this.scene==='guardian'){this.guardian.action();return;}if(this.scene==='district'){this.interactDistrict();return;}if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){this.interactRegion();return;}
+ interact(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&this.near(root.LabStations[this.scene],42)){this.logicLab.open(true);return;}
+  if(this.scene==='training'){this.controlsTutorial.action();return;}if(this.scene==='guardian'){this.guardian.action();return;}if(this.scene==='district'){this.interactDistrict();return;}if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){this.interactRegion();return;}
   if(this.scene==='harbor'){
    if(this.near(65,55)&&this.save.metroVisited){this.startTransition('metro','VOLVIENDO A ESTACIÓN UMBRAL',1205);return;}
    if(this.near(473,69)){if(!this.save.orbs.includes('move')){this.say(['Antes de entrar, recoge el orbe azul: es la primera memoria de la expedición.']);return}this.startTransition('workshop','ENTRANDO AL TALLER',142,['NIX duerme. Busca su consola y la batería dorada.']);return}
