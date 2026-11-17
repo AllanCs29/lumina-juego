@@ -951,7 +951,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,started:false});
   function sanitizeLabDrafts(value){
    const drafts={},ops=['SET0','SET2','SET3','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
@@ -973,6 +973,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
        labCompleted:Array.isArray(data.labCompleted)?[...new Set(data.labCompleted.filter(v=>Number.isInteger(v)&&v>=0&&v<8))]:[],
         labDrafts:sanitizeLabDrafts(data.labDrafts),
         labMastered:Array.isArray(data.labCompleted)&&[0,1,2,3,4,5,6,7].every(i=>data.labCompleted.includes(i)),
+        labEpilogueSeen:!!data.labEpilogueSeen,
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
   }
@@ -3140,6 +3141,9 @@ class Game{
   const resume=document.getElementById('resume-text'),summary=document.getElementById('save-summary');
   if(resume)resume.textContent=this.save.started?'Continuar':'Comenzar aventura';
   if(summary)summary.textContent=this.save.started?('✦ PARTIDA GUARDADA · '+(this.scene==='district'?'Distrito Aurora':this.scene==='archive'?'Archivo de Ecos':this.scene==='metro'?'Estación Umbral':this.scene==='rooftops'?'Azoteas de Aurora':this.scene==='harbor'?'Puerto de la Bruma':this.scene==='workshop'?'Taller de NIX':this.scene==='bridge'?'Pasarela Boreal':'Faro del Silencio')):'✦ NUEVA EXPEDICIÓN · PRÓLOGO DISPONIBLE';
+  if(summary&&this.save.labCompleted?.length)summary.textContent+=' · LAB '+this.save.labCompleted.length+'/8';
+  const button=document.getElementById('lab-open'),status=button?.querySelector('small');
+  if(status)status.textContent='Misiones de programación · '+(this.save.labCompleted?.length||0)+'/8 completadas';
  }
  openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
  say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
@@ -3255,7 +3259,15 @@ class Game{
   }
   if(this.near(925,85)){
    if(!this.save.archiveNodes.every(Boolean)){this.flashCaption('Faltan '+this.save.archiveNodes.filter(x=>!x).length+' memorias',2);this.sfx?.('deny');return;}
-   if(!this.save.guardianDefeated){this.guardian.start();return;}this.say(['Iris: «El Centinela reconoció nuestras condiciones. Ahora podemos seguir al faro».']);return;
+   if(!this.save.guardianDefeated){this.guardian.start();return;}
+   if(this.save.labMastered&&!this.save.labEpilogueSeen){
+    this.save.labEpilogueSeen=true;this.persist();
+    this.say(['ARCHIVO 07 · MENSAJE RECONSTRUIDO',
+     'NIX: «Tu función recuperó el cálculo y tus bucles sincronizaron la señal. Los ocho códigos encajan».',
+     'Iris: «La ciudad y el faro no estaban solos. Hay otra máquina esperando en el norte».',
+     'MEMORIA NUEVA · Puedes continuar la expedición sin repetir misiones.']);return;
+   }
+   this.say(['Iris: «El Centinela reconoció nuestras condiciones. Ahora podemos seguir al faro».']);return;
   }
  }
  interactDistrict(){
@@ -3280,7 +3292,15 @@ class Game{
  logicStatus(text,ok=false){const el=document.getElementById('logic-result');el.textContent=text;el.dataset.state=ok?'ok':'pending';}
  closeLogic(){document.getElementById('logic-modal').hidden=true;this.input.reset();this.locked=false;}
  tryLogic(){const state=this.save.cityPuzzle;const ok=root.CityLogic.check(state);this.logicStatus(root.CityLogic.diagnose(state),ok);this.persist();if(!ok){this.doorFailFlash=.75;this.sfx('deny');}if(ok){this.save.cityGate=true;this.doorProgress=0;this.doorOpening=true;this.persist();this.lightFlash=.6;this.sfx('gate');this.updateObjective();this.closeLogic();this.flashCaption('✓ SI (energía Y red Y NO alarma) → ABRIR',3.2);}}
- finish(){this.save.completed=true;this.persist();this.say(['PRIMER FARO REACTIVADO','NIX: «Iris… en las memorias del faro aparece la misma señal que nos atrajo hasta Aurora».',`Has aprendido lógica, variables, secuencias y bucles. Recuperaste ${this.save.shards.length}/3 fragmentos de la pasarela. El misterio todavía continúa.`],()=>{document.getElementById('ending').hidden=false;this.locked=true;this.beep(890,.23)})}
+ finish(){this.save.completed=true;this.persist();const finale=[
+   'PRIMER FARO REACTIVADO',
+   'NIX: «Iris… las memorias del faro muestran la misma señal que nos atrajo a Aurora».',
+   `Has aprendido lógica, variables, secuencias y bucles. Recuperaste ${this.save.shards.length}/3 fragmentos de la pasarela.`
+  ];
+  if(this.save.labMastered)finale.push('✦ ARCHIVO COMPLETO · Recuperaste el mensaje: hay más máquinas en las islas del norte.');
+  else finale.push('La red guarda secretos. Los terminales LAB tienen ocho retos opcionales para descubrir una nueva señal.');
+  this.say(finale,()=>{document.getElementById('ending').hidden=false;this.locked=true;this.beep(890,.23)});
+ }
  solved(id){if(id==='cityNix'&&!this.save.cityNixAwake){this.save.cityNixAwake=true;this.nixX=2040;this.nixWake=3.1;this.sfx('robot');this.persist();this.updateObjective();this.fx.burst(2040,279,'dash',20);this.beep(880,.12);this.flashCaption('✓ NIX despierto · el orden de tus pasos funcionó',3);return;}if(id==='nix'&&!this.save.robot){this.save.robot=true;this.nixWake=3;this.sfx('robot');this.fx.burst(518,267,'dash',16);this.persist();this.updateObjective();this.flashCaption('✓ NIX listo · completaste una secuencia',3)}
   if(id==='beacon'&&!this.save.beacon){this.save.beacon=true;this.persist();this.updateObjective();this.lightFlash=1.9;this.flashCaption('✦ Faro encendido · tres pulsos completados',3);this.fx.burst(975,152,'dash',28);this.beep(900,.23)}}
  hint(){if(this.scene==='training'){this.flashCaption('Sigue la marca dorada y practica el control indicado.',2);return;}if(this.scene==='guardian'){this.flashCaption('FALSO a la izquierda · VERDADERO a la derecha. Salta para esquivar ondas.',2.5);return;}if(this.scene==='district'){const tip=!this.save.cityGate?'Primero: usa la consola del acceso y prueba energía Y red Y NO alarma.':!this.save.cityPowered?'Activa el nodo eléctrico detrás de la puerta.':!this.save.cityVariableSolved?'Estación de datos: programa carga hasta que valga 5, paso a paso.':!this.save.cityNixAwake?'Busca a NIX al otro lado del puente.':'Llega hasta la plaza al este.';this.flashCaption(tip,4);return;}this.say([this.scene==='harbor'?'Acércate a la puerta de madera bajo el cartel NIX y pulsa E para entrar al taller.':this.scene==='workshop'?'NIX duerme al fondo del taller. Pulsa E en la consola iluminada y construye el programa que recupera su batería.':this.scene==='bridge'?'Primer tramo: salta a una repisa alta. Segundo: usa la plataforma móvil. Después salta las cajas y utiliza SHIFT para romper la barrera de cristal. La baliza guarda tu avance.':'Ve a la consola naranja a la izquierda del faro. Dentro de REPETIR 3, coloca AVANZAR y ACTIVAR.'])}
