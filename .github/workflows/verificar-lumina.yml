@@ -17,3 +17,4 @@ jobs:
         run: |
           node tests/v048-art-smoke.mjs
           node tests/v050-progress-smoke.mjs
+          node tests/v060-missions-smoke.mjs
