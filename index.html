@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.4.4</title>
+<title>Lúmina — Juega para aprender | v0.4.5</title>
 <style>
 :root{color-scheme:dark;--ink:#071b2d;--navy:#0d273c;--deep:#0c2131;--raised:#19374b;--mint:#88e7d0;--snow:#ecf7ef;--mist:#9bbac1;--gold:#f0bd73;--line:#48677b;--edge:#31516a}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#061c2f;color:var(--snow);font-family:Trebuchet MS,system-ui,-apple-system,sans-serif}body{background:radial-gradient(ellipse at 50% -20%,#26455c 0,transparent 65%),#071d2e}.shell{max-width:1260px;margin:auto;padding:14px 22px 8px}button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid #f8cc7d;outline-offset:3px}button:disabled{opacity:.45;cursor:default}button:not(:disabled):active{transform:translateY(2px)}[hidden]{display:none!important}.site-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:5px 0 17px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:43px;height:43px;display:grid;place-items:center;background:#23465b;color:#fbdf92;border:2px solid #8bb1b0;box-shadow:4px 4px #071627;font-size:27px}.brand strong{display:block;font-size:22px;letter-spacing:.22em;font-weight:900}.brand small{display:block;color:#a0cad1;font:700 9px ui-monospace,monospace;letter-spacing:.12em}.top-actions{display:flex;gap:8px;align-items:center}.top-actions button{background:#173448;color:#d6f1ef;border:1px solid #5a7885;padding:8px 11px;font-weight:800;font-size:12px;min-height:37px}.save-pill{border:1px solid #3d666e;padding:8px 10px;color:#95caba;font:800 10px ui-monospace,monospace;letter-spacing:.07em}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 258px;gap:20px;align-items:start}.game-column{min-width:0}.screen{position:relative;border:4px solid #6c929c;outline:4px solid #153548;background:#0a2639;box-shadow:9px 11px 0 #0008;overflow:hidden}.screen:after{content:'';position:absolute;pointer-events:none;inset:0;border:3px solid #122b44}.screen canvas{width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated;display:block}.prompt,.toast{position:absolute;left:50%;transform:translateX(-50%);width:max-content;max-width:90%;text-align:center;padding:8px 13px;background:#132d42ec;color:#ffdfa3;border:2px solid #9fb9b5;font:800 12px ui-monospace,monospace;bottom:14px;box-shadow:3px 4px #07121e}.toast{bottom:auto;top:33px;color:#a8ffe1;border-color:#66c5a7}.hud{display:flex;justify-content:space-between;gap:16px;border:1px solid #4f6d7d;border-top:0;padding:13px 14px 14px;background:#102b40;min-height:70px}.hud-main{display:flex;flex-direction:column;gap:5px}.hud-tag{font:800 10px ui-monospace,monospace;color:#76dfcb;letter-spacing:.06em}.hud-main #objective{font-size:13px;color:#e1f1ed;line-height:1.4}.hud-end{display:flex;flex-shrink:0;flex-direction:column;align-items:end;justify-content:space-between;font:800 10px ui-monospace,monospace;color:#9ebcc2}.hud-end b{color:#fcd289}.assist-label{cursor:pointer;display:flex;align-items:center;gap:6px}.assist-label input{accent-color:#6fddbb;width:17px;height:17px;margin:0}.controls{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 9px 5px;min-height:160px;user-select:none;-webkit-user-select:none}.touch-left,.touch-right{display:flex;align-items:center;gap:12px}.touch-right{gap:13px}.control-text{display:flex;flex-direction:column;gap:3px;white-space:nowrap}.control-text strong{font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#dcece9}.control-text small{font:11px ui-monospace,monospace;color:#81aab6}.touch-pad{width:116px;height:116px;border-radius:50%;background:linear-gradient(135deg,#1e4257,#11283e);border:2px solid #678898;display:grid;place-items:center;position:relative;touch-action:none;flex-shrink:0;box-shadow:inset 0 0 0 7px #112c3e}.dpad-axis{font-size:57px;color:#44677b;line-height:1}.touch-knob{width:46px;height:46px;border-radius:50%;position:absolute;inset:0;margin:auto;background:#90bfba;border:5px solid #d3e8db;box-shadow:3px 4px 0 #0b2236;pointer-events:none;transition:transform .025s linear}.circle-btn{width:91px;height:91px;border-radius:50%;font-weight:900;font-size:11px;letter-spacing:.05em;border:4px solid #f5e3ba;color:#123044;box-shadow:4px 6px 0 #061525}.circle-btn.action{background:linear-gradient(#f9d58f,#d1a35f)}.circle-btn.jump{background:linear-gradient(#a2f1e1,#56bda6);border-color:#dbf9ed}.journal{border:2px solid #506e7c;background:linear-gradient(160deg,#17384b,#102b40);padding:17px 17px 22px;box-shadow:6px 7px 0 #061526}.journal-header,.eyebrow{font:900 10px ui-monospace,monospace;letter-spacing:.1em;color:var(--mint)}.journal h2{font-size:24px;line-height:1.12;letter-spacing:-.02em;margin:16px 0 9px}.journal p{font-size:13px;color:#c2d8da;line-height:1.55}.journal-rule{height:2px;background:#446574;margin:20px 0}.milestone{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}.milestone>span{padding:7px 8px;background:#2c5462;font:900 13px ui-monospace,monospace;color:#f8c87b;border:1px solid #65828d}.milestone b{font-size:12px;display:block;margin-bottom:4px}.milestone small{display:block;font-size:11px;line-height:1.3;color:#9fbabd}.journal .journal-note{margin-top:32px;font-style:italic;color:#80aaa9}footer{font-size:10px;color:#6f97a6;text-align:center;padding:18px 0 5px;letter-spacing:.04em}.backdrop{position:fixed;inset:0;z-index:30;background:#051523ee;display:flex;justify-content:center;align-items:center;padding:14px;overflow:auto}.menu-panel,.editor-panel{width:min(460px,100%);max-height:calc(100dvh - 28px);overflow:auto;background:linear-gradient(155deg,#18374a,#0d2539);border:3px solid #92bdb8;box-shadow:8px 8px 0 #030d18;padding:25px;text-align:center}.menu-panel{border-top:6px solid #b8ded6}.star-row{letter-spacing:.35em;color:#f5d49a;font-size:20px}.menu-panel .eyebrow{margin-top:21px}.menu-panel h1{font-size:clamp(47px,11vw,76px);line-height:1;margin:10px 0 0;letter-spacing:.19em;color:#f2f7e8;text-shadow:4px 5px #234b64}.subtitle{color:#9cdbc9;font:800 15px ui-monospace,monospace;letter-spacing:.36em!important;margin:8px 0!important}.menu-art{height:100px;margin:10px auto;background:radial-gradient(circle at 52% 65%,#466b7b,transparent 62%);position:relative;overflow:hidden}.menu-art .moon{font-size:70px;position:absolute;top:-17px;left:42%;color:#fff5d7}.menu-art .island{font-size:130px;letter-spacing:-.25em;position:absolute;left:22%;top:0;color:#7aa4a5;line-height:1}.menu-art .light{font-size:40px;position:absolute;left:60%;top:24px;color:#f3cb87}.menu-panel p{font-size:13px;line-height:1.55;color:#c8e1de}.primary,.secondary{min-height:43px;padding:11px 18px;font-weight:900;letter-spacing:.02em;border-radius:0}.primary{border:2px solid #faf2d1;background:#f0c780;color:#173349;box-shadow:3px 4px 0 #051827}.primary.success{background:#89dfc7}.secondary{border:1px solid #7ea5aa;background:#17384c;color:#d9f2eb}.menu-panel>button{width:100%;margin-top:10px}.menu-panel>small{display:block;margin-top:23px;color:#91b9bf;font-size:10px;line-height:1.5}.story-overlay{position:fixed;z-index:35;inset:0;background:#051526a3;display:flex;align-items:flex-start;justify-content:center;padding:14px 22px 22px}.story-card{background:#0c2439;border:3px solid #a4c8bf;box-shadow:6px 7px 0 #010e1c;width:min(820px,100%);padding:18px 22px;display:flex;flex-direction:column;gap:10px}.touch-enabled .story-overlay{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:12px}.touch-enabled .story-card{max-width:min(96vw,900px)}.story-card .speaker{font:900 12px ui-monospace,monospace;color:#eac57f;letter-spacing:.06em}.story-card p{font-size:16px;line-height:1.6;min-height:50px;margin:5px 0}.story-card button{align-self:flex-end}.editor-panel{width:min(950px,100%);padding:18px 22px;text-align:left}.editor-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.editor-heading h2{font-size:23px;line-height:1.2;margin:6px 0}.exit{width:39px;height:39px;border:1px solid #a4c5c2;background:#2b4759;color:#effaf3;font-size:24px}.mission-text{background:#244457;color:#d8ecdf;border-left:3px solid #d2ba85;margin:10px 0 18px;padding:10px 12px;font-size:13px;line-height:1.5}.editor-columns{display:grid;grid-template-columns:minmax(230px,.95fr) minmax(270px,1fr);gap:21px}#program-board{display:block;width:100%;max-width:410px;image-rendering:pixelated;background:#0f293b;border:2px solid #5b8590;margin:0 auto}.board-legend{font:800 9px ui-monospace,monospace;color:#b7d3d0;display:flex;flex-wrap:wrap;justify-content:space-around;gap:8px;margin-top:11px}.editor-info{margin-top:17px;padding:13px;background:#1e4553;border:1px solid #5e998b}.editor-info span{color:#99f4d3;font:900 10px ui-monospace,monospace}.editor-info p{line-height:1.5;font-size:13px;min-height:43px;margin:7px 0 0}.explanation{color:#a5c3c9;font-size:12px;line-height:1.5;margin-top:14px}.list-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}.list-title small{color:#9fc5c3;font:800 10px ui-monospace,monospace}.block-list{display:flex;flex-direction:column;gap:7px;margin:9px 0 12px;min-height:44px;padding:8px;border:1px dashed #68858f;background:#0d2638}.block-list:empty:before{content:'Coloca aquí tus órdenes';font-size:12px;font-style:italic;color:#85a8b1;margin:auto}.command{display:flex;align-items:center;justify-content:space-between;gap:5px;background:#366279;border-left:5px solid #98e6ce;padding:7px;font:800 11px ui-monospace,monospace;min-height:36px}.command.repeat{border-left-color:#f6c781;background:#59566c}.command>span:first-child{flex:1}.command-tools,.count-tools{display:flex;gap:3px}.command button{width:25px;height:25px;padding:0;background:#16364a;border:1px solid #a2c6ca;color:#eef7ec;font-size:15px;font-weight:900}.count-tools button{background:#424358}.palette-caption{font:900 10px ui-monospace,monospace;color:#d6bd89;margin:14px 0 7px}.palette{display:flex;gap:6px;flex-wrap:wrap}.palette button{background:#2a5362;color:#e2f6ef;border:1px solid #6e9998;min-height:34px;padding:6px 9px;font-weight:900;font-size:11px}.inner-wrap{padding:6px 9px 10px;border:1px solid #9a809c;background:#232f45;margin-top:10px}.inner-wrap .block-list{border-color:#a98fa9}.code-view{background:#0c2236;border:1px solid #486b7c;margin-top:17px}.code-view summary{cursor:pointer;font-size:12px;padding:9px;color:#c7e2df}.code-view pre{padding:9px 12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;color:#95ebd1;line-height:1.5}.editor-footer{border-top:1px solid #547686;margin-top:17px;padding-top:14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.footer-left,.footer-right{display:flex;gap:7px;flex-wrap:wrap}.ending-panel h1{font-size:49px;letter-spacing:.05em}.startup-error{position:fixed;inset:auto 10px 10px;z-index:999;background:#442534;padding:30px;color:#fff}@media(max-width:980px){.game-layout{grid-template-columns:1fr}.journal{display:none}.shell{max-width:820px}.screen{box-shadow:4px 5px 0 #0006}.save-pill{display:none}}@media(max-width:550px){.shell{padding:8px 8px 2px}.site-header{padding:3px 2px 12px}.brand-mark{width:33px;height:33px;font-size:19px}.brand strong{font-size:16px;letter-spacing:.12em}.brand small{font-size:8px}.top-actions{gap:4px}.top-actions button{font-size:10px;min-height:32px;padding:6px}.screen{border-width:3px;outline-width:2px}.hud{padding:9px;gap:6px;min-height:72px}.hud-main #objective{font-size:11px}.hud-tag,.hud-end{font-size:9px}.controls{min-height:132px;padding:10px 4px 0}.touch-pad{width:105px;height:105px}.touch-knob{width:40px;height:40px}.circle-btn{width:67px;height:67px;border-width:3px;font-size:9px;box-shadow:3px 4px #061525}.touch-right{gap:6px}.control-text small{display:none}.control-text strong{font-size:9px}.touch-left{gap:8px}.touch-right .control-text{display:none}.prompt{bottom:8px;font-size:9px;white-space:normal}.story-overlay{padding:9px}.story-card{padding:14px}.story-card p{font-size:14px;min-height:45px}.backdrop{padding:8px}.editor-panel{padding:11px;max-height:calc(100dvh - 16px);box-shadow:2px 3px #000}.editor-columns{grid-template-columns:1fr;gap:12px}#program-board{max-width:320px}.editor-heading h2{font-size:18px}.mission-text{font-size:12px;margin:7px 0}.board-legend{font-size:8px}.explanation{display:none}.editor-info{margin-top:8px}.editor-info p{min-height:0;font-size:12px}.editor-footer{position:sticky;bottom:-11px;background:#0b2639;padding:9px 0 12px;margin-top:8px}.primary,.secondary{padding:9px 11px;font-size:12px;min-height:38px}.menu-panel{padding:16px}.menu-panel h1{font-size:48px}.menu-art{height:69px}.menu-art .island{font-size:100px}}@media(max-width:375px){.brand small{font-size:7px}.top-actions button{padding:5px}.circle-btn{width:62px;height:62px}.control-text{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:0s!important;animation-duration:0s!important}}
 /* =========================================================
@@ -547,12 +547,53 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
 .teaching-console .circuit-combine{min-height:34px}
 .teaching-console .circuit-output{min-height:34px}
 
+/* v0.4.5 — dialogue progress and fixed editor controls */
+.story-speaker{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.story-counter{flex-shrink:0;color:#f1d398;font:900 13px ui-monospace,monospace;border:1px solid #809a9c;border-radius:8px;padding:4px 9px;letter-spacing:.03em;background:#15394b}
+/* Reserve the space from the first command onward; only the list scrolls. */
+.editor-panel .code-column{min-width:0}
+.editor-panel #program-blocks{height:clamp(94px,19vh,168px);max-height:clamp(94px,19vh,168px);min-height:94px;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;flex:0 0 auto}
+.editor-panel #program-palette{flex-shrink:0}
+@media (min-width:751px){
+ .editor-panel .code-column{display:flex;flex-direction:column;min-height:0}
+ .editor-panel #program-palette{margin-top:0}
+}
+@media (max-width:600px){
+ .editor-panel #program-blocks{height:105px;max-height:105px;min-height:105px}
+}
+/* Landscape mobile uses two focused views: in Orders, the action pad never moves. */
+@media (orientation:landscape) and (max-height:650px){
+ body.touch-enabled .story-counter{font-size:11px;padding:2px 7px}
+ body.touch-enabled .editor-panel[data-view="commands"] .editor-columns{display:flex;overflow:hidden;flex-direction:column}
+ body.touch-enabled .editor-panel[data-view="commands"] .code-column{display:flex!important;flex:1;min-height:0;flex-direction:column;overflow:hidden}
+ body.touch-enabled .editor-panel[data-view="commands"] #program-blocks{flex:1 1 auto;min-height:48px;height:auto;max-height:none!important;overflow-y:auto;overscroll-behavior:contain}
+ body.touch-enabled .editor-panel[data-view="commands"] .list-title{flex-shrink:0;margin:0}
+ body.touch-enabled .editor-panel[data-view="commands"] #program-palette{flex-shrink:0;max-width:330px;width:100%;margin:1px auto 0;gap:3px}
+ body.touch-enabled .editor-panel[data-view="commands"] .compass button{min-height:28px;font-size:18px;padding:0}
+ body.touch-enabled .editor-panel[data-view="commands"] .compass .action-command,
+ body.touch-enabled .editor-panel[data-view="commands"] .compass .repeat-command{min-height:25px;font-size:10px}
+ body.touch-enabled .editor-panel[data-view="commands"] .compass button small{font-size:7px;margin-top:0}
+ body.touch-enabled .editor-panel[data-view="commands"] .code-view{display:none}
+ body.touch-enabled .editor-panel[data-view="commands"] .inner-wrap{max-height:65px;overflow:auto}
+ body.touch-enabled .editor-panel[data-view="commands"] #program-inner-wrap .palette{display:none}
+ body.touch-enabled .editor-panel[data-view="commands"] .editor-footer{flex-shrink:0}
+}
+/* v0.4.5 follow-up: command list height must not depend on how many rows it contains. */
+@media (orientation:landscape) and (max-height:650px){
+ body.touch-enabled .editor-panel[data-view="commands"] .palette-caption{display:none!important}
+ body.touch-enabled .editor-panel[data-view="commands"] #program-blocks{flex:0 0 74px!important;height:74px!important;min-height:74px!important;max-height:74px!important;overflow-y:auto}
+}
+@media (orientation:landscape) and (max-height:650px){
+ /* overflow:clip (not hidden) also disallows browser auto-scrolling the palette's parent on every tap. */
+ body.touch-enabled .editor-panel[data-view="commands"] .code-column{overflow:clip!important;overscroll-behavior:none}
+}
+
 </style>
 
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.4</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.5</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -584,7 +625,7 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.4</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.5</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -640,7 +681,7 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
  <div class="prologue-progress" id="prologue-progress" aria-label="Progreso de la historia"></div>
  <div class="prologue-buttons"><button class="secondary" id="prologue-skip" type="button">Omitir introducción</button><button class="primary" id="prologue-next" type="button">Siguiente escena →</button></div></section>
  </div>
- <div id="story" class="story-overlay" hidden role="dialog" aria-modal="true" aria-label="Conversación del juego"><div class="story-card"><div class="speaker">✦ TRANSMISIÓN DE LÚMINA</div><p id="story-text"></p><div class="story-actions"><button id="story-skip" type="button" class="secondary">Omitir texto</button><button id="story-next" type="button" class="primary">Continuar ›</button></div></div></div>
+ <div id="story" class="story-overlay" hidden role="dialog" aria-modal="true" aria-label="Conversación del juego"><div class="story-card"><div class="speaker story-speaker"><span>✦ TRANSMISIÓN DE LÚMINA</span><span id="dialogue-progress" class="story-counter" aria-label="Progreso de la conversación">1 / 1</span></div><p id="story-text"></p><div class="story-actions"><button id="story-skip" type="button" class="secondary">Omitir texto</button><button id="story-next" type="button" class="primary">Continuar ›</button></div></div></div>
 <div id="program-modal" class="modal backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="program-title">
  <div class="editor-panel"><div class="editor-heading"><div><p class="eyebrow">CONSOLA DE RUTAS · APRENDER HACIENDO</p><h2 id="program-title">Programar a NIX</h2></div><button id="program-close" class="exit" aria-label="Cerrar programación" type="button">×</button></div>
   <p id="program-story" class="mission-text" hidden></p><div class="guide-strip" id="program-guide">Toca casillas vecinas para crear tu ruta.</div><div class="editor-tabs" id="editor-tabs" role="tablist" aria-label="Vista de programación"><button type="button" id="editor-tab-map" data-editor-tab="map" aria-selected="true">🗺 Tablero</button><button type="button" id="editor-tab-commands" data-editor-tab="commands" aria-selected="false">⌨ Órdenes</button></div><div class="editor-columns"><div class="board-column"><canvas id="program-board" width="384" height="232" role="button" tabindex="0" aria-label="Mapa interactivo de NIX. Toca una casilla vecina para agregar una orden de movimiento"></canvas><div id="program-route-hint" class="route-hint">RUTA PREVISTA · 0 pasos</div><div class="board-legend">▣ NIX <span>◇ BATERÍA</span> <span>✦ INTERRUPTOR</span></div><div class="board-status" id="board-status" role="status">◇ Batería pendiente · lleva a NIX hasta ella y usa RECOGER</div><div class="editor-info"><span id="program-step">LISTO PARA TRAZAR</span><p id="program-message" role="status">Añade instrucciones.</p><div id="program-context" class="program-context" hidden><p id="program-context-text"></p><button id="program-quick-pick" type="button">+ Añadir RECOGER y probar</button></div></div><details class="explanation"><summary>¿Qué significan estas órdenes?</summary>Flecha = avanzar una casilla. RECOGER y ACTIVAR realizan acciones. REPETIR vuelve a ejecutar instrucciones.</details></div>
@@ -956,8 +997,7 @@ root.TouchLayout=TouchLayout;
    const jump=document.getElementById('touch-jump');jump.addEventListener('pointerdown',e=>{e.preventDefault();jump.setPointerCapture(e.pointerId);this.touchJump=true;this.jumpQueued=true});
    for(const evt of ['pointerup','pointercancel','lostpointercapture'])jump.addEventListener(evt,()=>this.touchJump=false);
    const dash=document.getElementById('touch-dash');if(dash)dash.addEventListener('pointerdown',e=>{e.preventDefault();this.dashQueued=true});
-  }
-  padVisual(x,y){const dot=document.getElementById('touch-knob');if(dot)dot.style.transform=`translate(${x}px,${y}px)`}
+  }  padVisual(x,y){const dot=document.getElementById('touch-knob');if(dot)dot.style.transform=`translate(${x}px,${y}px)`}
   axis(){const x=(this.keys.has('ArrowRight')||this.keys.has('KeyD')?1:0)-(this.keys.has('ArrowLeft')||this.keys.has('KeyA')?1:0);
    const y=(this.keys.has('ArrowDown')||this.keys.has('KeyS')?1:0)-(this.keys.has('ArrowUp')||this.keys.has('KeyW')?1:0);
    return {x:Math.abs(this.pad.x)>.18?this.pad.x:x,y:Math.abs(this.pad.y)>.18?this.pad.y:y}}
@@ -997,7 +1037,8 @@ function microStep(p,axis,dt,jump,assist,scene,holdingJump,dash,t){
  p.landTimer=Math.max(0,(p.landTimer||0)-dt);p.jumpTimer=Math.max(0,(p.jumpTimer||0)-dt);
  if(Math.abs(axis)>.12)p.facing=axis>0?1:-1;
  if(p.onGround&&p.support){const platform=movers.find(m=>m.id===p.support);if(platform){const prev=movingAt(scene,t-dt).find(m=>m.id===p.support);if(prev)p.x+=platform.x-prev.x;}}
- if(p.dashTime>0){p.dashTime=Math.max(0,p.dashTime-dt);p.vx=(p.dashDir||p.facing)*CFG.dashSpeed;p.vy=0;} else{
+ if(p.dashTime>0){p.dashTime=Math.max(0,p.dashTime-dt);p.vx=(p.dashDir||p.facing)*CFG.dashSpeed;p.vy=0;}
+ else{
   const desired=Math.abs(axis)>.12?axis*CFG.run*((assist ? .9 : 1)):0;
   p.vx=toward(p.vx,desired,dt*(desired?(p.onGround?CFG.acceleration:CFG.airAcceleration):(p.onGround?CFG.friction:CFG.airDrag)));
   if(dash&&p.dashReady){p.dashDir=Math.abs(axis)>.12?Math.sign(axis):p.facing;p.dashTime=CFG.dashTime;p.vx=p.dashDir*CFG.dashSpeed;p.vy=0;p.dashReady=false;p.justDashed=true;p.coyote=0;p.jumpBuffer=0;}
@@ -1537,8 +1578,11 @@ class Renderer{
   for(let i=0;i<40;i++){const xx=((i*91+17-camX*.07)%510+510)%510,yy=12+(i*71)%115;this.r(xx,yy,i%6===0?2:1,1,i%5===0?'#74e1d7':'#a3bdd0')}
   ctx.save();ctx.globalAlpha=.25;this.poly([[0,83],[68,54],[155,67],[230,41],[335,61],[480,26],[480,43],[333,77],[232,64],[154,90],[66,74],[0,103]],'#54bdb5');ctx.restore();
   for(const [s,b,c] of [[.12,198,'#2d3654'],[.29,224,'#3d4968'],[.52,253,'#52627a']]){
-   const off=((camX*s)%220+220)%220;for(let i=-2;i<5;i++){const x=i*220-off;this.poly([[x,b+65],[x+21,b-2],[x+57,b-55-(i%2)*16],[x+86,b-30],[x+115,b-66],[x+157,b-9],[x+202,b+8],[x+220,b+65]],c);
-    this.poly([[x+38,b-24],[x+57,b-55-(i%2)*16],[x+72,b-41],[x+63,b-42],[x+56,b-47],[x+47,b-31]],'#b6bbc8')}
+   // The tile id is in *world space*, so mountains never morph when scrolling crosses 220px.
+   const scroll=camX*s,first=Math.floor(scroll/220)-1,last=first+Math.ceil(this.w/220)+2;
+   for(let i=first;i<=last;i++){const x=i*220-scroll,peak=b-55-(Math.abs(i)%2)*16;
+    this.poly([[x,b+65],[x+21,b-2],[x+57,peak],[x+86,b-30],[x+115,b-66],[x+157,b-9],[x+202,b+8],[x+220,b+65]],c);
+    this.poly([[x+38,b-24],[x+57,peak],[x+72,b-41],[x+63,b-42],[x+56,b-47],[x+47,b-31]],'#b6bbc8')}
   }
  }
  terrain(f,seed){const x=f.x,y=f.y,w=f.w;
@@ -1547,7 +1591,7 @@ class Renderer{
    this.r(xx,yy,19,7,j%2?'#3a526b':'#35536a');this.r(xx+4,yy+7,12,3,'#20344c');this.r(xx+17,yy+3,3,3,'#506d80')}
   for(let xx=x+7;xx<x+w-12;xx+=26){this.r(xx,y+3,3,2,'#fffaff');if((xx/26|0)%2===0)this.r(xx+5,y+8,12,2,'#d8f4eb')}
  }
- pine(x,y,s=1){const q=(v)=>Math.round(v*s);this.r(x-q(3),y-q(3),q(7),q(20),'#38435c');this.poly([[x-q(24),y-q(4)],[x,y-q(62)],[x+q(24),y-q(4)]],'#1b5167');
+ pine(x,y,s=1){const q=(v)=>Math.round(v*s);this.r(x-q(15),y-q(2),q(30),q(3),'#14283d89');this.r(x-q(3),y-q(18),q(7),q(20),'#38435c');this.poly([[x-q(24),y-q(4)],[x,y-q(62)],[x+q(24),y-q(4)]],'#1b5167');
   this.poly([[x-q(20),y-q(17)],[x,y-q(70)],[x+q(20),y-q(17)]],'#2d6b79');this.poly([[x-q(14),y-q(40)],[x,y-q(78)],[x+q(14),y-q(40)]],'#43888b');
   this.poly([[x-q(13),y-q(38)],[x,y-q(78)],[x-q(1),y-q(54)],[x-q(9),y-q(52)]],'#cde9e6');this.r(x-q(19),y-q(18),q(13),q(4),'#c1e4e8');
   this.r(x+q(7),y-q(18),q(10),q(3),'#92c7ce')}
@@ -1784,11 +1828,14 @@ class Renderer{
   this.r(f.x+f.w/2-8,f.y-4,16,4,'#a7e5e2');
  }
  hurdle(o){
-  this.r(o.x-4,o.y+o.h-4,o.w+8,5,'#26374a');
-  this.r(o.x,o.y,o.w,o.h,'#5c7288');this.r(o.x+3,o.y+3,o.w-6,o.h-7,'#a5b8bd');
-  this.r(o.x-3,o.y-5,o.w+6,7,'#e5f4ef');
-  for(let i=0;i<3;i++)this.r(o.x+6+i*9,o.y+8,4,9,'#5e8c9a');
-  this.text('↑',o.x+o.w/2,o.y-11,'#ffdb9c',13,'center');
+  // Warm industrial cargo boxes read as solid obstacles; cool evergreens stay decorative.
+  this.r(o.x-8,o.y+o.h-4,o.w+16,6,'#0b1b2d8f');
+  this.poly([[o.x,o.y],[o.x+o.w,o.y],[o.x+o.w-4,o.y+6],[o.x-4,o.y+6]],'#f5c48c');
+  this.r(o.x,o.y+6,o.w,o.h-6,'#926e65');this.r(o.x+4,o.y+9,o.w-8,o.h-13,'#c99a77');
+  this.r(o.x+4,o.y+12,3,o.h-16,'#705b5f');this.r(o.x+o.w-8,o.y+12,3,o.h-16,'#705b5f');
+  this.r(o.x+5,o.y+o.h-8,o.w-10,3,'#efd2a0');this.r(o.x+4,o.y+9,o.w-8,3,'#f6d6aa');
+  this.r(o.x+o.w/2-2,o.y+14,4,5,'#4a5763');
+  this.text('↑',o.x+o.w/2,o.y-12,'#ffdfaa',13,'center');
  }
  orb(x,y,kind){
   const palette={move:'#79cfff',code:'#bf9cf4',jump:'#80e2b5',dash:'#f8c87d'};
@@ -1819,7 +1866,8 @@ class Renderer{
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
     this.player(game.player,this.t);game.fx.draw(this);this.interiorForeground();
   }else{
-    for(let x=0;x<level.width;x+=178)this.pine(x+46,305,.8+(x%3)*.13);
+    // Distant pines are scenery, not colliders; never place their roots over a gap.
+    if(game.scene!=='bridge'){for(let x=48;x<level.width;x+=168){const floor=level.ground.find(f=>x>=f.x+46&&x<=f.x+f.w-46);const nearCrate=(level.hurdles||[]).some(h=>Math.abs(x-(h.x+h.w/2))<64);if(floor&&!nearCrate)this.pine(x,floor.y,.72+(Math.floor(x/168)%3)*.07)}}
     for(let i=0;i<level.ground.length;i++)this.terrain(level.ground[i],i);
     for(let i=0;i<level.ledges.length;i++){const f=level.ledges[i];this.r(f.x,f.y,f.w,f.h,'#50657c');this.r(f.x,f.y,f.w,4,'#e7f8f0');this.r(f.x+7,f.y+10,f.w-14,2,'#a0d4cd');this.icicles(f.x+7,f.y+f.h,Math.min(8,Math.floor(f.w/10)))}
     for(const f of root.Physics.movingAt(game.scene,game.worldTime||0))this.movingIce(f);
@@ -1830,7 +1878,8 @@ class Renderer{
      for(const [x,y] of [[60,307],[185,307],[728,307],[1002,307],[1232,307]])this.pine(x,y,x===1002?1.3:.85);
      this.arch(1140,307,game.save.robot);
     }else if(game.scene==='bridge'){
-     for(const x of [100,463,810,930,1195,1520,1710])this.pine(x,this.floorAt(level,x),.9);
+     // Individually art-directed snowy trees stand on safe ground, away from jump crates.
+     for(const x of [95,558,822,932,1308,1500,1720]){const floor=level.ground.find(f=>x>=f.x+25&&x<=f.x+f.w-25);if(floor)this.pine(x,floor.y,.88)}
      for(const x of [180,515,940,1300,1680])this.lamp(x,this.floorAt(level,x));
      this.beacon(432,295,game.save.bridgeMiniCheckpoint);if(!game.save.orbs.includes('jump'))this.orb(310,239,'jump');if(!game.save.orbs.includes('dash'))this.orb(1290,281,'dash');if(game.save.orbs.includes('dash')&&!game.save.gateBroken)this.charger(1380,305);this.seal(608,302,!game.save.orbs.includes('jump'));this.seal(1389,305,!game.save.orbs.includes('dash'));this.beacon(817,295,game.save.bridgeCheckpoint);
      for(const [i,pos] of [[0,[319,228]],[1,[697,224]],[2,[1060,217]]])if(!game.save.shards.includes(i))this.memoryShard(pos[0],pos[1]);
@@ -1947,8 +1996,7 @@ class Editor{
   document.getElementById('program-reset').addEventListener('click',()=>{this.blocks=[];this.message.textContent='Ruta despejada. Toca las casillas para volver a comenzar.';this.refresh()});
   this.claim.addEventListener('click',()=>{this.close();this.game.solved(this.id)});
   document.getElementById('program-quick-pick').addEventListener('click',()=>{if(this.opened&&!this.tracing&&this.id==='nix'){this.append('PICK');this.execute()}});
-  this.el.addEventListener('click',e=>this.handleClick(e));
-  this.board.addEventListener('click',e=>this.clickBoard(e));this.board.tabIndex=0;
+  this.el.addEventListener('click',e=>this.handleClick(e));  this.board.addEventListener('click',e=>this.clickBoard(e));this.board.tabIndex=0;
   document.getElementById('program-hint').addEventListener('click',()=>this.hint());
   document.getElementById('program-how').addEventListener('click',()=>this.help());
   for(const tab of document.querySelectorAll('[data-editor-tab]'))tab.addEventListener('click',()=>this.view(tab.dataset.editorTab));
@@ -1964,7 +2012,7 @@ class Editor{
   this.id=id;const old=this.game.save.drafts[id]||root.Program.example(id);
   this.blocks=JSON.parse(JSON.stringify(old));
   if(JSON.stringify(this.blocks).match(/"(LEFT|RIGHT|MOVE)"/))this.blocks=root.Program.migrateLegacy(this.blocks);
-  this.opened=true;this.tracing=false;this.game.locked=true;this.el.hidden=false;this.view('map');this.context.hidden=true;
+  this.opened=true;this.tracing=false;this.game.locked=true;this.el.hidden=false;this.panel.dataset.mission=id;this.view('map');this.context.hidden=true;
   document.getElementById('program-title').textContent=id==='nix'?'Misión 01 · Despierta a NIX':id==='cityNix'?'Misión 03 · Programa al NIX urbano':'Misión 02 · Tres pulsos';
   document.getElementById('program-story').textContent=id==='nix'?'🎯 Lleva a NIX a la batería y recógela.':id==='cityNix'?'🎯 Lleva a NIX al botón ✦ y actívalo.':'🎯 Activa 3 circuitos usando REPETIR.';
   document.getElementById('program-main-label').textContent=id==='nix'?'Ruta de NIX':id==='cityNix'?'Programa urbano para NIX':'Instrucciones del faro';
@@ -1996,7 +2044,8 @@ class Editor{
   else if(edit==='move'){const to=n+Number(dir);if(to>=0&&to<target.length){const [item]=target.splice(n,1);target.splice(to,0,item)}}
   else if(edit==='count')target[n].count=Math.max(2,Math.min(5,target[n].count+Number(dir)));
   this.message.textContent='Programa editado ✓';this.claim.hidden=true;this.context.hidden=true;this.refresh();
- } clickBoard(event){
+ }
+ clickBoard(event){
   if(!this.opened||this.tracing)return;
   const rect=this.board.getBoundingClientRect(),bx=(event.clientX-rect.left)*this.board.width/rect.width,by=(event.clientY-rect.top)*this.board.height/rect.height;
   const b=root.Program.puzzles[this.id],cell=48,ox=(this.board.width-b.width*cell)/2,oy=(this.board.height-b.height*cell)/2;
@@ -2022,7 +2071,10 @@ class Editor{
   const tools=document.createElement('span');tools.className='command-tools';tools.append(this.makeBtn('↑','move',scope,i,-1),this.makeBtn('↓','move',scope,i,1),this.makeBtn('×','remove',scope,i));row.appendChild(tools);return row;
  }
  refresh(){
+  const previousScroll=this.main.scrollTop;const stickBottom=this.main.scrollHeight-this.main.clientHeight-previousScroll<42;
   this.main.replaceChildren(...this.blocks.map((b,i)=>this.renderRow(b,i,'main')));
+  // Only the command list scrolls, never the add-command palette or the whole modal.
+  this.main.scrollTop=stickBottom?this.main.scrollHeight:previousScroll;
   const loop=this.blocks.find(b=>b.type==='REPEAT');document.getElementById('program-inner-wrap').hidden=!loop;
   this.inner.replaceChildren(...(loop?loop.body.map((b,i)=>this.renderRow(b,i,'inner')):[]));
   const p=document.getElementById('program-palette');p.querySelectorAll('[data-type]').forEach(b=>b.hidden=(b.dataset.type==='REPEAT'&&this.id!=='beacon')||(b.dataset.type==='PICK'&&this.id!=='nix')||(b.dataset.type==='PULSE'&&this.id==='nix'));
@@ -2351,8 +2403,8 @@ class Game{
   if(summary)summary.textContent=this.save.started?('✦ PARTIDA GUARDADA · '+(this.scene==='district'?'Distrito Aurora':this.scene==='archive'?'Archivo de Ecos':this.scene==='metro'?'Estación Umbral':this.scene==='rooftops'?'Azoteas de Aurora':this.scene==='harbor'?'Puerto de la Bruma':this.scene==='workshop'?'Taller de NIX':this.scene==='bridge'?'Pasarela Boreal':'Faro del Silencio')):'✦ NUEVA EXPEDICIÓN · PRÓLOGO DISPONIBLE';
  }
  openMenu(){if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
- say(lines,callback){this.dialogue=lines.slice();this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
- nextDialogue(){if(this.dialogue.length){this.el.storyText.textContent=this.dialogue.shift();this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
+ say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
+ nextDialogue(){if(this.dialogue.length){this.dialogueShown=(this.dialogueShown||0)+1;this.el.storyText.textContent=this.dialogue.shift();const counter=document.getElementById('dialogue-progress');if(counter)counter.textContent=this.dialogueShown+' / '+(this.dialogueTotal||this.dialogueShown);this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
  toast(msg){this.el.toast.textContent=msg;this.el.toast.hidden=false;this.toastTimer=3}
  unlockAudio(){if(!this.audioOn)return;try{this.audio=this.audio||new (window.AudioContext||window.webkitAudioContext)();if(this.audio.state==='suspended')this.audio.resume()?.catch?.(()=>{});}catch{}}
  sfx(type){
