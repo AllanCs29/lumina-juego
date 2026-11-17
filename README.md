@@ -1,12 +1,24 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.7.1 · Flechas discretas y orientación contextual**
+**Versión 0.8.0 · Transferencia real entre escenarios y pruebas A/B**
 
 [**Jugar desde iPhone, Mac o PC**](https://allancs29.github.io/lumina-juego/) · [**Descargar todo el código ZIP**](https://github.com/AllanCs29/lumina-juego/archive/refs/heads/main.zip)
 
 Lúmina es una aventura 2D original para aprender lógica de programación desde cero mediante exploración, plataformas, misiones y narrativa. Iris y NIX recorren Distrito Aurora, Estación Umbral, Archivo de Ecos, Puerto de la Bruma, Pasarela Boreal y Faro del Silencio.
 
-## Nuevo en v0.7.1
+## Nuevo en v0.8.0
+- **Cinco desafíos programables con doble evaluación:** refugio, bucles, sensores de arreglos, compuertas booleanas y depuración. Las misiones 5 a 8 comprueban dos estados diferentes del entorno y exigen una sola receta que funcione en ambos.
+- **El bloque LEER carga se reutiliza:** ahora puede emplearse en bucles y depuración. Una receta con un valor inicial fijo puede resolver el caso A, pero no aprobar ambos.
+- **Arreglos variables:** los sensores cambian de [3, 7, 11] a [5, 2, 9]. El jugador debe leer las posiciones indicadas, no memorizar una suma.
+- **Condiciones auténticamente booleanas:** hay un caso que permite abrir y otro que debe bloquear el acceso. Usar O en lugar de Y puede producir una respuesta incorrecta.
+- **Más claridad didáctica:** cada consigna explica los estados A/B y la ejecución muestra el valor obtenido, la meta y la traza.
+- **Conserva el trabajo anterior:** código autónomo en HTML, bloque de aprendizaje, progreso previo, tutorial, modo offline, música y exploración de v0.7.1.
+- **Pruebas nuevas:** `node tests/v080-transfer-smoke.mjs`, añadida a GitHub Actions; sigue siendo necesaria una prueba personal en iPhone Safari.
+
+[Registro de cambios v0.8.0](CHANGELOG-v0.8.0.md) · [Qué probar en v0.8.0](QUE-PROBAR-v0.8.0.md)
+
+## Se conserva de v0.7.1
+
 
 - **Brújula visual discreta:** una pequeña flecha semitransparente cerca de Iris indica si el siguiente objetivo está a la izquierda o a la derecha. No es una ruta automática ni un indicador permanente que tape el escenario.
 - **La flecha cambia cuando completas el objetivo:** Aurora (consola, nodo, variables, NIX, metro), Estación Umbral (relés no activados, tren), Archivo (lectores y jefe), Azoteas (antenas), Puerto (orbe/taller/arco), Taller de NIX (orbe/programación/LAB opcional/salida), Pasarela Boreal (orbes/checkpoints/cristal/faro) y Faro (terminal/lente).
@@ -77,6 +89,7 @@ node tests/v050-progress-smoke.mjs
 node tests/v060-missions-smoke.mjs
 node tests/v070-refugio-smoke.mjs
 node tests/v071-wayfinding-smoke.mjs
+node tests/v080-transfer-smoke.mjs
 node tests/v060-browser-smoke.mjs  # requiere Chrome/Chromium
 ```
 
@@ -96,4 +109,4 @@ El rumbo de cada versión se evalúa ahora con tres documentos de producción ba
 
 [**Cambios completos v0.7.1**](CHANGELOG-v0.7.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.7.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
 
-**Pendiente para el siguiente hito:** extender a todo el juego la legibilidad móvil, evaluar otras misiones con datos variables, reforzar la integración de código y mundo, y probar en iPhone Safari físico. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
+**Pendiente para el siguiente hito:** extender a todo el juego la legibilidad móvil, profundizar las consecuencias físicas de las misiones 5–8, reforzar la integración de código y mundo, modularizar el código principal y probar en iPhone Safari físico. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
