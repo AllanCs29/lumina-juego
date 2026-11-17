@@ -1,12 +1,23 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.7.0 · La primera señal de NIX: programación que cambia el mundo**
+**Versión 0.7.1 · Flechas discretas y orientación contextual**
 
 [**Jugar desde iPhone, Mac o PC**](https://allancs29.github.io/lumina-juego/) · [**Descargar todo el código ZIP**](https://github.com/AllanCs29/lumina-juego/archive/refs/heads/main.zip)
 
 Lúmina es una aventura 2D original para aprender lógica de programación desde cero mediante exploración, plataformas, misiones y narrativa. Iris y NIX recorren Distrito Aurora, Estación Umbral, Archivo de Ecos, Puerto de la Bruma, Pasarela Boreal y Faro del Silencio.
 
-## Nuevo en v0.7.0
+## Nuevo en v0.7.1
+
+- **Brújula visual discreta:** una pequeña flecha semitransparente cerca de Iris indica si el siguiente objetivo está a la izquierda o a la derecha. No es una ruta automática ni un indicador permanente que tape el escenario.
+- **La flecha cambia cuando completas el objetivo:** Aurora (consola, nodo, variables, NIX, metro), Estación Umbral (relés no activados, tren), Archivo (lectores y jefe), Azoteas (antenas), Puerto (orbe/taller/arco), Taller de NIX (orbe/programación/LAB opcional/salida), Pasarela Boreal (orbes/checkpoints/cristal/faro) y Faro (terminal/lente).
+- **Sin saturación visual:** desaparece a 64 unidades del destino y durante diálogos, menús, transiciones, tutorial de controles o jefe Centinela. Se mantiene más tenue con `Reducir movimiento`.
+- **Tres ajustes persistentes:** `Configuración → Orientación suave → Flechas discretas / Solo cuando pulso Pista / Sin flechas`. El modo `Pista` muestra la dirección durante unos segundos y, si corresponde, una etiqueta breve del destino.
+- **Móvil y PC:** se dibuja directamente en el lienzo siguiendo la posición y cámara de Iris, sin botones adicionales en pantalla ni cambios a físicas o guardados anteriores.
+- **Pruebas:** `node tests/v071-wayfinding-smoke.mjs` valida todos los destinos y la supresión cerca del objetivo; los tests con Chrome comprueban dibujo en ambos sentidos, ajustes, pulsar Pista y persistencia offline.
+
+[Qué probar en v0.7.1](QUE-PROBAR-v0.7.1.md) · [Cambios completos](CHANGELOG-v0.7.1.md)
+
+## Se conserva de v0.7.0
 
 - **Una misión que comprueba aprendizaje real.** En la cuarta misión del Laboratorio de NIX, el mismo programa debe resolver dos entradas distintas: **2 → 5** y **4 → 7**. Fijar `carga ← 2` no basta. El nuevo bloque **LEER carga del entorno** permite trabajar con valores que cambian.
 - **Calefactor y refugio físicos en el Taller de NIX.** Antes del reto la persiana está cerrada, hay hielo y la luz es fría. Al superar los dos casos, se abre, emite luz cálida y puedes inspeccionarlo con **USAR / E** para escuchar una explicación de Iris y NIX. **El cambio se guarda entre partidas.**
@@ -65,6 +76,7 @@ node tests/v048-art-smoke.mjs
 node tests/v050-progress-smoke.mjs
 node tests/v060-missions-smoke.mjs
 node tests/v070-refugio-smoke.mjs
+node tests/v071-wayfinding-smoke.mjs
 node tests/v060-browser-smoke.mjs  # requiere Chrome/Chromium
 ```
 
@@ -82,6 +94,6 @@ El rumbo de cada versión se evalúa ahora con tres documentos de producción ba
 
 ## Entrega y próximos pasos
 
-[**Cambios completos v0.7.0**](CHANGELOG-v0.7.0.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.7.0.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
+[**Cambios completos v0.7.1**](CHANGELOG-v0.7.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.7.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
 
 **Pendiente para el siguiente hito:** extender a todo el juego la legibilidad móvil, evaluar otras misiones con datos variables, reforzar la integración de código y mundo, y probar en iPhone Safari físico. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
