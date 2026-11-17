@@ -710,6 +710,42 @@ try{
   persisted:'The finale persists across a fresh save read'
  }))assert.equal(journeyFinish[k],true,description);
  assert.ok(journeyFinish.storyMoments>=6,'Story beats were experienced during the whole route');
+ // Exercise UI at three phone dimensions; physical Safari remains a separate acceptance test.
+ for(const profile of [
+  {width:667,height:375,type:'landscapePrimary',angle:90},
+  {width:932,height:430,type:'landscapePrimary',angle:90},
+  {width:390,height:844,type:'portraitPrimary',angle:0}
+ ]){
+  await send('Emulation.setDeviceMetricsOverride',{width:profile.width,height:profile.height,deviceScaleFactor:2,mobile:true,
+   screenOrientation:{type:profile.type,angle:profile.angle}});
+  await delay(160);
+  const screenFit=await evalJs(`(()=>{
+   const g=window.Lumina.game;
+   document.getElementById('ending').hidden=true;
+   g.locked=false;g.el.menu.hidden=false;
+   const menu=document.querySelector('#menu .menu-v042').getBoundingClientRect();
+   g.el.menu.hidden=true;
+   g.scene='metro';g.player.x=710;g.player.y=280;
+   g.save.coreProofs.metro=false;g.save.metroRelays[1]=false;g.interactRegion();
+   const core=document.querySelector('#world-code-modal .world-code-panel').getBoundingClientRect();
+   document.querySelector('#world-code-palette button').click();
+   const target=document.querySelector('#world-code-list button[data-edit=remove]').getBoundingClientRect();
+   const add=document.querySelector('#world-code-palette button').getBoundingClientRect();
+   document.getElementById('world-code-close').click();
+   g.scene='tower';g.save.beacon=true;g.locked=false;g.openRouting();
+   const route=document.querySelector('#route-modal .route-panel').getBoundingClientRect();
+   document.getElementById('route-close').click();
+   return {vw:innerWidth,vh:innerHeight,menuW:menu.width,menuH:menu.height,
+    codeW:core.width,codeH:core.height,routeW:route.width,routeH:route.height,
+    targetH:target.height,addH:add.height};
+  })()`);
+  for(const rect of [['menu',screenFit.menuW,screenFit.menuH],['world editor',screenFit.codeW,screenFit.codeH],['final puzzle',screenFit.routeW,screenFit.routeH]]){
+   assert.ok(rect[1]<=screenFit.vw+1,rect[0]+' fits '+profile.width+'px width');
+   assert.ok(rect[2]<=screenFit.vh+1,rect[0]+' fits '+profile.height+'px height');
+  }
+  assert.ok(screenFit.addH>=44,'Adding instructions has mobile-sized touch targets');
+  assert.ok(screenFit.targetH>=44,'Editing instructions has mobile-sized touch targets');
+ }
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
  console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape offline navigation and screenshots');
 }catch(error){console.error('BROWSER SMOKE FAILURE:',error);process.exitCode=1;}
