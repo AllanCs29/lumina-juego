@@ -60,14 +60,36 @@ try{
  assert.equal(await evalJs("document.querySelector('link[rel=manifest]')?.getAttribute('href')"),'./manifest.webmanifest');
  const first=await evalJs(`(()=>{
    document.getElementById('training-offer-skip').click();
-   document.getElementById('lab-open').click();
    const game=window.Lumina.game,lab=game.logicLab;
-   document.getElementById('lab-answer').value='12';document.getElementById('lab-run').click();
-   return {active:lab.active,done:game.save.labCompleted.includes(0),title:document.getElementById('lab-title').textContent};
+   const locked=document.getElementById('lab-open').disabled;
+   const bypass=lab.open(false);
+   const notOpened=!lab.active&&document.getElementById('logic-lab').hidden;
+   const hiddenOutside=!window.Lumina.LabUnlock.visible(game.save,'district');
+   game.save.cityVariableSolved=true;game.save.robot=true;
+   game.scene='workshop';game.player.x=733;game.player.y=280;
+   game.locked=false;game.el.menu.hidden=true;game.interact();
+   for(let i=0;i<8&&!game.el.story.hidden;i++)game.nextDialogue();
+   const discovered=game.save.labDiscovered,guideRequired=lab.guideOpen&&document.getElementById('lab-run').disabled;
+   const noLanguageYet=document.getElementById('lab-language-panel').hidden;
+   document.getElementById('lab-answer').value='12';
+   document.getElementById('lab-run').click();
+   const didNotBypass=!game.save.labCompleted.includes(0);
+   for(let n=0;n<3;n++)document.getElementById('lab-guide-next').click();
+   document.getElementById('lab-run').click();
+   return {locked,bypass,notOpened,hiddenOutside,discovered,guideRequired,noLanguageYet,didNotBypass,
+    active:lab.active,done:game.save.labCompleted.includes(0),title:document.getElementById('lab-title').textContent};
  })()`);
- assert.equal(first.active,true);assert.equal(first.done,true);assert.match(first.title,/Funciones/);
+ assert.equal(first.locked,true,'Menu blocks lessons before reaching NIX');
+ assert.equal(first.notOpened,true,'Direct attempt does not bypass locked lesson');
+ assert.equal(first.hiddenOutside,true,'Undiscovered terminals do not appear');
+ assert.equal(first.discovered,true,'NIX workshop unlocks lab after prerequisites');
+ assert.equal(first.guideRequired,true,'Explanation precedes answers');
+ assert.equal(first.noLanguageYet,true,'No programming language at the beginning');
+ assert.equal(first.didNotBypass,true,'Run is disabled until explanation is read');
+ assert.equal(first.done,true);assert.match(first.title,/Instrucciones en orden/);
  const program=await evalJs(`(()=>{
   const g=window.Lumina.game,lab=g.logicLab;lab.index=3;lab.render();
+  for(let n=0;n<3;n++)document.getElementById('lab-guide-next').click();
   for(const op of ['SET2','ADD3','OUTPUT']){
    const button=document.querySelector('#lab-palette button[data-op="'+op+'"]');
    if(!button)throw Error('Missing palette operation '+op);button.click();
@@ -77,6 +99,14 @@ try{
    text:document.getElementById('lab-feedback').textContent};
  })()`);
  assert.equal(program.done,true);assert.equal(program.blocks,3);
+ const chosen=await evalJs(`(()=>{
+  const game=window.Lumina.game,panel=document.getElementById('lab-language-panel'),select=document.getElementById('lab-language-select');
+  const unlocked=!panel.hidden;select.value='python';select.dispatchEvent(new Event('change',{bubbles:true}));
+  return {unlocked,selected:game.save.learningLanguage,translated:document.getElementById('lab-code-preview').textContent};
+ })()`);
+ assert.equal(chosen.unlocked,true,'Languages unlock after first four lessons');
+ assert.equal(chosen.selected,'python','Preferred language is saved');
+ assert.match(chosen.translated,/carga = 2/);
  // Complete the remaining exercises using the same palette clicks a player uses.
  const course=await evalJs(`(()=>{
   const game=window.Lumina.game,lab=game.logicLab;
@@ -90,6 +120,7 @@ try{
   const results=[];
   for(const [key,answer] of Object.entries(solutions)){
    const i=Number(key);lab.index=i;lab.render();
+   for(let n=0;n<3;n++)document.getElementById('lab-guide-next').click();
    if(typeof answer==='number')document.getElementById('lab-answer').value=String(answer);
    else for(const op of answer){
     const button=[...document.querySelectorAll('#lab-palette button')].find(b=>b.dataset.op===op);
@@ -104,6 +135,18 @@ try{
  assert.equal(course.completed,8,'All eight missions should persist');
  assert.equal(course.mastered,true,'Course graduation should unlock');
  assert.ok(course.results.every(r=>r.done&&r.good==='true'),'Every mission should pass in real DOM');
+
+ const cape=await evalJs(`(()=>{
+  const game=window.Lumina.game,r=game.renderer,original=r.poly,signs=[];
+  r.poly=function(points,color){if(color==='#8d5c67'){const matrix=r.ctx.getTransform();signs.push(Math.sign(matrix.a*points[2][0]));}
+   return original.call(r,points,color);
+  };
+  try{for(const facing of [1,-1])r.player({...game.player,x:240,y:280,facing,vx:facing*110,anim:'run',gait:2},0);}
+  finally{r.poly=original;}
+  return signs;
+ })()`);
+ assert.equal(cape[0],-1,'Facing right: scarf trails left');
+ assert.equal(cape[1],1,'Facing left: scarf trails right');
 
  await send('Emulation.setDeviceMetricsOverride',{width:844,height:390,deviceScaleFactor:2,mobile:true,screenOrientation:{type:'landscapePrimary',angle:90}});
  await delay(260);
