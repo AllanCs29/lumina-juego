@@ -587,6 +587,16 @@ body.touch-enabled .screen .prompt,.screen .prompt{bottom:auto!important;height:
  /* overflow:clip (not hidden) also disallows browser auto-scrolling the palette's parent on every tap. */
  body.touch-enabled .editor-panel[data-view="commands"] .code-column{overflow:clip!important;overscroll-behavior:none}
 }
+/* v0.4.6: the energy meter belongs to the left HUD rail on mobile; it must
+   never overlap Pista and Menú on the upper-right edge. */
+body.touch-enabled .energy-hud{
+ top:max(54px,calc(env(safe-area-inset-top) + 54px));
+ left:max(8px,env(safe-area-inset-left));
+ right:auto;
+ width:99px;
+ padding:4px 7px;
+ background:#0b253ad9;
+}
 
 </style>
 
@@ -987,8 +997,7 @@ root.TouchLayout=TouchLayout;
    const canvas=document.getElementById('game');
    canvas?.addEventListener('touchend',e=>{if(document.body.classList.contains('touch-enabled')&&e.cancelable)e.preventDefault()},{passive:false});
   }
-  setupTouch(){const zone=document.getElementById('touch-pad');if(!zone)return;
-   const update=e=>{const r=zone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),radius=r.width*.35,scale=d?Math.min(d,radius)/d:0;
+  setupTouch(){const zone=document.getElementById('touch-pad');if(!zone)return;   const update=e=>{const r=zone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),radius=r.width*.35,scale=d?Math.min(d,radius)/d:0;
     this.pad={x:dx*scale/radius,y:dy*scale/radius};this.padVisual(dx*scale,dy*scale)};
    zone.addEventListener('pointerdown',e=>{e.preventDefault();zone.setPointerCapture(e.pointerId);update(e)});
    zone.addEventListener('pointermove',e=>{if(zone.hasPointerCapture(e.pointerId))update(e)});
@@ -997,7 +1006,8 @@ root.TouchLayout=TouchLayout;
    const jump=document.getElementById('touch-jump');jump.addEventListener('pointerdown',e=>{e.preventDefault();jump.setPointerCapture(e.pointerId);this.touchJump=true;this.jumpQueued=true});
    for(const evt of ['pointerup','pointercancel','lostpointercapture'])jump.addEventListener(evt,()=>this.touchJump=false);
    const dash=document.getElementById('touch-dash');if(dash)dash.addEventListener('pointerdown',e=>{e.preventDefault();this.dashQueued=true});
-  }  padVisual(x,y){const dot=document.getElementById('touch-knob');if(dot)dot.style.transform=`translate(${x}px,${y}px)`}
+  }
+  padVisual(x,y){const dot=document.getElementById('touch-knob');if(dot)dot.style.transform=`translate(${x}px,${y}px)`}
   axis(){const x=(this.keys.has('ArrowRight')||this.keys.has('KeyD')?1:0)-(this.keys.has('ArrowLeft')||this.keys.has('KeyA')?1:0);
    const y=(this.keys.has('ArrowDown')||this.keys.has('KeyS')?1:0)-(this.keys.has('ArrowUp')||this.keys.has('KeyW')?1:0);
    return {x:Math.abs(this.pad.x)>.18?this.pad.x:x,y:Math.abs(this.pad.y)>.18?this.pad.y:y}}
@@ -1986,8 +1996,7 @@ class Renderer{
  charger(x,y){
   this.glow(x,y-14,34,'#ffcc8649');this.r(x-20,y-4,40,6,'#536c7b');this.r(x-14,y-14,28,11,'#c7b47f');
   this.circ(x,y-16,8,'#6ad3d1');this.circ(x,y-16,4,'#fff4b9');this.text('↻',x,y-32,'#ffe0ad',13,'center');
- }
- seal(x,y,active){if(!active)return;this.glow(x,y-35,37,'#a1dcff4d');this.r(x-9,y-84,18,84,'#255170');for(let i=0;i<3;i++)this.r(x-6,y-74+i*22,12,8,'#8bebef');this.text('ORBE',x,y-90,'#d6f5eb',9,'center')}
+ } seal(x,y,active){if(!active)return;this.glow(x,y-35,37,'#a1dcff4d');this.r(x-9,y-84,18,84,'#255170');for(let i=0;i<3;i++)this.r(x-6,y-74+i*22,12,8,'#8bebef');this.text('ORBE',x,y-90,'#d6f5eb',9,'center')}
  memoryShard(x,y){
   const bob=Math.sin(this.t*3+x)*3;
   this.glow(x,y+bob,29,'#d6aaff66');
@@ -1996,7 +2005,8 @@ class Renderer{
  }
  atmosphere(){for(const s of this.snow){const xx=((s.x+this.t*s.speed)%500),yy=((s.y+this.t*s.speed*1.4)%270);this.r(xx,yy,s.r,s.r,'#e3f1f280')} }
  world(game){const level=root.Physics.levels[game.scene]||root.Physics.levels.tower,camX=game.camera.x,camY=game.camera.y;
-  if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}  if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
+  if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}
+  if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
   if(game.scene==='workshop'){
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
