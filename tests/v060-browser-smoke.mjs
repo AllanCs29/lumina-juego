@@ -274,6 +274,21 @@ try{
  assert.equal(streetLesson.pseudocode,true,'District uses pseudocode, not JavaScript syntax');
  assert.equal(streetLesson.logicPseudo,true,'Logic door also teaches pseudocode');
 
+ const menuMobile=await evalJs(`(()=>{
+  const g=window.Lumina.game;g.openMenu();
+  const panel=document.querySelector('#menu .menu-v042'),summary=document.querySelector('#menu-more>summary');
+  const rect=panel.getBoundingClientRect(),button=document.getElementById('start').getBoundingClientRect();
+  const focusable=[...document.querySelectorAll('#menu .menu-controls>button, #menu .menu-controls>details')].map(e=>e.id);
+  return {width:rect.width,height:rect.height,vw:innerWidth,vh:innerHeight,playHeight:button.height,optionsHeight:summary.getBoundingClientRect().height,focusable};
+ })()`);
+ assert.ok(menuMobile.width<=menuMobile.vw+1,'Main menu fits horizontal mobile width');
+ assert.ok(menuMobile.height<=menuMobile.vh+1,'Main menu fits horizontal mobile height');
+ assert.ok(menuMobile.playHeight>=44,'Primary action remains touch accessible');
+ assert.ok(menuMobile.optionsHeight>=44,'Options disclosure remains touch accessible');
+ assert.equal(menuMobile.focusable.join(','),'start,training-open,menu-more','Three main menu choices on mobile');
+ const menuImage=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+ writeFileSync('artifacts/lumina-v081-menu-movil.png',Buffer.from(menuImage.data,'base64'));
+ await evalJs(`(()=>{const g=window.Lumina.game;g.el.menu.hidden=true;g.locked=false;return true})()`);
  await delay(320);
  const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-distrito-movil.png',Buffer.from(image.data,'base64'));
