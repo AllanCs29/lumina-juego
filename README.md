@@ -6,7 +6,7 @@ Una aventura de plataformas y exploración donde Iris y NIX reactivan máquinas,
 
 ## El juego
 
-Recorre escenarios invernales, encuentra memorias, resuelve puzles, supera obstáculos y activa mecanismos mediante secuencias de instrucciones, variables, condiciones y ciclos. La programación se introduce gradualmente, empezando por lógica y pseudocódigo.
+Recorre escenarios invernales, encuentra memorias, resuelve puzles, supera obstáculos y activa mecanismos mediante secuencias de instrucciones, variables, condiciones y ciclos. El viaje concluye en el Faro del Silencio, donde debes verificar qué señales pueden transmitirse sin peligro. La programación se introduce gradualmente, empezando por lógica y pseudocódigo.
 
 Incluye checkpoints, guardado local, práctica de programación con bloques, opciones de accesibilidad y controles para teclado o pantalla táctil.
 
