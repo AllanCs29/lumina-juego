@@ -293,6 +293,67 @@ try{
  const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-distrito-movil.png',Buffer.from(image.data,'base64'));
 
+ const storyGate=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  if(g.logicLab.active)g.logicLab.close();
+  g.el.menu.hidden=true;g.locked=false;g.scene='metro';g.player.x=1230;g.player.y=280;
+  g.save.metroRelays=[true,true];g.save.guardianDefeated=false;g.save.beacon=false;g.save.completed=false;
+  g.transition=null;g.interactRegion();
+  const blocked=!g.transition&&!g.locked;
+  const target=window.Lumina.Guidance.pick('metro',g.save,950)?.label;
+  g.save.guardianDefeated=true;g.interactRegion();
+  const permitted=g.transition?.scene==='harbor';
+  g.transition=null;g.locked=false;
+  return {blocked,target,permitted};
+ })()`);
+ assert.equal(storyGate.blocked,true,'The train requires archive permission');
+ assert.equal(storyGate.target,'Archivo de Ecos','Guidance points toward the archive');
+ assert.equal(storyGate.permitted,true,'Guardian victory grants train access');
+
+ const routeFail=await evalJs(`(()=>{
+  const g=window.Lumina.game;g.scene='tower';g.player.x=975;g.player.y=280;
+  g.el.menu.hidden=true;g.locked=false;g.save.beacon=true;g.save.signalBalanced=false;
+  g.interact();
+  const opened=!document.getElementById('route-modal').hidden;
+  document.getElementById('route-operator').value='OR';
+  document.getElementById('route-alarm').value='negate';
+  document.getElementById('route-run').click();
+  return {opened,failed:document.getElementById('route-status').dataset.success==='false',
+   trace:document.getElementById('route-trace').textContent.includes('BOREAL'),
+   blocked:!g.save.signalBalanced&&document.getElementById('route-finish').hidden};
+ })()`);
+ assert.equal(routeFail.opened,true,'The lighthouse opens a final programming challenge');
+ assert.equal(routeFail.failed,true,'Unsafe OR rule is rejected');
+ assert.equal(routeFail.trace,true,'Diagnostic trace shows environmental states');
+ assert.equal(routeFail.blocked,true,'Unsafe routing cannot complete the story');
+
+ const routeImage=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+ writeFileSync('artifacts/lumina-v090-final-movil.png',Buffer.from(routeImage.data,'base64'));
+ const routeWin=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  document.getElementById('route-operator').value='AND';
+  document.getElementById('route-alarm').value='negate';
+  document.getElementById('route-run').click();
+  const accepted=document.getElementById('route-status').dataset.success==='true';
+  const transmitted=g.save.signalBalanced;
+  const available=!document.getElementById('route-finish').hidden;
+  const flags=[],r=g.renderer,orig=r.tower;
+  r.tower=function(x,y,on){flags.push(on);return orig.call(r,x,y,on);};
+  try{g.renderer.world(g);}finally{r.tower=orig;}
+  document.getElementById('route-finish').click();
+  for(let i=0;i<12&&!g.el.story.hidden;i++)g.nextDialogue();
+  return {accepted,transmitted,available,light:flags[0],completed:g.save.completed,
+    ending:!document.getElementById('ending').hidden,title:document.querySelector('#ending h1')?.textContent};
+ })()`);
+ assert.equal(routeWin.accepted,true,'One rule works across three environments');
+ assert.equal(routeWin.transmitted,true,'The valid routing state is saved');
+ assert.equal(routeWin.available,true,'Only valid rule unlocks completion');
+ assert.equal(routeWin.light,true,'Lighthouse visibly illuminates on valid routing');
+ assert.equal(routeWin.completed,true,'Chapter completion persists');
+ assert.equal(routeWin.ending,true,'Player sees ending after final dialogue');
+ assert.equal(routeWin.title,'LA RED RESPIRA');
+ await evalJs(`(()=>{document.getElementById('ending').hidden=true;window.Lumina.game.locked=false;return true;})()`);
+
  // Wait for the real service worker to cache the app shell, then reload offline.
  const offlineReady=await evalJs("Promise.race([navigator.serviceWorker.ready.then(()=>true),new Promise(r=>setTimeout(()=>r(false),10000))])");
  assert.equal(offlineReady,true,'PWA worker should activate after opening on localhost');
