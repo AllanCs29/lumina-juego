@@ -2133,6 +2133,9 @@ class Renderer{
    this.text(word,x,281,'#142a3c',word==='VERDADERO'?8:10,'center');}
   this.guardianModel(585,306,b.phase,b.warning,b.pulse,b.clock,game.save.guardianDefeated);
   if(b.pulse>0){this.r(b.pulse-8,263,16,42,'#64ebd778');this.glow(b.pulse,273,38,'#7cfff38e');this.r(b.pulse-6,257,12,4,'#effff1');}
+  if(b.pulse2>0){this.r(b.pulse2-6,272,13,33,'#ffa5a785');this.glow(b.pulse2,281,24,'#ffc2c450');this.r(b.pulse2-8,270,17,3,'#ffdbcb');}
+  if(b.beamWarning||b.beamActive){const x=b.beamX;this.r(x-20,306,40,3,b.beamActive?'#ff8e99':'#f5c77e');this.r(x-2,126,4,180,b.beamActive?'#ffc29eaa':'#f7d0a73c');if(b.beamActive){this.glow(x,217,40,'#ffe3ab55');this.r(x-6,112,12,194,'#ffe4b4a6');}}
+  this.r(525,107,120,4,b.phase===0?'#85e6bf':b.phase===1?'#f4ce84':'#ef9a9c');
   this.player(game.player,this.t);game.fx.draw(this);this.ctx.restore();
  }
  guardianModel(x,y,stage,warning,pulse,t,won){
@@ -2750,6 +2753,51 @@ root.Prologue=Prologue;
    else if(g.save.guardianDefeated)g.toast('✦ El Centinela reconoce tu lógica. Nueva memoria registrada.');
   }
  }
+
+ // v0.5.0 · multi-pattern boss, checkpoint per correctly completed round.
+ const _start=Guardian.prototype.start,_display=Guardian.prototype.display,_action=Guardian.prototype.action;
+ Guardian.prototype.start=function(replay=false){
+  if(this.active&&!replay)return;
+  const running=this.active,scene=this.returnScene,returnX=this.returnX;
+  if(running&&replay)this.active=false;
+  _start.call(this,replay);
+  if(running&&replay){this.returnScene=scene;this.returnX=returnX;}
+  this.phase=replay?0:Math.max(0,Math.min(2,this.game.save.guardianCheckpoint||0));
+  if(replay){this.game.save.guardianCheckpoint=0;this.game.persist();}
+  this.pulse2=0;this.beamX=0;this.beamLocked=false;this.beamWarning=false;this.beamActive=false;this.display();
+ };
+ Guardian.prototype.display=function(){
+  _display.call(this);const el=document.getElementById('guardian-checkpoint');
+  if(el)el.textContent='✦ Checkpoint de ronda '+(this.phase+1)+'/3';
+ };
+ Guardian.prototype.action=function(){
+  const phase=this.phase,result=_action.call(this);
+  if(this.phase!==phase){this.game.save.guardianCheckpoint=this.phase;this.game.persist();}
+  return result;
+ };
+ Guardian.prototype.update=function(dt){
+  if(!this.active)return;
+  this.clock+=Math.max(0,Math.min(.05,dt));this.hurtCooldown=Math.max(0,this.hurtCooldown-dt);
+  const p=this.game.player,t=this.clock,assist=!!this.game.save.assist;
+  this.warning=t>=1.8&&t<3.2?1:0;
+  this.pulse=t>=3.2&&t<6.6?715-(t-3.2)*(assist?170:220):0;
+  this.pulse2=this.phase>=1&&!assist&&t>=4.2&&t<7.2?795-(t-4.2)*210:0;
+  this.beamWarning=this.phase>=2&&t>=5.1&&t<6.5;
+  this.beamActive=this.phase>=2&&t>=6.5&&t<7.1;
+  if(this.beamWarning&&!this.beamLocked){this.beamX=Math.max(205,Math.min(470,p.x+8));this.beamLocked=true;}
+  const hurt=(x,groundOnly)=>{
+   if(x<=0||this.hurtCooldown>0||p.dashTime>0||(groundOnly&&!p.onGround)||Math.abs(p.x+8-x)>21)return;
+   p.x=Math.max(20,p.x-22);p.vx=-85;this.hurtCooldown=assist?2.3:1.5;this.game.sfx('deny');
+   this.game.fx.burst(p.x+8,p.y+18,'error',8);
+   document.getElementById('guardian-feedback').textContent='¡Esquiva! Las rondas resueltas no se pierden.';
+  };
+  hurt(this.pulse,true);hurt(this.pulse2,true);if(this.beamActive)hurt(this.beamX,false);
+  const msg=this.beamActive?'¡Rayo vertical! Aléjate.':this.beamWarning?'Columna marcada: muévete antes del rayo.':
+   this.warning?'¡Onda cerca! Salta o usa IMPULSO.':this.pulse2>0?'Segunda onda: mantén el ritmo.':this.pulse>0?'Onda activa: evita el suelo.':
+   this.phase===0?'Patrón 1 · una onda':this.phase===1?'Patrón 2 · ondas dobles':'Patrón 3 · ondas y rayo';
+  const el=document.getElementById('guardian-attack');if(el&&el.textContent!==msg)el.textContent=msg;
+  if(t>=8.9){this.clock=0;this.pulse=0;this.pulse2=0;this.warning=0;this.beamWarning=false;this.beamActive=false;this.beamLocked=false;}
+ };
  root.Guardian=Guardian;root.GuardianQuestions=QUESTIONS;
 })(typeof window!=='undefined'?(window.Lumina=window.Lumina||{}):(globalThis.Lumina=globalThis.Lumina||{}));
 
@@ -2770,7 +2818,7 @@ class Game{
   this.input=new root.Input();this.last=0;this.frameLast=0;this.targetFps=60;this.measuredFps=0;this.renderCount=0;this.renderWindow=0;this.occlusionWait=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
   this.editor=new root.Editor(this);this.touchLayout=new root.TouchLayout(this);root.touchLayout=this.touchLayout;this.shake=0;this.walk=0;this.audioOn=true;this.audio=null;this.toastTimer=0;
   this.el={menu:document.getElementById('menu'),story:document.getElementById('story'),storyText:document.getElementById('story-text'),storyButton:document.getElementById('story-next'),objective:document.getElementById('objective'),prompt:document.getElementById('prompt'),toast:document.getElementById('toast'),sceneName:document.getElementById('scene-name'),assist:document.getElementById('assist')};
-  this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.controlsTutorial=new root.ControlsTutorial(this);this.guardian=new root.Guardian(this);this.logicLab=new root.LogicLab(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
+  this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.controlsTutorial=new root.ControlsTutorial(this);this.guardian=new root.Guardian(this);document.getElementById("guardian-restart")?.addEventListener("click",()=>this.guardian.start(true));this.logicLab=new root.LogicLab(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
   const startBtn=document.getElementById('start');const startGame=()=>{if(!this.el.menu.hidden){this.unlockAudio();this.sfx('start');this.start(false)}};
   startBtn.addEventListener('click',startGame);
   // Some mobile embedded viewers drop the synthetic click after touch. Pointerup
@@ -2886,7 +2934,7 @@ class Game{
  }
  near(x,range){return Math.abs(this.player.x-x)<range&&this.player.y>165}
  scenePrompt(){if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
-  if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(535,56)?'E · VERDADERO':null;
+  if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(425,56)?'E · VERDADERO':null;
   if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?(this.save.guardianDefeated?'E · Consultar memoria':'E · Desafiar Centinela de lógica'):null;
   if(this.scene==='metro')return this.near(934,78)?(root.Regions.complete(this.save,'metro')?'E · Entrar al Archivo de Ecos':'Archivo cerrado · faltan relés'):this.near(58,60)?'E · Volver al Distrito Aurora':this.near(1230,95)?(root.Regions.complete(this.save,'metro')?'E · Tomar el tren al norte':'Primero activa ambos relés'):this.near(340,67)?'E · Activar relé uno':this.near(710,67)?'E · Activar relé dos':null;
   if(this.scene==='rooftops')return this.near(75,70)?'E · Regresar a la calle':this.near(420,70)?'E · Conectar antena uno':this.near(805,70)?'E · Conectar antena dos':null;
