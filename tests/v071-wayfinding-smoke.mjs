@@ -54,7 +54,7 @@ assert.equal(G.direction('metro',base,325),null,'Hide arrow when player is close
 assert.equal(G.direction('training',base,80),null);
 assert.equal(G.direction('district',base,NaN),null);
 assert.match(html,/id="guidance-mode"/);
-assert.match(html,/value="hint">Solo cuando pulso Pista/);
+assert.match(html,/value="hint">Solo al pedir Pista/);
 assert.match(html,/value="off">Sin flechas/);
 assert.match(html,/lumina-guidance-mode-v1/);
 assert.match(html,/this\.drawGuidance\(game\)/);
