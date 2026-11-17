@@ -1,10 +1,24 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.8.0 · Transferencia real entre escenarios y pruebas A/B**
+**Versión 0.8.1 · Menú más simple, progresión contextual y auditoría integral**
 
 [**Jugar desde iPhone, Mac o PC**](https://allancs29.github.io/lumina-juego/) · [**Descargar todo el código ZIP**](https://github.com/AllanCs29/lumina-juego/archive/refs/heads/main.zip)
 
 Lúmina es una aventura 2D original para aprender lógica de programación desde cero mediante exploración, plataformas, misiones y narrativa. Iris y NIX recorren Distrito Aurora, Estación Umbral, Archivo de Ecos, Puerto de la Bruma, Pasarela Boreal y Faro del Silencio.
+
+## Nuevo en v0.8.1 — Menú esencial y auditoría integral
+
+- **Tres decisiones al abrir el juego:** Jugar/Continuar, Aprender controles y Opciones. La pantalla inicial ya no es una lista de tareas y menús técnicos.
+- **Preferencias de uso frecuente en Opciones:** orientación, tamaño de lectura, sonido y reducción de movimiento; los controles táctiles, FPS, calidad, ambiente y vibración quedan bajo Ajustes avanzados.
+- **Desbloqueo contextual:** Laboratorio y Cuaderno se muestran únicamente después de descubrirlos. Nueva partida solo aparece si existe un progreso iniciado. La cinemática se puede repetir después de haberla visto.
+- **Menú de QA separado:** cambiar de escena y repetir pruebas de jefe se oculta en modo normal; para desarrolladores, agregar `?dev=1` a la URL permite mostrar las herramientas de prueba.
+- **Accesibilidad y regresión:** el menú usa `details/summary` con teclado, foco visible, controles principales de al menos 44 px y verificación real en Chromium de la estructura y ajustes en pantalla móvil. La captura móvil queda como artefacto en GitHub Actions.
+- **Auditoría de cuatro áreas:** enseñanza, aprendizaje autónomo, diseño/arte/UX e ingeniería con hallazgos P0/P1/P2 y criterios de aceptación. **Documento de análisis, no funcionalidades ya implementadas.**
+- **Compatibilidad:** mismas partidas, mismas ocho misiones, mismo entorno offline; caché PWA renovada a v0.8.1.
+
+[Auditoría integral v0.8.1](AUDITORIA-INTEGRAL-v0.8.1.md) · [Qué probar](QUE-PROBAR-v0.8.1.md) · [Registro de cambios](CHANGELOG-v0.8.1.md)
+
+## Se conserva de v0.8.0
 
 ## Nuevo en v0.8.0
 - **Cinco desafíos programables con doble evaluación:** refugio, bucles, sensores de arreglos, compuertas booleanas y depuración. Las misiones 5 a 8 comprueban dos estados diferentes del entorno y exigen una sola receta que funcione en ambos.
@@ -109,4 +123,4 @@ El rumbo de cada versión se evalúa ahora con tres documentos de producción ba
 
 [**Cambios completos v0.7.1**](CHANGELOG-v0.7.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.7.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
 
-**Pendiente para el siguiente hito:** extender a todo el juego la legibilidad móvil, profundizar las consecuencias físicas de las misiones 5–8, reforzar la integración de código y mundo, modularizar el código principal y probar en iPhone Safari físico. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
+**Siguientes prioridades según auditoría:** reducir explicaciones obligatorias del LAB sin omitir enseñanza, reforzar evaluación con casos nuevos, integrar programación al mundo, revisar contraste y legibilidad móvil, modularizar el motor y validar físicamente en Safari iPhone. La historia completa permanece reservada para revisión posterior. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
