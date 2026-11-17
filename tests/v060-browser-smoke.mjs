@@ -522,6 +522,99 @@ try{
  assert.equal(offline.levels.length,8,'All missions survive offline reload');
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
  await delay(150);
+ // Follow the logical story from a NEW SAVE using each real in-game puzzle and transition.
+ // Positions jump between interaction anchors; a separate physical playtest is still required.
+ const journeyCity=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  g.start(true);if(g.prologue.active)g.prologue.finish();
+  g.el.menu.hidden=true;g.locked=false;
+  g.player.x=606;g.player.y=280;g.interact();
+  for(const [id,checked] of [['logic-power',true],['logic-network',true],['logic-alarm',false]]){
+   const e=document.getElementById(id);e.checked=checked;e.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  document.getElementById('logic-try').click();
+  const gate=g.save.cityGate;
+  g.player.x=1090;g.player.y=280;g.interact();
+  const power=g.save.cityPowered;
+  g.player.x=1505;g.player.y=280;g.interact();
+  for(let n=0;n<2;n++)document.querySelector('#variable-modal .variable-palette button[data-operation=ADD2]').click();
+  for(let n=0;n<2;n++)document.getElementById('variable-step').click();
+  const variable=g.save.cityVariableSolved;
+  g.academy.closeVariable();
+  g.player.x=2240;g.player.y=280;g.interact();
+  const nixGate=!g.save.cityCompleted&&document.getElementById('city-ending').hidden;
+  g.player.x=2040;g.player.y=280;g.interact();
+  const editor=g.editor;
+  const cityEditor=editor.opened&&editor.id==='cityNix';
+  for(const cmd of ['EAST','EAST','PULSE'])editor.append(cmd);
+  const solved=window.Lumina.Program.run('cityNix',editor.blocks).success;
+  editor.execute();
+  return {gate,power,variable,nixGate,cityEditor,solved};
+ })()`);
+ for(const [name,description] of Object.entries({gate:'City Boolean console authorizes the physical door',
+  power:'City relay restores power',variable:'Real variable editor extends the bridge',
+  nixGate:'A new player cannot leave Aurora before finding NIX',
+  cityEditor:'The NIX puzzle is unlocked in the city',
+  solved:'Movement programming wakes the urban NIX'}))assert.equal(journeyCity[name],true,description);
+ await until(async()=>await evalJs("!document.getElementById('program-claim').hidden"),15000);
+ const journeyDepart=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  document.getElementById('program-claim').click();
+  const awake=g.save.cityNixAwake;
+  g.player.x=2240;g.player.y=280;g.interact();
+  const cityEnd=!document.getElementById('city-ending').hidden;
+  document.getElementById('city-end-close').click();
+  g.updateTransition(2);
+  for(let n=0;n<10&&!g.el.story.hidden;n++)g.nextDialogue();
+  return {awake,cityEnd,inMetro:g.scene==='metro'};
+ })()`);
+ assert.equal(journeyDepart.awake,true,'City NIX runs programmed directions');
+ assert.equal(journeyDepart.cityEnd,true,'Aurora chapter opens its real ending');
+ assert.equal(journeyDepart.inMetro,true,'The real station transition succeeds');
+
+ const journeyArchive=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  const talk=()=>{for(let n=0;n<10&&!g.el.story.hidden;n++)g.nextDialogue();};
+  const activate=(x)=>{g.player.x=x;g.player.y=280;g.interact();};
+  activate(340);const relay1=g.save.metroRelays[0];
+  activate(710);
+  const coding=!document.getElementById('world-code-modal').hidden;
+  const add=ops=>{for(const op of ops){const b=document.querySelector('#world-code-palette button[data-op="'+op+'"]');if(!b)throw Error('Missing '+op);b.click();}};
+  add(['ENERGY','NETWORK','AND','NOT_ALARM','AND','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const safety=document.getElementById('world-code-feedback').dataset.correct==='true';
+  document.getElementById('world-code-done').click();
+  activate(934);g.updateTransition(2);talk();
+  const entered=g.scene==='archive';
+  activate(275);talk();activate(520);talk();
+  const memories=g.save.archiveNodes[0]&&g.save.archiveNodes[1];
+  activate(765);
+  const decode=!document.getElementById('world-code-modal').hidden;
+  add(['SET0','SENSOR0','SENSOR1','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const arrays=document.getElementById('world-code-feedback').dataset.correct==='true';
+  document.getElementById('world-code-done').click();talk();
+  activate(925);const guardian=g.guardian.active;
+  const pads=[425,330,425];
+  for(const x of pads){g.player.x=x;g.player.y=280;g.guardian.action();}
+  talk();
+  const defeated=g.save.guardianDefeated;
+  activate(68);g.updateTransition(2);talk();
+  const backMetro=g.scene==='metro';
+  activate(1230);g.updateTransition(2);talk();
+  return {relay1,coding,safety,entered,memories,decode,arrays,guardian,defeated,backMetro,harbor:g.scene==='harbor'};
+ })()`);
+ for(const [name,description] of Object.entries({relay1:'First station relay enables normally',
+  coding:'Second relay triggers Boolean programming',
+  safety:'Safe Boolean program works for the train',
+  entered:'The Archive opens after both relays',
+  memories:'Two archive records are read in order',
+  decode:'Last archive record requires array programming',
+  arrays:'Sensor array program decodes memory',
+  guardian:'Centinela challenge starts after evidence',
+  defeated:'Three Boolean boss phases can be passed',
+  backMetro:'Archive return leads to station',
+  harbor:'Authorized train reaches the northern harbor'}))assert.equal(journeyArchive[name],true,description);
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
  console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape offline navigation and screenshots');
 }catch(error){console.error('BROWSER SMOKE FAILURE:',error);process.exitCode=1;}
