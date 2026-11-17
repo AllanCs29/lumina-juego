@@ -2,6 +2,18 @@
 
 **Prioridad:** primero una experiencia pequeña y completa que demuestre diversión + aprendizaje + legibilidad, antes de expandir 8 sistemas aislados.
 
+## Estado de implementación · v0.7.0
+
+| Área de la auditoría | Estado comprobable | Qué falta para considerarla terminada |
+|---|---|---|
+| **LUM-001 · Móvil legible** | **Parcial** · textos del LAB a partir de 14 px, botones didácticos ampliados a 44 px y ajuste 100/115/130 % guardado | Extender al HUD, otras consolas, menús, sobreimpresiones y validar en Safari físico |
+| **LUM-002 · Comprensión y transferencia** | **Parcial** · misión 4 comprueba dos valores distintos con un mismo programa y traza por entrada | Variantes para condiciones, arreglos, bucles, funciones y depuración |
+| **LUM-003 · Consecuencia en el mundo** | **Parcial jugable** · calefactor del Taller de NIX cambia de apariencia con el resultado real y conserva estado | Editor anclado físicamente al escenario en lugar de modal y reacción de más máquinas |
+| **LUM-004 · Ciclo pedagógico** | **Parcial** · explicación nueva, prueba A/B, feedback específico y recompensa física | Convertir el tutor de varias pantallas en demostración corta interactiva con transferencia en contexto |
+| **LUM-005 · Arte por categorías** | **Parcial** · nuevo refugio con sombra, persiana y luz cálida; revisión integral pendiente | Auditar arte de cada región en el tamaño final del juego |
+
+Los tests unitarios y de Chrome verifican estas implementaciones, pero **no sustituyen un playtest humano ni una validación física de iPhone**. La misión 4 es un **primer circuito vertical**, no equivale a cerrar todos los hitos P0.
+
 ## Objetivos de producto verificables
 
 | Id | Prioridad | Cambio específico | Prueba de aceptación |
@@ -26,7 +38,7 @@
 
 ## Propuesta de vertical slice
 
-**Capítulo jugable: «La primera señal de NIX»** (propuesta de diseño, todavía no implementada).
+**Capítulo jugable: «La primera señal de NIX»** (prototipo parcial implementado en v0.7.0; los siete puntos describen el diseño final buscado, no funciones todas terminadas).
 
 1. Iris llega a un cuarto sin calefacción; la máquina tiene una etiqueta *carga = 2*. NIX pide que la energía llegue a 5.
 2. En el mismo escenario, el jugador observa dos cajas y aprende una variable: `carga ← 2` y `carga ← carga + 3`.
