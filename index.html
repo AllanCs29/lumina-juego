@@ -2751,40 +2751,186 @@ root.Prologue=Prologue;
 })(typeof window!=='undefined'?(window.Lumina=window.Lumina||{}):(globalThis.Lumina=globalThis.Lumina||{}));
 
 </script><script>
-/* Lúmina 0.5 · practical code lessons: no arbitrary code execution. */
+
+/* Lúmina 0.6 — story missions + safe block interpreter. Never executes user JS. */
 (function(root){'use strict';
- const TASKS=Object.freeze([
-  {title:'01 · Funciones',description:'Una función recibe datos y devuelve un resultado.',code:'function duplicar(numero) {\n  return numero * 2;\n}\n\nduplicar(6);',answer:12,hint:'Sustituye numero por 6 y multiplica por 2.',trace:'numero = 6\n6 × 2 = 12\nreturn 12',success:'¡Correcto! Las funciones permiten reutilizar una operación.'},
-  {title:'02 · Arreglos',description:'Un arreglo almacena valores. La primera posición tiene índice 0.',code:'let sensores = [3, 7, 11];\nlet total = sensores[1] + sensores[0];\ntotal;',answer:10,hint:'sensores[0] es 3; sensores[1] es 7.',trace:'sensores[1] = 7\nsensores[0] = 3\n7 + 3 = 10',success:'¡Bien! Los índices te permiten recuperar datos.'},
-  {title:'03 · Depuración',description:'Localiza el valor que falta en esta condición para abrir la puerta.',code:'let carga = 2;\ncarga = carga + 3;\nif (carga === ___) {\n  abrirPuerta();\n}',answer:5,hint:'Parte de 2, luego suma 3.',trace:'carga = 2\ncarga = 2 + 3 = 5\nLa condición debe ser carga === 5',success:'¡Corregido! Depurar significa rastrear valores y localizar fallos.'}
- ]);
- function evaluate(i,value){const t=TASKS[i],valid=!!t&&String(value).trim()!==''&&Number.isInteger(Number(value));return {valid,correct:valid&&Number(value)===t.answer,trace:t?.trace,answer:t?.answer};}
- class LogicLab{
-  constructor(game){this.game=game;this.index=0;
-   for(const [id,fn] of [['lab-open',()=>this.open()],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)]])document.getElementById(id)?.addEventListener('click',fn);
-   document.getElementById('lab-answer')?.addEventListener('keydown',e=>{if(e.key==='Enter')this.run();});
+const TASKS=Object.freeze([{"kind":"answer","title":"01 · Funciones","story":"NIX encontró una señal duplicada en el taller. Necesita comprobar el cálculo.","description":"Una función recibe un valor y devuelve otro. Observa la operación.","code":"function duplicar(numero) {\n  return numero * 2;\n}\n\nduplicar(6);","answer":12,"hint":"Sustituye numero por 6 y multiplica por 2.","trace":"numero = 6\n6 × 2 = 12\nreturn 12","success":"¡Bien! Una función resuelve la misma tarea con entradas diferentes."},{"kind":"answer","title":"02 · Arreglos","story":"Los sensores del túnel envían tres lecturas. NIX necesita combinar dos.","description":"Los arreglos empiezan en índice 0. ¿Cuánto suma el programa?","code":"let sensores = [3, 7, 11];\nlet total = sensores[1] + sensores[0];\ntotal;","answer":10,"hint":"El primer valor ocupa sensores[0] y el segundo sensores[1].","trace":"sensores[1] = 7\nsensores[0] = 3\n7 + 3 = 10","success":"¡Correcto! Puedes consultar un dato específico con su índice."},{"kind":"answer","title":"03 · Depuración","story":"La puerta de la estación se quedó bloqueada por un valor incompleto.","description":"Rastrea cuánto vale carga y completa la condición.","code":"let carga = 2;\ncarga = carga + 3;\nif (carga === ___) {\n  abrirPuerta();\n}","answer":5,"hint":"Carga inicia en 2. La instrucción siguiente aumenta su valor en 3.","trace":"carga = 2\ncarga = 2 + 3 = 5\nLa condición correcta compara carga con 5","success":"¡Reparado! Depurar significa observar valores reales, no adivinar."},{"kind":"program","title":"04 · Calentar el refugio","story":"Iris: «Hace frío. Si hacemos que el calefactor llegue a carga 5, habrá refugio para todos».","description":"CONSTRUYE un programa que comience con carga 2, sume 3 y muestre 5.","code":"OBJETIVO: carga final = 5\nUsa variables, operaciones y MOSTRAR.","answer":5,"required":["SET2","ADD3","OUTPUT"],"options":["SET2","SET3","ADD3","MUL2","OUTPUT"],"hint":"Primero crea la caja carga con valor 2; luego cámbiala sumando 3.","success":"El calefactor se enciende. ¡Tus instrucciones produjeron un resultado real!"},{"kind":"program","title":"05 · Faros repetidos","story":"NIX: «Tres pulsos iguales pueden programarse con una sola instrucción de repetición».","description":"Construye carga = 0, repite 3 veces sumar 2 y muestra 6.","code":"OBJETIVO: 3 pulsos de 2 unidades\nPrueba un bucle, no tres instrucciones copiadas.","answer":6,"required":["SET0","REPEAT3_ADD2","OUTPUT"],"options":["SET0","SET2","ADD2","REPEAT3_ADD2","OUTPUT"],"hint":"Un bucle REPETIR 3 debe ejecutar sumar 2 tres veces.","success":"Tres pulsos sincronizan las lámparas. ¡Entendiste un bucle!"},{"kind":"program","title":"06 · Sensores del hielo","story":"NIX: «El hielo está cambiando. Sumemos las lecturas de los dos primeros sensores».","description":"Usa el arreglo [3, 7, 11] y muestra la suma de posiciones 0 y 1.","code":"sensores = [3, 7, 11]\nOBJETIVO: sumar sensores[0] y sensores[1].","answer":10,"required":["SET0","SENSOR0","SENSOR1","OUTPUT"],"options":["SET0","SENSOR0","SENSOR1","SENSOR2","ADD3","OUTPUT"],"hint":"Empieza en 0 y lee los índices 0 y 1. Cada lectura se acumula.","success":"El hielo está controlado. ¡Has leído y combinado datos del arreglo!"},{"kind":"program","title":"07 · Compuerta lógica","story":"Iris: «La puerta solo abre con energía y red activas, y alarma desactivada».","description":"Combina sensores booleanos con Y. El resultado debe ser VERDADERO.","code":"energía = VERDADERO\nred = VERDADERO\nalarma = FALSO\nOBJETIVO: energía Y red Y NO alarma","answer":true,"required":["ENERGY","NETWORK","NOT_ALARM","AND","AND","OUTPUT"],"options":["ENERGY","NETWORK","NOT_ALARM","AND","OR","OUTPUT"],"hint":"Primero une energía Y red. Después une el resultado Y NO alarma.","success":"La compuerta reconoce tu condición booleana. ¡Acceso autorizado!"},{"kind":"program","title":"08 · Señal de Lúmina","story":"NIX: «Esta es la señal que une Aurora con el norte. Tú puedes corregirla».","description":"La variable empieza en 2. Súmale 3, compárala con 5 y muestra VERDADERO.","code":"carga = 2\ncarga = carga + 3\nOBJETIVO: comprobar que carga vale 5","answer":true,"required":["SET2","ADD3","TEST5","OUTPUT"],"options":["SET2","ADD2","ADD3","TEST4","TEST5","OUTPUT"],"hint":"Usa una variable, cambia su valor, compárala y finalmente muestra el resultado.","success":"✦ ¡Red del Norte reactivada! Iris y NIX han aprendido a leer la señal."}]);
+const OPS=Object.freeze({
+ SET0:'carga ← 0',SET2:'carga ← 2',SET3:'carga ← 3',
+ ADD2:'carga ← carga + 2',ADD3:'carga ← carga + 3',
+ MUL2:'carga ← carga × 2',REPEAT3_ADD2:'REPETIR 3 { + 2 }',
+ SENSOR0:'carga += sensores[0]',SENSOR1:'carga += sensores[1]',SENSOR2:'carga += sensores[2]',
+ ENERGY:'LEER energía',NETWORK:'LEER red',NOT_ALARM:'LEER NO alarma',
+ AND:'Y (combinar)',OR:'O (combinar)',TEST4:'¿carga es 4?',TEST5:'¿carga es 5?',
+ OUTPUT:'MOSTRAR resultado'
+});
+const MAX_BLOCKS=14;
+function evaluate(i,value){
+ const task=TASKS[i],valid=!!task&&task.kind==='answer'&&String(value).trim()!==''&&Number.isInteger(Number(value));
+ return {valid,correct:valid&&Number(value)===task.answer,trace:task?.trace||'',answer:task?.answer};
+}
+function runProgram(i,program){
+ const task=TASKS[i],trace=[],stack=[];let acc=null,output=null,error='',halted=false;
+ if(!task||task.kind!=='program'||!Array.isArray(program)||program.length>MAX_BLOCKS||!program.length)
+  return {valid:false,correct:false,error:'Agrega instrucciones para formar un programa.',trace:[],value:null};
+ const counts={};const valueName=v=>typeof v==='boolean'?(v?'VERDADERO':'FALSO'):String(v);
+ for(let n=0;n<program.length;n++){
+  const op=program[n];counts[op]=(counts[op]||0)+1;
+  if(!Object.prototype.hasOwnProperty.call(OPS,op)||!task.options.includes(op)){error='El programa contiene un bloque no disponible.';break;}
+  if(halted){error='MOSTRAR debe ser la última instrucción.';break;}
+  if(op==='SET0'||op==='SET2'||op==='SET3'){acc=Number(op.slice(3));trace.push('carga ← '+acc);}
+  else if(op==='ADD2'||op==='ADD3'||op==='MUL2'){
+   if(typeof acc!=='number'){error='Primero declara la variable carga.';break;}
+   const v=Number(op.slice(-1));acc=op.startsWith('ADD')?acc+v:acc*v;
+   trace.push('carga = '+acc);
+  }else if(op==='REPEAT3_ADD2'){
+   if(typeof acc!=='number'){error='Declara carga antes de usar REPETIR.';break;}
+   for(let it=1;it<=3;it++){acc+=2;trace.push('vuelta '+it+'/3 → carga = '+acc);}
+  }else if(op.startsWith('SENSOR')){
+   if(typeof acc!=='number'){error='Inicia carga antes de leer sensores.';break;}
+   const idx=Number(op.slice(6)),sensor=[3,7,11][idx];
+   if(!Number.isInteger(idx)||sensor===undefined){error='Índice de sensor inválido.';break;}
+   acc+=sensor;trace.push('sensores['+idx+'] = '+sensor+' → carga = '+acc);
+  }else if(op==='ENERGY'||op==='NETWORK'||op==='NOT_ALARM'){
+   stack.push(true);trace.push(op==='NOT_ALARM'?'NO alarma = VERDADERO':(op==='ENERGY'?'energía':'red')+' = VERDADERO');
+  }else if(op==='AND'||op==='OR'){
+   if(stack.length<2){error='La condición necesita dos valores booleanos.';break;}
+   const b=stack.pop(),a=stack.pop();
+   if(typeof a!=='boolean'||typeof b!=='boolean'){error='Y/O solo combina condiciones booleanas.';break;}
+   const v=op==='AND'?a&&b:a||b;stack.push(v);
+   trace.push(valueName(a)+' '+(op==='AND'?'Y':'O')+' '+valueName(b)+' → '+valueName(v));
+  }else if(op==='TEST4'||op==='TEST5'){
+   if(typeof acc!=='number'){error='No hay variable numérica para comparar.';break;}
+   const expected=Number(op.slice(-1));stack.push(acc===expected);
+   trace.push('¿'+acc+' = '+expected+'? → '+valueName(acc===expected));
+  }else if(op==='OUTPUT'){
+   if(stack.length===1)output=stack.pop();
+   else if(stack.length===0&&typeof acc==='number')output=acc;
+   else {error='La salida necesita un único resultado.';break;}
+   trace.push('MOSTRAR '+valueName(output));halted=true;
   }
-  open(){const completed=this.game.save.labCompleted||[];this.index=TASKS.findIndex((_,i)=>!completed.includes(i));if(this.index<0)this.index=TASKS.length-1;
-   this.game.locked=true;this.game.input.reset();this.game.el.menu.hidden=true;document.getElementById('logic-lab').hidden=false;this.render();}
-  close(){document.getElementById('logic-lab').hidden=true;this.game.input.reset();this.game.locked=true;this.game.el.menu.hidden=false;this.game.updateMenuState();}
-  move(delta){const next=this.index+delta;if(next<0||next>=TASKS.length||delta>0&&!this.game.save.labCompleted.includes(this.index))return;this.index=next;this.render();}
-  hint(){document.getElementById('lab-feedback').textContent='PISTA · '+TASKS[this.index].hint;this.game.sfx('menu');}
-  run(){const input=document.getElementById('lab-answer').value,result=evaluate(this.index,input),el=document.getElementById('lab-feedback'),trace=document.getElementById('lab-step');
-   if(!result.valid){el.textContent='Introduce un número entero para probar tu respuesta.';el.dataset.success='false';return;}
-   trace.hidden=!result.correct;trace.textContent='EJECUCIÓN PASO A PASO\n'+result.trace;
-   if(result.correct){if(!this.game.save.labCompleted.includes(this.index)){this.game.save.labCompleted.push(this.index);this.game.persist();}
-    el.textContent=TASKS[this.index].success;el.dataset.success='true';this.game.sfx('success');
-   }else{el.textContent='Resultado '+input+': todavía no coincide. Revisa el estado de cada variable.';el.dataset.success='false';this.game.sfx('deny');}
-   this.renderNav();
-  }
-  renderNav(){const done=this.game.save.labCompleted;document.getElementById('lab-prev').disabled=this.index===0;
-   document.getElementById('lab-next').disabled=!done.includes(this.index)||this.index===TASKS.length-1;
-   document.getElementById('lab-counter').textContent='MISIÓN '+(this.index+1)+' / '+TASKS.length+' · '+done.length+' completadas';}
-  render(){const t=TASKS[this.index];document.getElementById('lab-title').textContent=t.title;document.getElementById('lab-description').textContent=t.description;document.getElementById('lab-code').textContent=t.code;
-   document.getElementById('lab-answer').value='';document.getElementById('lab-feedback').textContent=this.game.save.labCompleted.includes(this.index)?'✓ Ya completaste este reto. Puedes practicar de nuevo.':'Escribe el resultado y pulsa Ejecutar.';
-   document.getElementById('lab-feedback').dataset.success=String(this.game.save.labCompleted.includes(this.index));document.getElementById('lab-step').hidden=true;this.renderNav();}
+  if(trace.length>60){error='Se alcanzó el límite de ejecución.';break;}
  }
- root.LogicLab=LogicLab;root.LogicLabModel={TASKS,evaluate};
+ if(!error&&!halted)error='El programa debe terminar con MOSTRAR.';
+ if(!error){
+  const required={};for(const op of task.required)required[op]=(required[op]||0)+1;
+  for(const [op,count] of Object.entries(required)){if((counts[op]||0)<count){error='Falta utilizar una instrucción del concepto de la misión.';break;}}
+ }
+ return {valid:!error,correct:!error&&output===task.answer,error,trace,value:output};
+}
+function sanitizedDraft(i,ops){const task=TASKS[i];return task?.kind==='program'&&Array.isArray(ops)?
+ ops.slice(0,MAX_BLOCKS).filter(op=>typeof op==='string'&&task.options.includes(op)):[];}
+class LogicLab{
+ constructor(game){
+  this.game=game;this.index=0;this.active=false;this.fromWorld=false;this.draft=[];
+  for(const [id,fn] of [['lab-open',()=>this.open(false)],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)],['lab-clear',()=>this.clear()]])
+   document.getElementById(id)?.addEventListener('click',fn);
+  document.getElementById('lab-answer')?.addEventListener('keydown',e=>{if(e.key==='Enter')this.run();});
+  document.getElementById('lab-palette')?.addEventListener('click',e=>{const button=e.target.closest('button[data-op]');if(button)this.add(button.dataset.op);});
+  document.getElementById('lab-blocks')?.addEventListener('click',e=>{const button=e.target.closest('button[data-edit]');if(button)this.edit(Number(button.dataset.idx),button.dataset.edit);});
+  document.getElementById('logic-lab')?.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();this.close();}});
+ }
+ open(fromWorld=false){
+  if(this.active)return;this.active=true;this.fromWorld=fromWorld;
+  const completed=this.game.save.labCompleted||[];let next=TASKS.findIndex((_,i)=>!completed.includes(i));
+  if(next<0)next=TASKS.length-1;this.index=next;
+  this.game.locked=true;this.game.input.reset();this.game.el.menu.hidden=true;
+  document.getElementById('logic-lab').hidden=false;this.render();
+  document.querySelector('#logic-lab .lab-panel')?.focus();
+ }
+ close(){
+  if(!this.active)return;this.active=false;document.getElementById('logic-lab').hidden=true;
+  this.game.input.reset();
+  if(this.fromWorld){this.game.locked=false;this.game.el.menu.hidden=true;this.game.updateObjective();}
+  else {this.game.locked=true;this.game.el.menu.hidden=false;this.game.updateMenuState();}
+ }
+ move(delta){
+  const next=this.index+delta;if(next<0||next>=TASKS.length)return;
+  if(delta>0&&!this.game.save.labCompleted.includes(this.index))return;
+  this.index=next;this.render();
+ }
+ getDraft(){return sanitizedDraft(this.index,(this.game.save.labDrafts||{})[this.index]);}
+ storeDraft(){
+  this.game.save.labDrafts=this.game.save.labDrafts||{};
+  this.game.save.labDrafts[this.index]=this.draft.slice();this.game.persist();
+ }
+ add(op){const task=TASKS[this.index];if(task?.kind!=='program'||!task.options.includes(op)||this.draft.length>=MAX_BLOCKS)return;
+  this.draft.push(op);this.storeDraft();this.drawBlocks();
+ }
+ edit(idx,action){
+  if(!Number.isInteger(idx)||idx<0||idx>=this.draft.length)return;
+  if(action==='delete')this.draft.splice(idx,1);
+  else if(action==='up'&&idx>0){[this.draft[idx-1],this.draft[idx]]=[this.draft[idx],this.draft[idx-1]];}
+  else if(action==='down'&&idx<this.draft.length-1){[this.draft[idx+1],this.draft[idx]]=[this.draft[idx],this.draft[idx+1]];}
+  else return;
+  this.storeDraft();this.drawBlocks();
+ }
+ clear(){if(TASKS[this.index].kind!=='program')return;this.draft=[];this.storeDraft();this.drawBlocks();this.feedback('Tu programa está vacío. Prueba otra secuencia.',false);}
+ feedback(msg,success=false){const e=document.getElementById('lab-feedback');e.textContent=msg;e.dataset.success=String(success);}
+ hint(){const task=TASKS[this.index];this.feedback('PISTA · '+task.hint,false);this.game.sfx('menu');}
+ markSuccess(){
+  const done=this.game.save.labCompleted;
+  if(!done.includes(this.index)){done.push(this.index);this.game.save.labMastered=done.length===TASKS.length;this.game.persist();}
+  this.game.sfx('success');
+  if(this.game.save.labMastered){document.getElementById('lab-story').textContent='✦ NIX: «La señal del norte está completa. Ya puedes escribir instrucciones, combinarlas y repararlas».';
+   this.game.flashCaption('✦ Dominio de lógica · 8/8 misiones',3);}
+ }
+ run(){
+  const task=TASKS[this.index],numeric=task.kind==='answer';
+  const result=numeric?evaluate(this.index,document.getElementById('lab-answer').value):runProgram(this.index,this.draft);
+  const trace=document.getElementById('lab-step');
+  if(!result.valid&&numeric){this.feedback('Introduce un número entero para ejecutar.',false);trace.hidden=true;return;}
+  if(result.correct){this.markSuccess();this.feedback(task.success,true);}
+  else this.feedback(result.error||'La máquina todavía no llega al objetivo. Observa el estado y corrige las instrucciones.',false);
+  const lines=result.trace||[];trace.hidden=!(result.correct||!numeric&&lines.length>0);
+  trace.textContent='EJECUCIÓN PASO A PASO\n'+(Array.isArray(lines)?lines.join('\n'):lines);
+  if(!numeric)this.drawMeter(result.value);
+  this.renderNav();
+ }
+ drawMeter(value){const e=document.getElementById('lab-meter');e.replaceChildren();
+  if(value===null||value===undefined)return;
+  const count=typeof value==='boolean'?(value?12:0):Math.max(0,Math.min(12,Math.round(value)));
+  for(let i=0;i<12;i++){const segment=document.createElement('span');segment.className=i<count?'active':'';e.append(segment);}
+  e.setAttribute('aria-label','Resultado de la máquina: '+(typeof value==='boolean'?(value?'VERDADERO':'FALSO'):value));
+ }
+ drawBlocks(){
+  const palette=document.getElementById('lab-palette'),list=document.getElementById('lab-blocks');
+  palette.replaceChildren();list.replaceChildren();
+  const task=TASKS[this.index];if(task.kind!=='program')return;
+  for(const op of task.options){const button=document.createElement('button');button.type='button';button.dataset.op=op;
+   button.textContent='+ '+OPS[op];button.disabled=this.draft.length>=MAX_BLOCKS;button.setAttribute('aria-label','Agregar '+OPS[op]);palette.append(button);}
+  this.draft.forEach((op,i)=>{
+   const row=document.createElement('div');row.className='lab-block';row.setAttribute('role','listitem');
+   const n=document.createElement('span');n.className='lab-line';n.textContent=String(i+1).padStart(2,'0');
+   const label=document.createElement('span');label.className='lab-op';label.textContent=OPS[op];row.append(n,label);
+   for(const [act,symbol,can] of [['up','↑',i>0],['down','↓',i<this.draft.length-1],['delete','×',true]]){
+    const b=document.createElement('button');b.type='button';b.dataset.idx=String(i);b.dataset.edit=act;b.disabled=!can;
+    b.textContent=symbol;b.setAttribute('aria-label',(act==='up'?'Subir':act==='down'?'Bajar':'Quitar')+' bloque '+(i+1));row.append(b);
+   }
+   list.append(row);
+  });
+ }
+ renderNav(){
+  const completed=this.game.save.labCompleted,bar=document.getElementById('lab-progress');bar.replaceChildren();
+  for(let i=0;i<TASKS.length;i++){const part=document.createElement('i');part.className=(completed.includes(i)?'done ':'')+(i===this.index?'current':'');bar.append(part);}
+  document.getElementById('lab-prev').disabled=this.index===0;
+  document.getElementById('lab-next').disabled=this.index===TASKS.length-1||!completed.includes(this.index);
+  document.getElementById('lab-counter').textContent='MISIÓN '+(this.index+1)+' / '+TASKS.length+' · '+completed.length+' completadas';
+ }
+ render(){
+  const task=TASKS[this.index],numeric=task.kind==='answer';this.draft=this.getDraft();
+  document.getElementById('lab-title').textContent=task.title;
+  document.getElementById('lab-story').textContent=task.story;
+  document.getElementById('lab-description').textContent=task.description;
+  document.getElementById('lab-code').textContent=task.code;
+  document.getElementById('lab-answer-wrap').hidden=!numeric;document.getElementById('lab-builder').hidden=numeric;
+  document.getElementById('lab-answer').value='';document.getElementById('lab-step').hidden=true;
+  document.getElementById('lab-run').textContent=numeric?'▶ Comprobar':'▶ Ejecutar programa';
+  this.feedback(this.game.save.labCompleted.includes(this.index)?'✓ Misión superada. Puedes volver a practicar.':'Construye la solución; la respuesta no está prellenada.',this.game.save.labCompleted.includes(this.index));
+  this.drawMeter(null);this.drawBlocks();this.renderNav();
+ }
+}
+root.LogicLab=LogicLab;root.LogicLabModel={TASKS,OPS,MAX_BLOCKS,evaluate,runProgram,sanitizedDraft};
 })(window.Lumina=window.Lumina||{});
 
 /* First original teaching boss: answers are Boolean expressions; no random one-shot deaths. */
