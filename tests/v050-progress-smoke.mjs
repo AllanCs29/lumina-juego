@@ -1,4 +1,4 @@
-// Lúmina v0.5.0 — save migration, programming lab, and boss checkpoints.
+// Lúmina v0.6.1 — save migration, programming lab, and boss checkpoints.
 // Run: node tests/v050-progress-smoke.mjs
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -20,7 +20,7 @@ assert.equal(LogicLabModel.TASKS.length,8);
 for(const [i,answer] of [[0,12],[1,10],[2,5]]){
  assert.equal(LogicLabModel.evaluate(i,answer).correct,true,'lesson '+i+' correct');
  assert.equal(LogicLabModel.evaluate(i,answer+1).correct,false,'lesson '+i+' incorrect');
- assert.match(LogicLabModel.evaluate(i,answer).trace,/=/);
+ assert.match(LogicLabModel.evaluate(i,answer).trace,/=|←/,'Pseudocode traces explain assignments');
 }
 assert.equal(LogicLabModel.evaluate(0,'').valid,false);
 const fresh=Save.fresh();
@@ -56,4 +56,4 @@ assert.equal(g.active,false,'Returns to world');
 game.save.guardianDefeated=false;game.save.guardianCheckpoint=2;game.scene='archive';
 g.start(true);assert.equal(g.phase,0,'Explicit replay starts from first round');
 assert.equal(game.save.guardianCheckpoint,0,'Explicit replay resets checkpoint');
-console.log('v0.5.0 progression PASS: 3 lessons, save migration, patterns, round checkpoints & replay');
+console.log('v0.6.1 progression PASS: 3 lessons, save migration, patterns, round checkpoints & replay');
