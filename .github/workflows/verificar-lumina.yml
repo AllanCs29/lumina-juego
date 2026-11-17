@@ -1,0 +1,17 @@
+name: Lúmina · verificaciones
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  arte-y-sintaxis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probar build autónomo y escenas
+        run: node tests/v048-art-smoke.mjs
