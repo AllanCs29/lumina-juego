@@ -956,7 +956,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
    const drafts={},ops=['SET0','SET2','SET3','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
    for(let i=3;i<8;i++){
-    const candidate=value[i];if(Array.isArray(candidate))drafts[i]=candidate.slice(0,14).filter(op=>typeof op==='string'&&ops.includes(op));
+    const candidate=value[i];if(Array.isArray(candidate))drafts[i]=candidate.filter(op=>typeof op==='string'&&ops.includes(op)).slice(0,14);
    }
    return drafts;
   }
@@ -2853,7 +2853,7 @@ function runProgram(i,program){
  return {valid:!error,correct:!error&&output===task.answer,error,trace,value:output};
 }
 function sanitizedDraft(i,ops){const task=TASKS[i];return task?.kind==='program'&&Array.isArray(ops)?
- ops.slice(0,MAX_BLOCKS).filter(op=>typeof op==='string'&&task.options.includes(op)):[];}
+ ops.filter(op=>typeof op==='string'&&task.options.includes(op)).slice(0,MAX_BLOCKS):[];}
 class LogicLab{
  constructor(game){
   this.game=game;this.index=0;this.active=false;this.fromWorld=false;this.draft=[];
