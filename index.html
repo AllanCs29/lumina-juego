@@ -1130,7 +1130,8 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
  const FINAL_CASES=Object.freeze([
   {name:'AURORA',network:true,alarm:false,expected:'TRANSMITIR'},
   {name:'BOREAL',network:true,alarm:true,expected:'AISLAR'},
-  {name:'PUERTO',network:false,alarm:false,expected:'AISLAR'}
+  {name:'PUERTO',network:false,alarm:false,expected:'AISLAR'},
+  {name:'ISLOTE',network:false,alarm:true,expected:'AISLAR'}
  ]);
  function evaluateFinal(operator,negateAlarm){
   if(!['AND','OR'].includes(operator)||typeof negateAlarm!=='boolean')return {valid:false,passed:false,cases:[]};
