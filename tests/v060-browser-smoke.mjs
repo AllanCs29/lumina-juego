@@ -740,6 +740,26 @@ try{
   persisted:'The finale persists across a fresh save read'
  }))assert.equal(journeyFinish[k],true,description);
  assert.ok(journeyFinish.storyMoments>=6,'Story beats were experienced during the whole route');
+ const bossReplay=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  document.getElementById('ending').hidden=true;
+  g.locked=false;g.el.menu.hidden=false;g.scene='tower';
+  g.updateMenuState();
+  const control=document.getElementById('guardian-replay');
+  const available=!control.hidden&&g.save.guardianDefeated;
+  control.click();
+  const started=g.guardian.active&&g.guardian.replay&&g.guardian.phase===0&&g.scene==='guardian';
+  g.guardian.leave();
+  const returned=g.scene==='tower'&&g.save.completed&&g.save.guardianDefeated;
+  const announcement=document.getElementById('guardian-attack').getAttribute('aria-live');
+  g.locked=false;g.el.menu.hidden=true;
+  return {available,started,returned,announcement};
+ })()`);
+ assert.equal(bossReplay.available,true,'Centinela replay unlocks after first victory');
+ assert.equal(bossReplay.started,true,'Replay starts at round one without erasing the campaign');
+ assert.equal(bossReplay.returned,true,'Leaving replay restores the prior world and completed story');
+ assert.equal(bossReplay.announcement,'polite','Boss warning can be read by assistive technology');
+
  // Exercise UI at three phone dimensions; physical Safari remains a separate acceptance test.
  for(const profile of [
   {width:667,height:375,type:'landscapePrimary',angle:90},
