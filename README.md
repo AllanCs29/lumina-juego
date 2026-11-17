@@ -1,6 +1,6 @@
 # Lúmina — Señales del Norte
 
-**v0.4.2** · Videojuego educativo de programación desde cero para iPhone horizontal y PC.
+**v0.4.2.1** · Videojuego educativo de programación desde cero para iPhone horizontal y PC.
 
 ## Jugar
 https://allancs29.github.io/lumina-juego/
@@ -22,3 +22,7 @@ Móvil horizontal: joystick y botones personalizables. PC: A/D o flechas, Espaci
 El proyecto modular, las pruebas y los sprites se distribuyen en el ZIP de la entrega de ChatGPT.
 
 **Validación:** 92 pruebas unitarias aprobadas y pruebas de navegador en Chromium PC y móvil emulado. Pendiente validación en Safari físico.
+
+
+### Parche móvil v0.4.2.1
+Corregido el zoom involuntario por doble toque en iPhone. [Detalles y pruebas](CHANGELOG-v0.4.2.1.md).
