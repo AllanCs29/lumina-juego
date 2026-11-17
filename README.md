@@ -1,32 +1,38 @@
 # Lúmina — Distrito Aurora
 
-Videojuego de plataformas y programación para móvil (horizontal) y PC.
+**Versión actual: v0.3.8 (Mobile First).**
 
-## Versión actual
+Juego de plataformas y lógica protagonizado por Iris, una exploradora informática. Ciudad nocturna, puzles de puertas y el capítulo anterior de NIX y el faro.
 
-**v0.3.7.1** — Distrito Aurora, profundidad urbana, puerta de lógica y mejora del aviso al abrir HTML en visores sin JavaScript.
+## 🎮 Jugar desde iPhone y PC
 
-## Jugar
+**https://allancs29.github.io/lumina-juego/**
 
-Cuando el repositorio tenga activado **GitHub Pages** (Settings → Pages → Deploy from a branch → main / root), la página del juego será:
+- **iPhone:** abre el enlace en Safari, gira a horizontal y pulsa «Nueva expedición».
+- **Controles móviles:** joystick, Saltar, Usar e Impulso cuando esté disponible.
+- **Personalización:** Menú → ⚙ Ajustes de juego y controles → ✥ Personalizar controles táctiles. Arrastra los botones, selecciona uno y cambia su tamaño con el deslizador. Pulsa «Listo».
+- **Velocidad:** Menú → Ajustes → Velocidad de movimiento en móvil (60–110 %, de fábrica 78 %). También encontrarás el control de sonido.
+- **PC:** A/D o flechas para moverte; Espacio para saltar; Shift para impulso; E para interactuar.
 
-https://allancs29.github.io/lumina-juego/
+## Cambios en v0.3.8
 
-En iPhone, abrir desde **Safari**, no desde la vista previa de archivos de ChatGPT. Girar el dispositivo a horizontal.
+- Escenario horizontal adaptable sin deformar personajes ni dejar barras laterales.
+- Botones Pista y Menú dentro del área de juego.
+- Título Distrito Aurora temporal al entrar, con fundido después de ~2 segundos.
+- Tamaño/posición individuales de botones táctiles, guardados localmente.
+- Movimiento táctil suavizado y velocidad configurable.
+- Menú móvil compacto con ajustes plegables.
+- Se conservan las misiones anteriores de NIX, puertas lógicas y faro.
 
-## Estructura
+## Validación y pendientes
 
-- `index.html` — juego completo preparado para GitHub Pages.
-- `README.md` — información del proyecto.
+- 63 pruebas unitarias aprobadas.
+- Pruebas de navegador en Chromium móvil emulado (844×390, 740×360, 390×844) y PC.
+- Puzle urbano, consola NIX y recorrido del faro comprobados con pruebas automatizadas.
+- **Pendiente:** prueba manual de la comodidad, rendimiento y persistencia de controles en Safari de un iPhone físico.
+
+El código completo modular y los tests están disponibles en el ZIP v0.3.8 entregado en el chat.
 
 ## Desarrollo
 
-Actualizamos el archivo `index.html` del repositorio desde ChatGPT. Después de habilitar GitHub Pages, cada nueva publicación en `main` podrá actualizar la página sin volver a descargar el HTML en el teléfono.
-
-## Próximas mejoras
-
-- Más variedad de plataformas urbanas e interiores.
-- Mejorar interacción con NIX y variables reales.
-- Ajustes de animación, controles y rendimiento en Safari físico.
-- Mantener la lista de mejoras, pendientes y pruebas manuales con cada versión.
-
+El archivo `index.html` es una versión autocontenida del juego. Los commits de la rama `main` se utilizan para publicar GitHub Pages.
