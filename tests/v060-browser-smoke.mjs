@@ -199,6 +199,40 @@ try{
  assert.equal(world.opened,true,'Open educational kiosk by interacting in playable world');
  assert.equal(world.unlocked,true,'Close kiosk and resume play');
  assert.equal(world.menuHidden,true,'Do not send player to menu after world kiosk');
+ const guidance=await evalJs(`(()=>{
+  const g=window.Lumina.game,r=g.renderer,G=window.Lumina.Guidance,save={...g.save,cityGate:false};
+  const mode=document.getElementById('guidance-mode'),label=document.getElementById('guidance-mode-label');
+  g.scene='district';g.locked=false;g.el.menu.hidden=true;g.save.cityGate=false;
+  g.camera.x=0;g.player.y=280;
+  mode.value='subtle';mode.dispatchEvent(new Event('change',{bubbles:true}));
+  g.player.x=100;const right=G.direction(g.scene,g.save,g.player.x)?.side;
+  let arrows=0;const old=r.poly;
+  r.poly=function(points,color){if(color==='#d5f5df')arrows++;return old.call(r,points,color);};
+  try{
+   const drawnRight=!!r.drawGuidance(g);
+   g.player.x=860;const left=G.direction(g.scene,g.save,g.player.x)?.side,drawnLeft=!!r.drawGuidance(g);
+   g.player.x=596;const near=r.drawGuidance(g)===null;
+   mode.value='off';mode.dispatchEvent(new Event('change',{bubbles:true}));
+   g.player.x=100;const disabled=r.drawGuidance(g)===null;
+   mode.value='hint';mode.dispatchEvent(new Event('change',{bubbles:true}));
+   const preHint=r.drawGuidance(g)===null;
+   g.hint();const afterHint=!!r.drawGuidance(g);
+   const saved=localStorage.getItem('lumina-guidance-mode-v1');
+   mode.value='hint';mode.dispatchEvent(new Event('change',{bubbles:true}));
+   return {right,left,drawnRight,drawnLeft,near,disabled,preHint,afterHint,saved,arrows,label:label.textContent};
+  }finally{r.poly=old;}
+ })()`);
+ assert.equal(guidance.right,1,'Arrow points east when objective is to the right');
+ assert.equal(guidance.left,-1,'Arrow points west after passing objective');
+ assert.ok(guidance.drawnRight&&guidance.drawnLeft,'Guidance is drawn in both directions');
+ assert.equal(guidance.arrows,3,'Near-target arrows and disabled mode are suppressed');
+ assert.equal(guidance.near,true,'Proximity indicator is replaced by use prompt');
+ assert.equal(guidance.disabled,true,'Off preference draws no arrow');
+ assert.equal(guidance.preHint,true,'Hint-only mode stays quiet until requested');
+ assert.equal(guidance.afterHint,true,'Hint button temporarily reveals the arrow');
+ assert.equal(guidance.saved,'hint','Preference is persistent');
+ assert.match(guidance.label,/Solo con Pista/);
+
  const streetLesson=await evalJs(`(()=>{
   const game=window.Lumina.game;
   game.academy.openVariable();
@@ -223,12 +257,13 @@ try{
  await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await send('Page.reload',{ignoreCache:false});
  await until(async()=>await evalJs("document.documentElement.dataset.luminaReady==='true'"),12000);
- const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered,refuge:window.Lumina.game.save.refugePowered,reading:document.getElementById('reading-scale').value})");
+ const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered,refuge:window.Lumina.game.save.refugePowered,reading:document.getElementById('reading-scale').value,guidance:window.Lumina.game.guidanceMode})");
  assert.equal(offline.ready,true,'Lúmina should start without network');
  assert.equal(offline.language,'python','Chosen language survives offline restart');
  assert.equal(offline.discovered,true,'Laboratory discovery remains stored offline');
  assert.equal(offline.refuge,true,'Workshop heater survives offline reloading');
  assert.equal(offline.reading,'1.3','Reading scale survives offline reloading');
+ assert.equal(offline.guidance,'hint','Direction guidance preference survives offline restart');
  assert.equal(offline.levels.includes(3),true,'Lab progress survives offline restart');
  assert.equal(offline.levels.length,8,'All missions survive offline reload');
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
