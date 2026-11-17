@@ -77,6 +77,34 @@ try{
    text:document.getElementById('lab-feedback').textContent};
  })()`);
  assert.equal(program.done,true);assert.equal(program.blocks,3);
+ // Complete the remaining exercises using the same palette clicks a player uses.
+ const course=await evalJs(`(()=>{
+  const game=window.Lumina.game,lab=game.logicLab;
+  const solutions={
+   1:10,2:5,
+   4:['SET0','REPEAT3_ADD2','OUTPUT'],
+   5:['SET0','SENSOR0','SENSOR1','OUTPUT'],
+   6:['ENERGY','NETWORK','AND','NOT_ALARM','AND','OUTPUT'],
+   7:['SET2','ADD3','TEST5','OUTPUT']
+  };
+  const results=[];
+  for(const [key,answer] of Object.entries(solutions)){
+   const i=Number(key);lab.index=i;lab.render();
+   if(typeof answer==='number')document.getElementById('lab-answer').value=String(answer);
+   else for(const op of answer){
+    const button=[...document.querySelectorAll('#lab-palette button')].find(b=>b.dataset.op===op);
+    if(!button)throw Error('Missing block '+op+' in mission '+i);
+    button.click();
+   }
+   document.getElementById('lab-run').click();
+   results.push({i,done:game.save.labCompleted.includes(i),good:document.getElementById('lab-feedback').dataset.success});
+  }
+  return {results,mastered:game.save.labMastered,completed:game.save.labCompleted.length};
+ })()`);
+ assert.equal(course.completed,8,'All eight missions should persist');
+ assert.equal(course.mastered,true,'Course graduation should unlock');
+ assert.ok(course.results.every(r=>r.done&&r.good==='true'),'Every mission should pass in real DOM');
+
  await send('Emulation.setDeviceMetricsOverride',{width:844,height:390,deviceScaleFactor:2,mobile:true,screenOrientation:{type:'landscapePrimary',angle:90}});
  await delay(260);
  const fit=await evalJs(`(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,
@@ -109,6 +137,7 @@ try{
  const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice()})");
  assert.equal(offline.ready,true,'Lúmina should start without network');
  assert.equal(offline.levels.includes(3),true,'Lab progress survives offline restart');
+ assert.equal(offline.levels.length,8,'All missions survive offline reload');
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
  await delay(150);
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
