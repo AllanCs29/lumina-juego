@@ -427,6 +427,21 @@ body.touch-enabled .story-card{max-height:63dvh;overflow:auto;margin-top:0!impor
 @media (orientation:landscape) and (max-height:520px){body.touch-enabled .menu-panel.menu-v042{height:min(95dvh,410px)}body.touch-enabled .menu-v042 .menu-controls{max-height:95dvh}body.touch-enabled .menu-v042 .menu-art{height:95px}}
 @media (orientation:portrait) and (max-width:650px){body.touch-enabled .menu-panel.menu-v042{display:block;max-height:92dvh;overflow-y:auto}body.touch-enabled .menu-v042 .menu-hero{max-height:none}body.touch-enabled .menu-v042 .menu-controls{max-height:none}}
 
+
+/* v0.4.2.1 · iOS Safari: double tapping the gameplay area must never zoom the page.
+   Scope gesture interception to the stage: preserve readable/zoomable menus and settings. */
+body.touch-enabled .screen,
+body.touch-enabled .screen canvas,
+body.touch-enabled .screen .controls,
+body.touch-enabled .screen .controls *,
+body.touch-enabled .screen .quick-actions,
+body.touch-enabled .screen .quick-actions button {
+  touch-action:none!important;
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+
 </style>
 
 </head>
@@ -464,7 +479,7 @@ body.touch-enabled .story-card{max-height:63dvh;overflow:auto;margin-top:0!impor
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.2</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.2.1</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -808,10 +823,22 @@ root.TouchLayout=TouchLayout;
     if(!e.repeat&&['KeyE','Enter'].includes(e.code))this.action=true;
     this.keys.add(e.code);
    });
-   window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>this.reset());this.setupTouch();
+   window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>this.reset());this.setupTouch();this.preventStageZoom();
   }
   isEditing(){return !!document.querySelector('.modal:not([hidden]),.story-overlay:not([hidden])')}
   reset(){this.keys.clear();this.pad={x:0,y:0};this.touchJump=false;this.action=false;this.jumpQueued=false;this.dashQueued=false;this.padVisual(0,0)}
+  // Safari occasionally handles double taps on absolutely positioned stage overlays
+  // even when individual buttons already have touch-action:manipulation.
+  // Keep native browser gestures outside the stage (menus, articles, Safari chrome).
+  preventStageZoom(){
+   const stage=document.querySelector('.screen');if(!stage)return;
+   stage.addEventListener('dblclick',e=>{if(e.cancelable)e.preventDefault()},{passive:false});
+   stage.addEventListener('gesturestart',e=>{if(e.cancelable)e.preventDefault()},{passive:false});
+   // Canvas itself is not a button; cancelling its native touch-end does not
+   // suppress gameplay controls, which use pointerdown on separate elements.
+   const canvas=document.getElementById('game');
+   canvas?.addEventListener('touchend',e=>{if(document.body.classList.contains('touch-enabled')&&e.cancelable)e.preventDefault()},{passive:false});
+  }
   setupTouch(){const zone=document.getElementById('touch-pad');if(!zone)return;
    const update=e=>{const r=zone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),radius=r.width*.35,scale=d?Math.min(d,radius)/d:0;
     this.pad={x:dx*scale/radius,y:dy*scale/radius};this.padVisual(dx*scale,dy*scale)};
@@ -970,8 +997,7 @@ function windows(r,x,y,w,h,day,kind){
  const spacing=kind==='homes'?37:kind==='power'?52:55;
  const top=y+(kind==='homes'?28:35);
  for(let cx=x+17,k=0;cx<x+w-19;cx+=spacing,k++)for(let cy=top,j=0;cy<Math.min(251,y+h-18);cy+=36,j++){
-  if(kind==='gate' && cx>x+25 && cx<x+w-30)continue; // keep actual doorway clear
-  if(kind==='power' && cx>1040 && cx<1132)continue;
+  if(kind==='gate' && cx>x+25 && cx<x+w-30)continue; // keep actual doorway clear  if(kind==='power' && cx>1040 && cx<1132)continue;
   if(kind==='station'&&cx>1460&&cx<1535)continue;
   if(kind==='lift'&&cx>1730&&cx<1810)continue; // relay has its own alcove
   const isLit=(!day && (k*7+j*5+Math.floor(cx/16))%4!==0);
@@ -997,7 +1023,8 @@ function farSkyline(r,scroll,day){
  ];
  ctx.save();
  for(const layer of layerSettings){ctx.globalAlpha=layer.alpha;
-  let off=((scroll*layer.speed)%layer.period+layer.period)%layer.period;  for(const repeat of [-2,-1,0,1,2])for(const [sx,w,h] of layer.rects){const x=sx+repeat*layer.period-off;
+  let off=((scroll*layer.speed)%layer.period+layer.period)%layer.period;
+  for(const repeat of [-2,-1,0,1,2])for(const [sx,w,h] of layer.rects){const x=sx+repeat*layer.period-off;
    if(x>r.w+20||x+w<0)continue;
    const y=layer.base-h;
    r.r(x,y,w,h+70,layer.ink);r.r(x+5,y+4,w-10,3,day?'#a6b2b8':'#52647f');
@@ -1969,8 +1996,7 @@ class Prologue{
   act('prologue-replay')?.addEventListener('click',()=>{if(this.game.el.menu.hidden)return;this.game.el.menu.hidden=true;this.open(()=>{this.game.el.menu.hidden=false},true)});
  }
  open(after,replay=false){this.after=after||null;this.index=0;this.active=true;this.replay=replay;this.el.hidden=false;this.game.locked=true;this.game.input.reset();this.game.sfx?.('start');this.show();this.loop(performance.now());}
- show(){this.started=performance.now();const c=CHAPTERS[this.index];this.game.sfx?.('menu');document.getElementById('prologue-scene-name').textContent=c.name;document.getElementById('prologue-speaker').textContent=c.speaker;document.getElementById('prologue-text').textContent=c.text;document.getElementById('prologue-purpose').textContent=c.lesson;document.getElementById('prologue-page').textContent=(this.index+1)+' / '+CHAPTERS.length;document.getElementById('prologue-next').textContent=this.index===CHAPTERS.length-1?'Comenzar expedición →':'Siguiente escena →';}
- next(){if(!this.active)return;if(this.index===CHAPTERS.length-1)this.finish();else{this.index++;this.show()}}
+ show(){this.started=performance.now();const c=CHAPTERS[this.index];this.game.sfx?.('menu');document.getElementById('prologue-scene-name').textContent=c.name;document.getElementById('prologue-speaker').textContent=c.speaker;document.getElementById('prologue-text').textContent=c.text;document.getElementById('prologue-purpose').textContent=c.lesson;document.getElementById('prologue-page').textContent=(this.index+1)+' / '+CHAPTERS.length;document.getElementById('prologue-next').textContent=this.index===CHAPTERS.length-1?'Comenzar expedición →':'Siguiente escena →';} next(){if(!this.active)return;if(this.index===CHAPTERS.length-1)this.finish();else{this.index++;this.show()}}
  finish(){if(!this.active)return;this.active=false;this.el.hidden=true;cancelAnimationFrame(this.raf);const g=this.game;if(!this.replay){g.save.cityIntroSeen=true;root.StoryProgress.discover(g.save,'intro');g.persist();g.updateLearningProgress();}g.locked=false;g.input.reset();const cb=this.after;this.after=null;if(cb)cb();}
  loop(now){if(!this.active)return;this.draw((now-this.started)/1000);this.raf=requestAnimationFrame(t=>this.loop(t));}
  draw(t){const x=this.ctx,W=this.canvas.width,H=this.canvas.height,p=CHAPTERS[this.index].scene;
@@ -1996,7 +2022,8 @@ class Prologue{
   }
   if(p==='route'){
    const names=['AURORA','UMBRAL','BRUMA','FARO'];x.fillStyle='#385d73';x.fillRect(62,94,376,5);x.fillStyle='#87ddcf';x.fillRect(62,94,((t*110)%377),4);
-   names.forEach((s,i)=>{const px=66+i*121;x.fillStyle=i?'#cbd9ec':'#f5dba0';x.fillRect(px,88,14,14);x.font='bold 11px monospace';x.fillText(s,px-14,124)});   x.fillStyle='#edc68e';x.fillRect(70+(t*68)%356,92,6,8);
+   names.forEach((s,i)=>{const px=66+i*121;x.fillStyle=i?'#cbd9ec':'#f5dba0';x.fillRect(px,88,14,14);x.font='bold 11px monospace';x.fillText(s,px-14,124)});
+   x.fillStyle='#edc68e';x.fillRect(70+(t*68)%356,92,6,8);
   }
   // Motion and environmental feedback make every shot feel alive even when idle.
   for(let i=0;i<18;i++){const px=(i*71+13+t*(4+i%3*4))%W,py=(i*37+41+t*(5+i%4))%H;x.fillStyle=i%3?'#8bb7c759':'#eac68c65';x.fillRect(px,py,2,2)}
