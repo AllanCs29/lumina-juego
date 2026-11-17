@@ -401,6 +401,38 @@ try{
  assert.equal(checkpointProof.entry,95,'Entering a scene respects the intended entry point');
  await evalJs(`(()=>{const g=window.Lumina.game;g.scene='metro';g.save.scene='metro';g.player.x=1200;g.player.y=280;g.locked=false;g.transition=null;return true})()`);
 
+ await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:2,mobile:true,screenOrientation:{type:'portraitPrimary',angle:0}});
+ await delay(170);
+ const portrait=await evalJs(`(()=>{
+  const g=window.Lumina.game;g.locked=false;g.el.menu.hidden=false;g.updateMenuState();
+  const menu=document.querySelector('#menu .menu-v042');
+  const rect=menu.getBoundingClientRect();
+  const feedback=document.getElementById('feedback-open');
+  feedback.click();
+  const modal=document.getElementById('feedback-modal'),panel=modal.querySelector('.feedback-panel');
+  const panelRect=panel.getBoundingClientRect();
+  document.getElementById('feedback-category').value='No entendí una misión';
+  document.getElementById('feedback-description').value='No entendí cómo leer el sensor del segundo relé y me perdí en el metro.';
+  document.getElementById('feedback-copy').click();
+  const text=document.getElementById('feedback-result').textContent;
+  const noSend=modal.textContent.includes('No se envía automáticamente');
+  document.getElementById('feedback-close').click();
+  g.el.menu.hidden=true;g.locked=false;
+  return {width:rect.width,height:rect.height,vw:innerWidth,vh:innerHeight,feedbackW:panelRect.width,
+   feedbackHeight:panelRect.height,feedbackVisible:!modal.hidden||panelRect.width>0,
+   text,closed:modal.hidden,noSend};
+ })()`);
+ assert.ok(portrait.width<=portrait.vw+1,'Main menu fits narrow portrait screens');
+ assert.ok(portrait.height<=portrait.vh+1,'Main menu is scrollable in portrait');
+ assert.ok(portrait.feedbackW<=portrait.vw+1,'Feedback dialog fits phone width');
+ assert.ok(portrait.feedbackHeight<=portrait.vh+1,'Feedback dialog is vertically scrollable');
+ assert.equal(portrait.closed,true,'Playtester can leave feedback modal');
+ assert.equal(portrait.noSend,true,'Feedback clearly states it is never sent automatically');
+ assert.match(portrait.text,/No entendí cómo leer el sensor/,'Playtester observation is included');
+ assert.match(portrait.text,/Control: (táctil|teclado)/,'Device control method is included without personal identifiers');
+ await send('Emulation.setDeviceMetricsOverride',{width:844,height:390,deviceScaleFactor:2,mobile:true,screenOrientation:{type:'landscapePrimary',angle:90}});
+ await delay(160);
+
  const storyGate=await evalJs(`(()=>{
   const g=window.Lumina.game;
   if(g.logicLab.active)g.logicLab.close();
