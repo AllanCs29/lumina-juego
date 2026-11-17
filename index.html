@@ -3034,6 +3034,11 @@ function translateProgram(lang,program,taskCode=''){
  const isPython=lang==='python',isCpp=lang==='cpp';
  const lines=[],stack=[];let hasCarga=false;
  const initVar=(v)=>isPython?'carga = '+v:isCpp?(hasCarga?'carga = ':'int carga = ')+v+';':(hasCarga?'carga = ':'let carga = ')+v+';';
+ // Every preview with READ_CHARGE declares a REAL runtime input;
+ // otherwise learners would see 'entrada' without ever creating it.
+ if(program.includes('READ_CHARGE'))lines.push(isPython?'entrada = int(input("Carga inicial: "))':
+   isCpp?'int entrada; std::cout << "Carga inicial: "; std::cin >> entrada;':
+   'const entrada = Number(prompt("Carga inicial: "));');
  if(program.some(op=>op.startsWith('SENSOR')))lines.push(isPython?'sensores = [3, 7, 11]':isCpp?'int sensores[] = {3, 7, 11};':'const sensores = [3, 7, 11];');
  if(program.some(op=>['ENERGY','NETWORK','NOT_ALARM'].includes(op)))lines.push(isPython?'energia, red, alarma = True, True, False':isCpp?'bool energia = true, red = true, alarma = false;':'const energia = true, red = true, alarma = false;');
  for(const op of program){
