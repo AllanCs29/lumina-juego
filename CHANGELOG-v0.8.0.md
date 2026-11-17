@@ -7,7 +7,8 @@
 - Misión 6: arreglos de sensores [3,7,11] y [5,2,9]; los índices 0 y 1 siguen siendo la regla.
 - Misión 7: el caso verdadero y el falso distinguen Y de O en los sensores de puerta.
 - Misión 8: lectura de cargas 2 y 1; el resultado de (carga+3=5) debe ser verdadero y falso respectivamente.
-- La interfaz muestra las dos entradas, los resultados, la meta y trazas por instrucción. Mensajes de fallo específicos invitan a corregir.
+- La interfaz muestra las dos entradas, los resultados, la meta y trazas por instrucción.
+- El LAB ahora resume las habilidades aprendidas y el siguiente objetivo. En retos completados desde el mundo, permite volver directamente a la aventura y muestra una confirmación del avance. Mensajes de fallo específicos invitan a corregir.
 - Se mantienen los guardados, desbloqueo del LAB, pseudocódigo inicial, traducciones de lenguajes, PWA e historia existente.
 - Actualización de caché PWA y título de versión. Prueba nueva v080-transfer-smoke y ampliación del escenario Chrome E2E.
 
