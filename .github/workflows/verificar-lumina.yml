@@ -22,3 +22,5 @@ jobs:
           node tests/v071-wayfinding-smoke.mjs
           node tests/v080-transfer-smoke.mjs
           node tests/v090-story-smoke.mjs
+          node tests/v091-audio-smoke.mjs
+          node --check audio-system.js
