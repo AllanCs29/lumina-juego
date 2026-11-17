@@ -81,6 +81,43 @@ try{
  assert.equal(cleanMenu.debugHidden,true,'Development scenes hidden in player mode');
  assert.equal(cleanMenu.advancedClosed,true,'Rare technical settings remain collapsed');
  assert.equal(cleanMenu.prefs.join(','),'guidance-mode,reading-scale','Essential settings remain discoverable');
+ const audioPrefs=await evalJs(`(()=>{
+  const g=window.Lumina.game,score=g.soundEngine,defs=window.Lumina.Soundtrack;
+  const music=document.getElementById('music-button'),effects=document.getElementById('audio-button');
+  const musicSlider=document.getElementById('music-volume'),fxSlider=document.getElementById('effects-volume');
+  const original={music:score.musicOn,fx:g.audioOn,themes:Object.keys(defs.THEMES).length};
+  music.click();const musicOff=!score.musicOn&&g.audioOn;
+  effects.click();const fxOff=!g.audioOn&&!score.musicOn;
+  music.click();const separate=score.musicOn&&!g.audioOn;
+  musicSlider.value='30';musicSlider.dispatchEvent(new Event('input',{bubbles:true}));
+  fxSlider.value='65';fxSlider.dispatchEvent(new Event('input',{bubbles:true}));
+  effects.click();
+  return {original,musicOff,fxOff,separate,musicOn:score.musicOn,fxOn:g.audioOn,
+   mv:score.musicVol,fv:score.fxVol,
+   storedMusic:localStorage.getItem(defs.KEY.music),
+   storedFx:localStorage.getItem(defs.KEY.fxEnabled),
+   storedMv:localStorage.getItem(defs.KEY.musicVol),
+   storedFv:localStorage.getItem(defs.KEY.fxVol),
+   controlsInOptions:!!music.closest('.menu-quick-preferences'),
+   ariaMusic:music.getAttribute('aria-pressed'),ariaFx:effects.getAttribute('aria-pressed')};
+ })()`);
+ assert.equal(audioPrefs.original.music,true,'Original score enabled by default');
+ assert.equal(audioPrefs.original.fx,true,'Game effects enabled by default');
+ assert.ok(audioPrefs.original.themes>=8,'Scene-specific 8-bit themes are available');
+ assert.equal(audioPrefs.musicOff,true,'Music can be muted without affecting effects');
+ assert.equal(audioPrefs.fxOff,true,'Effects can also be independently muted');
+ assert.equal(audioPrefs.separate,true,'Music can resume with effects muted');
+ assert.equal(audioPrefs.musicOn,true);
+ assert.equal(audioPrefs.fxOn,true);
+ assert.equal(audioPrefs.mv,.3);
+ assert.equal(audioPrefs.fv,.65);
+ assert.equal(audioPrefs.storedMusic,'on');
+ assert.equal(audioPrefs.storedFx,'on');
+ assert.equal(audioPrefs.storedMv,'0.3');
+ assert.equal(audioPrefs.storedFv,'0.65');
+ assert.equal(audioPrefs.ariaMusic,'true');
+ assert.equal(audioPrefs.ariaFx,'true');
+ assert.equal(audioPrefs.controlsInOptions,true,'Sound settings are in the compact Options menu');
  const first=await evalJs(`(()=>{
    document.getElementById('training-offer-skip').click();
    const game=window.Lumina.game,lab=game.logicLab;
@@ -361,7 +398,11 @@ try{
  await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await send('Page.reload',{ignoreCache:false});
  await until(async()=>await evalJs("document.documentElement.dataset.luminaReady==='true'"),12000);
- const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered,refuge:window.Lumina.game.save.refugePowered,reading:document.getElementById('reading-scale').value,guidance:window.Lumina.game.guidanceMode})");
+ const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered,refuge:window.Lumina.game.save.refugePowered,reading:document.getElementById('reading-scale').value,guidance:window.Lumina.game.guidanceMode,musicOn:window.Lumina.game.soundEngine.musicOn,fxOn:window.Lumina.game.audioOn,musicVol:window.Lumina.game.soundEngine.musicVol,fxVol:window.Lumina.game.soundEngine.fxVol})");
+ assert.equal(offline.musicOn,true,'Music stays enabled offline');
+ assert.equal(offline.fxOn,true,'Effects stay enabled offline');
+ assert.equal(offline.musicVol,.3,'Music volume persists across an offline reload');
+ assert.equal(offline.fxVol,.65,'Effects volume persists independently across an offline reload');
  assert.equal(offline.ready,true,'Lúmina should start without network');
  assert.equal(offline.language,'python','Chosen language survives offline restart');
  assert.equal(offline.discovered,true,'Laboratory discovery remains stored offline');
