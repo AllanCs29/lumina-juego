@@ -1,25 +1,27 @@
-# Lúmina — Distrito Aurora
+# Lúmina — Señales del Norte
 
-Videojuego educativo de plataformas y lógica de programación para **móvil horizontal** y PC.
+**Versión 0.4.0** · Videojuego de exploración y aprendizaje de programación desde cero para iPhone horizontal y PC.
 
-**Versión actual: 0.3.9.** Iris investiga un apagón urbano y aprende programación desde cero para abrir accesos, recuperar la energía y reactivar un transporte. Los conceptos se introducen mediante misiones: lógica booleana, variables numéricas y secuencias para NIX.
+[**Jugar desde Safari o PC**](https://allancs29.github.io/lumina-juego/)
 
-## Jugar
-https://allancs29.github.io/lumina-juego/
+## La aventura
+Iris, estudiante de informática, llega a una ciudad sin energía. Investigará sensores y condiciones, aprenderá a asignar variables y recuperará un robot. El tren la llevará a las islas heladas, donde podrá explorar un puerto, programar NIX y reactivar un faro.
 
-Abre el enlace en Safari horizontal o en un navegador de escritorio, no en un visor de archivos HTML.
+**Ruta principal:** Distrito Aurora → Estación Umbral → Puerto de la Bruma → Taller de NIX → Pasarela Boreal → Faro del Silencio.
 
-## Características
-- Historia introductoria omitible y Cuaderno para repasar lecciones.
-- Consolas visuales: condiciones Y/NO con valores VERDADERO/FALSO, variable `carga` con ejecución paso a paso, NIX.
-- Mundo urbano extendido con fragmentos opcionales y cambios de día/noche.
-- Controles táctiles personalizables y cámara adaptada para no tapar a Iris.
-- Capítulo anterior del faro conservado.
+**Desvío opcional:** Azoteas de Aurora, con dos antenas y una señal misteriosa.
 
-## Desarrollo
-El archivo `index.html` es la versión HTML independiente que se publica en GitHub Pages. El proyecto modular, pruebas y documentación se distribuyen en el ZIP de cada entrega de ChatGPT.
+## Aprender durante la historia
+La introducción animada cuenta el problema; las misiones enseñan condiciones booleanas, variables numéricas, secuencias y bucles. El **Cuaderno** solo permite repasar lo que Iris descubrió jugando, sin mostrar temas futuros. Las explicaciones pueden omitirse.
 
-Consulta [cambios](CHANGELOG-v0.3.9.md) y [lista de pruebas](QUE-PROBAR-v0.3.9.md).
+## Móvil
+Usa Safari en horizontal. Los controles son ajustables. Frecuencia por defecto 60 FPS, opción experimental 120 FPS si el navegador la soporta; el contador indica los FPS efectivos.
 
-## Estado de pruebas
-77 unitarias aprobadas y pruebas de interfaz en Chromium móvil emulado y escritorio. Falta una partida manual en Safari físico.
+## Archivos
+- `index.html` — juego completo listo para GitHub Pages.
+- [Cambios de v0.4.0](CHANGELOG-v0.4.0.md)
+- [Pruebas de v0.4.0](QUE-PROBAR-v0.4.0.md)
+
+Código modular y batería de pruebas disponibles también en el ZIP de esta entrega de ChatGPT.
+
+**Validado:** 83 pruebas unitarias + recorrido de navegador en Chromium. **Pendiente:** Safari físico.
