@@ -23,4 +23,6 @@ jobs:
           node tests/v080-transfer-smoke.mjs
           node tests/v090-story-smoke.mjs
           node tests/v091-audio-smoke.mjs
+          node tests/v093-polish-smoke.mjs
+          node --check polish-system.js
           node --check audio-system.js
