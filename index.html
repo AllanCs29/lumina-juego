@@ -655,6 +655,35 @@ body.reduce-motion .menu-beam{opacity:.55}
 .training-offer{z-index:300}.training-offer-card{width:min(440px,95vw);border:2px solid #b1e1d4;border-radius:18px;background:linear-gradient(160deg,#1b344b,#0b2037);box-shadow:0 25px 80px #000b;padding:23px;text-align:center}.training-offer-card .training-crest{font-size:39px;color:#f2cf88}.training-offer-card h2{margin:8px 0;font-size:clamp(21px,3vw,28px)}.training-offer-card p{font-size:14px;line-height:1.5;color:#d1e9e5}.training-offer-card small{color:#8dddcf}.training-offer-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:17px 0}
 @media(orientation:landscape) and (max-height:500px){.training-hud,.guardian-hud{top:9%;padding:4px 9px;width:45%;max-width:45%}.training-topline,.guardian-heading{font-size:9px}.training-objective{margin-top:2px;gap:6px}.training-objective span{font-size:10px}.guardian-hud strong{font-size:13px}.training-offer-card{padding:10px 17px;max-height:90dvh}.training-offer-card .training-crest{font-size:24px}.training-offer-card p{font-size:12px;margin:5px 0}.training-offer-buttons{margin:6px 0}.training-offer-buttons button{min-height:35px;padding:5px}}
 
+
+/* v0.7.0 · teaching UI and touch sizes: adaptive, without resizing the game hitbox. */
+:root{--reading-scale:1}
+.lab-transfer{padding:11px 12px;background:#153c48;border:2px solid #91d8ba;border-left:6px solid #f3cf95;margin:12px 0;color:#effce9;font:700 13px/1.55 ui-monospace,monospace}
+.lab-transfer strong{display:block;color:#ffe0aa;margin:0 0 5px}
+.lab-transfer small{display:block;color:#d1eee7;font-size:calc(12px * var(--reading-scale));margin-top:5px}
+.lab-world-result{width:100%;min-height:46px;margin:10px 0;font-weight:900}
+.lab-panel #lab-description,.lab-panel #lab-story,.lab-panel #lab-feedback{font-size:calc(14px * var(--reading-scale))!important;line-height:1.5!important}
+.lab-panel .lab-guide p{font-size:calc(14px * var(--reading-scale))!important;line-height:1.5!important}
+.lab-panel .lab-guide-head{font-size:calc(12px * var(--reading-scale))!important}
+.lab-panel .lab-code{font-size:calc(13px * var(--reading-scale))!important;line-height:1.5}
+.lab-panel .lab-step{font-size:calc(13px * var(--reading-scale))!important;line-height:1.5}
+.lab-panel .lab-block{font-size:calc(13px * var(--reading-scale));min-height:44px}
+.lab-panel .lab-block button{min-width:44px;min-height:44px;font-size:15px}
+.lab-panel .lab-palette button{min-height:44px;font-size:calc(12px * var(--reading-scale));padding:8px 11px}
+.lab-panel .lab-guide button,.lab-panel .lab-actions button,.lab-panel .lab-nav button,
+.lab-panel .lab-tips button,.lab-panel #lab-guide-reopen,.lab-panel #lab-exit{min-height:44px}
+.lab-panel .lab-story{font-size:calc(14px * var(--reading-scale))!important}
+.lab-panel .lab-sublabel,.lab-panel .lab-tips span{font-size:calc(11px * var(--reading-scale))!important}
+@media (orientation:landscape) and (max-height:510px){
+ .lab-panel{max-height:96dvh;overflow-y:auto;overscroll-behavior:contain}
+ body.touch-enabled .lab-panel #lab-description,body.touch-enabled .lab-panel #lab-story,
+ body.touch-enabled .lab-panel #lab-feedback,body.touch-enabled .lab-panel .lab-guide p{
+  font-size:calc(14px * var(--reading-scale))!important;line-height:1.4!important
+ }
+ body.touch-enabled .lab-panel .lab-block button,body.touch-enabled .lab-panel .lab-palette button,
+ body.touch-enabled .lab-panel .lab-actions button,body.touch-enabled .lab-panel .lab-nav button,
+ body.touch-enabled .lab-panel #lab-guide-next{min-height:44px!important}
+}
 </style>
 
 </head>
@@ -762,7 +791,12 @@ body.reduce-motion .menu-beam{opacity:.55}
     <button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
     <button id="edit-controls" class="secondary" type="button">✥ Personalizar controles táctiles</button>
     <label class="mobile-speed-label" for="mobile-speed">Velocidad de movimiento en móvil <span id="mobile-speed-value">78%</span></label><input id="mobile-speed" type="range" min="60" max="110" step="5" value="78"/>
-    <label class="mobile-speed-label" for="render-quality">Nitidez <span id="quality-label">Equilibrada · 2×</span></label>
+    <label class="mobile-speed-label" for="reading-scale">Tamaño de lectura <span id="reading-scale-value">100%</span></label>
+     <select id="reading-scale" aria-label="Aumentar tamaño de letra en misiones y tutoriales">
+      <option value="1">Normal · 100%</option><option value="1.15">Grande · 115%</option>
+      <option value="1.3">Muy grande · 130%</option>
+     </select>
+     <label class="mobile-speed-label" for="render-quality">Nitidez <span id="quality-label">Equilibrada · 2×</span></label>
     <select id="render-quality" aria-label="Nitidez del juego"><option value="retro">Retro · 1× (ahorra batería)</option><option value="balanced" selected>Equilibrada · hasta 2×</option><option value="sharp">Nítida · hasta 3× + microdetalles</option></select>
     <label class="mobile-speed-label" for="fps-limit">Frecuencia de dibujo <span id="fps-actual">Detectando pantalla…</span></label>
     <select id="fps-limit" aria-label="Límite de fotogramas"><option value="60">60 FPS · estándar</option><option value="120">120 FPS · probar ProMotion</option></select>
@@ -3656,6 +3690,18 @@ class Game{
   const mode=document.getElementById('render-quality'),qualityLabel=document.getElementById('quality-label'),fps=document.getElementById('fps-limit'),actual=document.getElementById('fps-actual');
   const qualityNames={retro:'Retro · 1×',balanced:'Equilibrada · 2×',sharp:'Nítida · 3× + microdetalles'};
   mode.value=this.renderer.quality;qualityLabel.textContent=qualityNames[this.renderer.quality];
+   const reading=document.getElementById('reading-scale'),readingLabel=document.getElementById('reading-scale-value');
+   let readingLevel='1';try{const saved=localStorage.getItem('lumina-reading-scale-v1');
+    if(['1','1.15','1.3'].includes(saved))readingLevel=saved;}catch{}
+   const updateReading=value=>{
+    const next=['1','1.15','1.3'].includes(String(value))?String(value):'1';
+    document.documentElement.style.setProperty('--reading-scale',next);
+    reading.value=next;readingLabel.textContent=Math.round(Number(next)*100)+'%';
+   };
+   updateReading(readingLevel);
+   reading.addEventListener('change',()=>{updateReading(reading.value);
+    try{localStorage.setItem('lumina-reading-scale-v1',reading.value)}catch{}
+   });
  const ambient=document.getElementById('ambient-button'),haptics=document.getElementById('haptic-button');
  const motion=document.getElementById('motion-button'),auto=document.getElementById('auto-quality-button');
  const updateMotion=()=>{motion.textContent='◌ Reducir movimiento: '+(this.reduceMotion?'activado':'desactivado');
