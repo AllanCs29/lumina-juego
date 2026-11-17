@@ -58,6 +58,16 @@ node tests/v060-browser-smoke.mjs  # requiere Chrome/Chromium
 
 Los workflows de CI comprueban sintaxis, escenas, intérprete de bloques, migración de guardado, operaciones de la interfaz, pantalla móvil horizontal y recarga offline, y conservan capturas como artefactos descargables de GitHub Actions.
 
+## Estándares profesionales de diseño y aprendizaje
+
+El rumbo de cada versión se evalúa ahora con tres documentos de producción basados en literatura de diseño de videojuegos, investigación educativa, UX y accesibilidad:
+
+- [Auditoría profesional de Lúmina v0.6.1](AUDITORIA-PROFESIONAL-v0.6.1.md): evaluación honesta de lo que funciona y los problemas que todavía existen.
+- [Biblia de diseño](BIBLIA-DE-DISENO-LUMINA.md): visión, mecánicas, experiencia buscada, arte, narrativa, progreso educativo, accesibilidad y ética de retención.
+- [Plan de producción y calidad](PLAN-DE-PRODUCCION-Y-CALIDAD.md): tareas prioritarias, criterios de aceptación, prueba con personas, propuesta de capítulo jugable y roadmap.
+
+**Nota:** las especificaciones no implican que sus mejoras ya estén implementadas; cada función requiere desarrollo y pruebas antes de marcarla como terminada.
+
 ## Entrega y próximos pasos
 
 [**Cambios completos v0.6.1**](CHANGELOG-v0.6.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.6.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
