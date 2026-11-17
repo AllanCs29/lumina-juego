@@ -217,9 +217,13 @@ try{
    mode.value='hint';mode.dispatchEvent(new Event('change',{bubbles:true}));
    const preHint=r.drawGuidance(g)===null;
    g.hint();const afterHint=!!r.drawGuidance(g);
+   const oldScene=g.scene,oldX=g.player.x,oldOrbs=g.save.orbs.slice();
+   g.scene='harbor';g.player.x=300;g.save.orbs=['move'];
+   g.hint();const harborUnpaused=!g.locked&&g.guidancePulse>0;
+   g.scene=oldScene;g.player.x=oldX;g.save.orbs=oldOrbs;
    const saved=localStorage.getItem('lumina-guidance-mode-v1');
    mode.value='hint';mode.dispatchEvent(new Event('change',{bubbles:true}));
-   return {right,left,drawnRight,drawnLeft,near,disabled,preHint,afterHint,saved,arrows,label:label.textContent};
+   return {right,left,drawnRight,drawnLeft,near,disabled,preHint,afterHint,harborUnpaused,saved,arrows,label:label.textContent};
   }finally{r.poly=old;}
  })()`);
  assert.equal(guidance.right,1,'Arrow points east when objective is to the right');
@@ -230,6 +234,7 @@ try{
  assert.equal(guidance.disabled,true,'Off preference draws no arrow');
  assert.equal(guidance.preHint,true,'Hint-only mode stays quiet until requested');
  assert.equal(guidance.afterHint,true,'Hint button temporarily reveals the arrow');
+ assert.equal(guidance.harborUnpaused,true,'On-demand direction in harbor does not pause play with a dialogue');
  assert.equal(guidance.saved,'hint','Preference is persistent');
  assert.match(guidance.label,/Solo con Pista/);
 
