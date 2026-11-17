@@ -42,8 +42,8 @@ const game={
 const g=new Guardian(game);game.guardian=g;
 g.start(false);assert.equal(g.phase,1,'Reopen from saved second round');
 assert.equal(game.scene,'guardian');
-g.update(2);assert.equal(g.warning,1);
-g.update(1.3);assert.ok(g.pulse>0,'Wave attack is active');
+for(let i=0;i<40;i++)g.update(.05);assert.equal(g.warning,1);
+for(let i=0;i<27;i++)g.update(.05);assert.ok(g.pulse>0,'Wave attack is active');
 game.player.x=310;g.action();assert.equal(g.phase,2,'Correct answer completed round 2');
 assert.equal(game.save.guardianCheckpoint,2,'Checkpoint saved immediately');
 assert.ok(persisted>0);
