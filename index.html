@@ -717,6 +717,7 @@ body.reduce-motion .menu-beam{opacity:.55}
 .menu-v042 .menu-controls>button.menu-primary{min-height:54px;font-size:17px}
 @media(orientation:landscape) and (max-height:520px){.menu-v042 .menu-hero{padding:12px 18px}.menu-v042 .menu-art{height:80px;margin:5px 0}.menu-v042 .menu-controls{gap:9px}.menu-v042 .menu-controls>button.menu-primary{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.menu-v042 .menu-more>summary span{transition:none}}
+.lab-guide-actions{display:flex;gap:8px;flex-wrap:wrap}.lab-guide-actions button{flex:1 1 160px;min-height:44px}.lab-guide-reopen:focus-visible,#lab-guide-skip:focus-visible{outline:3px solid #ffe1a3;outline-offset:3px}
 </style>
 
 </head>
@@ -751,7 +752,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div id="lab-guide" class="lab-guide" role="group" aria-labelledby="lab-guide-title">
    <div class="lab-guide-head"><strong id="lab-guide-title">📖 Aprende antes de practicar</strong><span id="lab-guide-count">1 / 3</span></div>
    <p id="lab-guide-content">Explicación del concepto</p>
-   <button id="lab-guide-next" type="button" class="primary">Siguiente explicación ›</button>
+   <div class="lab-guide-actions"><button id="lab-guide-skip" type="button" class="secondary">Empezar reto ahora</button><button id="lab-guide-next" type="button" class="primary">Siguiente explicación ›</button></div>
   </div>
   <button id="lab-guide-reopen" type="button" class="secondary" hidden>📖 Volver a leer la explicación</button>
   <p class="lab-code-caption">PSEUDOCÓDIGO · INSTRUCCIONES SIN LENGUAJE ESPECÍFICO</p>
@@ -3325,7 +3326,7 @@ function translateProgram(lang,program,taskCode=''){
 class LogicLab{
  constructor(game){
   this.game=game;this.index=0;this.active=false;this.fromWorld=false;this.draft=[];this.guideOpen=false;this.guideStep=0;
-  for(const [id,fn] of [['lab-open',()=>this.open(false)],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)],['lab-clear',()=>this.clear()],['lab-world-result',()=>this.close()],['lab-guide-next',()=>this.advanceGuide()],['lab-guide-reopen',()=>this.reopenGuide()]])
+  for(const [id,fn] of [['lab-open',()=>this.open(false)],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)],['lab-clear',()=>this.clear()],['lab-world-result',()=>this.close()],['lab-guide-next',()=>this.advanceGuide()],['lab-guide-skip',()=>{this.guideOpen=false;this.guideStep=0;this.showGuide();}],['lab-guide-reopen',()=>this.reopenGuide()]])
    document.getElementById(id)?.addEventListener('click',fn);
   document.getElementById('lab-answer')?.addEventListener('keydown',e=>{if(e.key==='Enter')this.run();});
   document.getElementById('lab-language-select')?.addEventListener('change',e=>{
