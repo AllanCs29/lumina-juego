@@ -74,7 +74,15 @@
    const ctx=this.ctx;
    if(!ctx||ctx.state!=='running'||!this.musicOn||this.musicVol<=0||!this.musicBus)return;
    const theme=this.scene();
-   if(theme!==this.theme){this.theme=theme;this.step=0;this.next=ctx.currentTime+.035;}
+   if(theme!==this.theme){
+    const previous=this.theme;this.theme=theme;this.step=0;this.next=ctx.currentTime+(previous?.16:.035);
+    // Fade between regions rather than abruptly switching synthesizer notes.
+    if(previous&&this.musicBus?.gain){
+     const volume=this.musicOn?.32*this.musicVol:0;
+     this.musicBus.gain.setTargetAtTime(.0001,ctx.currentTime,.025);
+     this.musicBus.gain.setTargetAtTime(volume,ctx.currentTime+.12,.11);
+    }
+   }
    if(this.next<ctx.currentTime-.45){this.next=ctx.currentTime+.035;this.step=0;}
    const data=THEMES[theme],interval=60/data.bpm/2;
    let budget=0;
