@@ -1150,7 +1150,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,refugePowered:false,learningLanguage:'pseudo',storyBeats:{},signalBalanced:false,started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,refugePowered:false,learningLanguage:'pseudo',storyBeats:{},signalBalanced:false,coreProofs:{metro:false,archive:false},checkpoints:{},started:false});
   function sanitizeLabDrafts(value){
    const drafts={},ops=['SET0','SET2','SET3','READ_CHARGE','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
@@ -1158,6 +1158,17 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
     const candidate=value[i];if(Array.isArray(candidate))drafts[i]=candidate.filter(op=>typeof op==='string'&&ops.includes(op)).slice(0,14);
    }
    return drafts;
+  }
+  const CHECKPOINT_LIMITS=Object.freeze({district:2330,metro:1320,rooftops:1020,archive:1000,harbor:1190,workshop:750,tower:1050});
+  function checkpoints(value){
+    if(!value||typeof value!=='object'||Array.isArray(value))return {};
+    const entries=[];
+    for(const [scene,max] of Object.entries(CHECKPOINT_LIMITS)){
+      const p=value[scene];if(!p||typeof p!=='object'||!Number.isFinite(p.x)||!Number.isFinite(p.y))continue;
+      if(p.x<22||p.x>max||p.y<100||p.y>335)continue;
+      entries.push([scene,{x:Math.round(p.x),y:Math.round(p.y)}]);
+    }
+    return Object.fromEntries(entries);
   }
   function clean(data){
     const f=fresh(); if(!data||data.version!==1)return f;
@@ -1177,7 +1188,9 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
          // Previous v0.6 users who completed lessons keep their existing access.
          labDiscovered:!!data.labDiscovered||(Array.isArray(data.labCompleted)&&data.labCompleted.length>0),
          learningLanguage:['pseudo','python','cpp','javascript'].includes(data.learningLanguage)?data.learningLanguage:'pseudo',
-         signalBalanced:!!data.signalBalanced,
+         signalBalanced:!!data.signalBalanced||!!data.completed&&!!data.beacon,
+         coreProofs:{metro:!!data.coreProofs?.metro||!!data.metroRelays?.[1],archive:!!data.coreProofs?.archive||!!data.archiveNodes?.[2]},
+         checkpoints:checkpoints(data.checkpoints),
          storyBeats:Object.fromEntries(Object.keys(root.Narrative?.BEATS||{}).filter(k=>data.storyBeats?.[k]===true).map(k=>[k,true])),
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
