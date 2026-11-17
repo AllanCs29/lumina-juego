@@ -1,12 +1,23 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.6.1 · Capa corregida, aprendizaje gradual y lenguajes opcionales**
+**Versión 0.7.0 · La primera señal de NIX: programación que cambia el mundo**
 
 [**Jugar desde iPhone, Mac o PC**](https://allancs29.github.io/lumina-juego/) · [**Descargar todo el código ZIP**](https://github.com/AllanCs29/lumina-juego/archive/refs/heads/main.zip)
 
 Lúmina es una aventura 2D original para aprender lógica de programación desde cero mediante exploración, plataformas, misiones y narrativa. Iris y NIX recorren Distrito Aurora, Estación Umbral, Archivo de Ecos, Puerto de la Bruma, Pasarela Boreal y Faro del Silencio.
 
-## Nuevo en v0.6.1
+## Nuevo en v0.7.0
+
+- **Una misión que comprueba aprendizaje real.** En la cuarta misión del Laboratorio de NIX, el mismo programa debe resolver dos entradas distintas: **2 → 5** y **4 → 7**. Fijar `carga ← 2` no basta. El nuevo bloque **LEER carga del entorno** permite trabajar con valores que cambian.
+- **Calefactor y refugio físicos en el Taller de NIX.** Antes del reto la persiana está cerrada, hay hielo y la luz es fría. Al superar los dos casos, se abre, emite luz cálida y puedes inspeccionarlo con **USAR / E** para escuchar una explicación de Iris y NIX. **El cambio se guarda entre partidas.**
+- **Feedback paso a paso:** se muestra el valor inicial, la salida, la meta y la traza para ambas pruebas. En caso de error se explica por qué una receta que funcionó una vez puede fallar cuando cambia la entrada. El ejemplo del tutorial usa datos distintos de los de la evaluación y no muestra una solución ya escrita.
+- **Mejoras de lectura móvil:** el panel de programación tiene texto didáctico más legible y objetivos táctiles de un mínimo de 44 px. En **Menú → Configuración → Tamaño de lectura** puedes elegir 100%, 115% o 130%, con preferencia guardada.
+- **Pruebas de regresión ampliadas:** intérprete para distintas entradas, fallo honesto de soluciones fijas, guardado del refugio, traducciones de `LEER` a Python/C++/JavaScript y navegación móvil real en Chrome, incluido funcionamiento offline.
+- **Compatibilidad:** guarda la partida anterior. Si una partida vieja ya tenía la misión 4 terminada, conserva el avance, pero el refugio pide superar **la nueva prueba de dominio** para encenderse.
+
+[Registro detallado de v0.7.0](CHANGELOG-v0.7.0.md) · [Qué probar en el juego](QUE-PROBAR-v0.7.0.md)
+
+## Se conserva de v0.6.1
 - **Capa de Iris:** corrigió la dirección de la capa y bufanda al correr y saltar a izquierda/derecha, sin cambiar colisiones.
 - **Retos por descubrimiento:** el laboratorio se desbloquea al encontrar la estación LAB en el **Taller de NIX**, después de completar la lógica/variable de Aurora y reparar a NIX. En una nueva partida está bloqueado en el menú y oculto fuera del taller. Se preserva acceso de partidas antiguas con misiones completadas.
 - **Tutor de tres pasos para cada desafío:** primero explica con analogías, después muestra un ejemplo, finalmente deja practicar. En desafíos nuevos no puedes ejecutar hasta terminar la introducción.
@@ -53,6 +64,7 @@ El juego se publica principalmente como `index.html` con código y sprites incor
 node tests/v048-art-smoke.mjs
 node tests/v050-progress-smoke.mjs
 node tests/v060-missions-smoke.mjs
+node tests/v070-refugio-smoke.mjs
 node tests/v060-browser-smoke.mjs  # requiere Chrome/Chromium
 ```
 
@@ -70,6 +82,6 @@ El rumbo de cada versión se evalúa ahora con tres documentos de producción ba
 
 ## Entrega y próximos pasos
 
-[**Cambios completos v0.6.1**](CHANGELOG-v0.6.1.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.6.1.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
+[**Cambios completos v0.7.0**](CHANGELOG-v0.7.0.md) · [**Qué probar personalmente**](QUE-PROBAR-v0.7.0.md) · [**Dirección de arte**](GUIA-ARTE-Y-PROFUNDIDAD.md) · [**Ver pruebas automáticas**](https://github.com/AllanCs29/lumina-juego/actions)
 
-**Pendiente para el siguiente hito:** validación física en iPhone Safari, más fotogramas completamente redibujados, cursos especializados interactivos para cada lenguaje, ampliación de campaña después del faro y mayor integración de programas construidos dentro de mecanismos y combates. Consulta el changelog para una distinción exacta entre implementado y pendiente.
+**Pendiente para el siguiente hito:** extender a todo el juego la legibilidad móvil, evaluar otras misiones con datos variables, reforzar la integración de código y mundo, y probar en iPhone Safari físico. Más adelante: sprites más expresivos, cursos específicos de cada lenguaje, jefes nuevos y campaña posterior al faro. Consulta el changelog para una distinción exacta entre implementado y pendiente.
