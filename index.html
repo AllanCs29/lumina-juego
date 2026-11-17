@@ -3205,7 +3205,9 @@ class LogicLab{
  close(){
   if(!this.active)return;this.active=false;document.getElementById('logic-lab').hidden=true;
   this.game.input.reset();
-  if(this.fromWorld){this.game.locked=false;this.game.el.menu.hidden=true;this.game.updateObjective();}
+  if(this.fromWorld){this.game.locked=false;this.game.el.menu.hidden=true;this.game.updateObjective();
+    if(this.game.save.labCompleted.includes(this.index))this.game.flashCaption('✓ Habilidad adquirida · LAB '+this.game.save.labCompleted.length+'/8 · la estación registra tu avance',3);
+   }
   else {this.game.locked=true;this.game.el.menu.hidden=false;this.game.updateMenuState();}
  }
  move(delta){
@@ -3311,7 +3313,8 @@ class LogicLab{
  }
  updateWorldButton(){
   const b=document.getElementById('lab-world-result');
-  b.hidden=!(this.index===3&&this.fromWorld&&this.game.scene==='workshop'&&this.game.save.refugePowered);
+  b.hidden=!(this.fromWorld&&this.game.save.labCompleted.includes(this.index));
+   b.textContent=this.index===3&&this.game.scene==='workshop'?'✦ Volver al mundo y ver el refugio encendido':'✦ Volver al mundo y ver el progreso del LAB';
  }
  drawMeter(value){const e=document.getElementById('lab-meter');e.replaceChildren();
   if(value===null||value===undefined)return;
