@@ -2060,7 +2060,7 @@ class Renderer{
    this.r(x+14,246,65,5,'#152c42');}
   for(const f of level.ground)this.terrain(f,0);for(const l of level.ledges)this.ledge(l);
   // Data pads: the face, lit top and pedestal communicate that both can be touched.
-  for(const [x,word,color] of [[365,'FALSO','#ffc38e'],[455,'VERDADERO','#83f3d7']]){
+  for(const [x,word,color] of [[330,'FALSO','#ffc38e'],[425,'VERDADERO','#83f3d7']]){
    this.contactShadow(x,305,32,5,.44);this.r(x-28,261,56,46,'#142b40');this.r(x-25,259,50,40,'#516c7e');this.r(x-22,264,44,27,'#1a3a51');
    this.r(x-19,267,38,21,color);this.r(x-16,269,32,2,'#fff3d3');this.r(x-20,296,41,4,'#253c51');
    this.text(word,x,281,'#142a3c',word==='VERDADERO'?8:10,'center');}
@@ -2630,7 +2630,7 @@ root.Prologue=Prologue;
    if(this.clock>=8){this.clock=0;this.pulse=0;this.warning=0;}
   }
   action(){if(!this.active)return false;const x=this.game.player.x+8;
-   const choose=x>320&&x<408?false:x>425&&x<488?true:null;
+   const choose=x>290&&x<365?false:x>392&&x<460?true:null;
    if(choose===null){this.game.flashCaption('Acércate a VERDADERO o FALSO y pulsa USAR.',1.6);return true;}
    const q=QUESTIONS[this.phase];if(choose!==q.answer){this.mistakes++;this.game.sfx('deny');this.game.fx.burst(x,257,'dash',8);document.getElementById('guardian-feedback').textContent='No todavía. '+q.lesson;return true;}
    this.game.sfx('success');this.game.fx.burst(585,174,'dash',27);this.phase++;this.game.updateObjective();this.clock=0;this.warning=0;this.pulse=0;
