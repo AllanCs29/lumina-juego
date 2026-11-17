@@ -1,0 +1,60 @@
+// Lúmina v0.7.0 — mastery cannot be faked by memorizing one value.
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+const context={window:{Lumina:{}}};
+const lab=scripts.find(x=>x.includes('root.LogicLabModel='));
+const saved=scripts.find(x=>x.includes('root.Save={'));
+assert.ok(lab&&saved);
+vm.runInNewContext(lab,context);
+vm.runInNewContext(saved,context);
+const {LogicLabModel:m,Save}=context.window.Lumina;
+assert.equal(m.TASKS.length,8);
+assert.equal(m.REFUGE_CASES.length,2);
+const fixed=['SET2','ADD3','OUTPUT'];
+const naive=m.validateRefuge(fixed);
+assert.equal(naive.cases[0].correct,true);
+assert.equal(naive.cases[0].value,5);
+assert.equal(naive.cases[1].correct,false,'Hardcoded 2 must fail when the input is 4');
+assert.equal(naive.cases[1].value,5);
+assert.equal(naive.passed,false);
+const general=['READ_CHARGE','ADD3','OUTPUT'];
+const result=m.validateRefuge(general);
+assert.equal(result.passed,true);
+assert.equal(result.cases[0].value,5);
+assert.equal(result.cases[1].value,7);
+assert.match(result.cases[0].trace.join('\n'),/LEER carga del entorno = 2/);
+assert.match(result.cases[1].trace.join('\n'),/LEER carga del entorno = 4/);
+for(const start of [0,1,2,4,7,12,20]){
+ const state=m.runProgram(3,general,{initialCharge:start});
+ assert.equal(state.valid,true,'input '+start);
+ assert.equal(state.correct,true,'transfer '+start);
+ assert.equal(state.value,start+3);
+}
+for(const invalid of [-1,21,1.2,NaN]){
+ assert.equal(m.runProgram(3,general,{initialCharge:invalid}).valid,false);
+}
+assert.equal(m.runProgram(3,['OUTPUT'],{initialCharge:2}).valid,false);
+assert.equal(m.runProgram(3,['READ_CHARGE','OUTPUT'],{initialCharge:2}).correct,false,'Must demonstrate the taught operation');
+assert.equal(m.runProgram(3,['READ_CHARGE','ADD3','OUTPUT','OUTPUT'],{initialCharge:2}).valid,false);
+assert.equal(m.sanitizedDraft(3,['READ_CHARGE','ADD3','OUTPUT']).join(','),general.join(','));
+const fresh=Save.fresh();
+assert.equal(fresh.refugePowered,false);
+assert.equal(Save.clean({...fresh,refugePowered:true}).refugePowered,true);
+assert.equal(Save.clean({...fresh,refugePowered:false,labCompleted:[3]}).refugePowered,false,'Old completed LAB challenges should not silently unlock visual reward');
+const session={value:null,getItem(){return this.value},setItem(_key,value){this.value=value},removeItem(){this.value=null}};
+const state={...fresh,cityVariableSolved:true,robot:true,refugePowered:true,labDiscovered:true,labCompleted:[0,1,2,3],labDrafts:{3:general}};
+assert.equal(Save.save(session,state),true);
+const recovered=Save.load(session);
+assert.equal(recovered.refugePowered,true);
+assert.equal(recovered.labDrafts[3].join(','),general.join(','));
+assert.equal(recovered.cityVariableSolved,true);
+assert.equal(recovered.robot,true);
+assert.match(html,/refugeHeater\(631,307,!!game\.save\.refugePowered\)/);
+assert.match(html,/id="lab-transfer"/);
+assert.match(html,/id="lab-world-result"/);
+assert.match(html,/id="reading-scale"/);
+assert.match(html,/min-height:44px/);
+console.log('v0.7.0 REFUGE PASS: transfer with varied inputs, honest failure, world state and save migration');
