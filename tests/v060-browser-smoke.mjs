@@ -615,6 +615,101 @@ try{
   defeated:'Three Boolean boss phases can be passed',
   backMetro:'Archive return leads to station',
   harbor:'Authorized train reaches the northern harbor'}))assert.equal(journeyArchive[name],true,description);
+ const journeyHarbor=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  const talk=()=>{for(let n=0;n<12&&!g.el.story.hidden;n++)g.nextDialogue();};
+  g.player.x=177;g.player.y=271;g.checkOrbs(g.player);
+  const moving=g.save.orbs.includes('move');
+  if(g.orbDialog)g.closeOrb();
+  g.player.x=473;g.player.y=280;g.interact();g.updateTransition(2);talk();
+  const workshop=g.scene==='workshop';
+  g.player.x=284;g.player.y=273;g.checkOrbs(g.player);
+  const codingOrb=g.save.orbs.includes('code');
+  if(g.orbDialog)g.closeOrb();
+  g.player.x=435;g.player.y=280;g.interact();
+  const editor=g.editor,repair=editor.opened&&editor.id==='nix';
+  for(const op of ['EAST','EAST','EAST','PICK'])editor.append(op);
+  const program=window.Lumina.Program.run('nix',editor.blocks).success;
+  editor.execute();
+  return {moving,workshop,codingOrb,repair,program};
+ })()`);
+ for(const [k,description] of Object.entries({
+  moving:'Player collects the movement orb in the harbor',
+  workshop:'Workshop entry is connected to the harbor',
+  codingOrb:'Player collects the coding orb before NIX',
+  repair:'NIX repair editor opens from the actual bench',
+  program:'Three movement instructions and PICK rescue the robot'
+ }))assert.equal(journeyHarbor[k],true,description);
+ await until(async()=>await evalJs("!document.getElementById('program-claim').hidden"),15000);
+ const journeyBridge=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  const talk=()=>{for(let n=0;n<12&&!g.el.story.hidden;n++)g.nextDialogue();};
+  document.getElementById('program-claim').click();talk();
+  const robot=g.save.robot;
+  g.player.x=95;g.player.y=280;g.interact();g.updateTransition(2);talk();
+  const returned=g.scene==='harbor';
+  g.player.x=1140;g.player.y=280;g.interact();g.updateTransition(2);talk();
+  const bridge=g.scene==='bridge';
+  g.player.x=302;g.player.y=225;g.checkOrbs(g.player);
+  const jump=g.save.orbs.includes('jump');if(g.orbDialog)g.closeOrb();
+  g.player.x=1282;g.player.y=267;g.checkOrbs(g.player);
+  const dash=g.save.orbs.includes('dash');if(g.orbDialog)g.closeOrb();
+  g.energy=100;g.player.x=1418;g.player.y=280;g.player.onGround=true;
+  const old={dash:g.input.consumeDash,axis:g.input.axis,jump:g.input.consumeJump,hold:g.input.holdingJump};
+  g.input.consumeDash=()=>true;g.input.axis=()=>({x:1,y:0});g.input.consumeJump=()=>false;g.input.holdingJump=()=>false;
+  try{for(let n=0;n<5&&!g.save.gateBroken;n++){g.energy=100;g.move(.05);}}finally{
+   g.input.consumeDash=old.dash;g.input.axis=old.axis;g.input.consumeJump=old.jump;g.input.holdingJump=old.hold;
+  }
+  const crystal=g.save.gateBroken;
+  if(crystal){g.player.x=1650;g.player.y=280;g.interact();g.updateTransition(2);talk();}
+  const tower=g.scene==='tower';
+  if(tower){
+   g.player.x=350;g.player.y=280;g.interact();
+   const e=g.editor;e.append('REPEAT');e.append('EAST','inner');e.append('PULSE','inner');
+   const pulses=window.Lumina.Program.run('beacon',e.blocks).success;
+   if(pulses)e.execute();
+   return {robot,returned,bridge,jump,dash,crystal,tower,pulses};
+  }
+  return {robot,returned,bridge,jump,dash,crystal,tower,pulses:false};
+ })()`);
+ for(const [k,description] of Object.entries({
+  robot:'The workshop sequence physically restores NIX',
+  returned:'Workshop exit leads back to harbor',
+  bridge:'The restored robot lets Iris cross to Boreal',
+  jump:'Jump orb is collected in the actual bridge scene',
+  dash:'Dash orb is collected before the crystal gate',
+  crystal:'A real charged dash breaks the blocking crystal',
+  tower:'Crossing the opened barrier enters the tower',
+  pulses:'REPETIR three times activates every beacon switch'
+ }))assert.equal(journeyBridge[k],true,description);
+ await until(async()=>await evalJs("!document.getElementById('program-claim').hidden"),15000);
+ const journeyFinish=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  document.getElementById('program-claim').click();
+  const generator=g.save.beacon;
+  g.player.x=975;g.player.y=280;g.interact();
+  const routing=!document.getElementById('route-modal').hidden;
+  document.getElementById('route-operator').value='AND';
+  document.getElementById('route-alarm').value='negate';
+  document.getElementById('route-prediction').value='AISLAR';
+  document.getElementById('route-run').click();
+  const safe=document.getElementById('route-status').dataset.success==='true';
+  document.getElementById('route-finish').click();
+  for(let n=0;n<14&&!g.el.story.hidden;n++)g.nextDialogue();
+  const saved=window.Lumina.Save.load(g.storage);
+  return {generator,routing,safe,ending:!document.getElementById('ending').hidden,
+   completed:g.save.completed,persisted:saved.completed&&saved.signalBalanced,
+   storyMoments:Object.keys(g.save.storyBeats).filter(x=>g.save.storyBeats[x]).length};
+ })()`);
+ for(const [k,description] of Object.entries({
+  generator:'Beacon loop charges the real generator',
+  routing:'Final safety puzzle appears at the tower lens',
+  safe:'The final rule and prediction pass four states',
+  ending:'The complete chapter ends with the proper dialogue',
+  completed:'The game marks the chapter as completed',
+  persisted:'The finale persists across a fresh save read'
+ }))assert.equal(journeyFinish[k],true,description);
+ assert.ok(journeyFinish.storyMoments>=6,'Story beats were experienced during the whole route');
  assert.deepEqual(errors,[],'No uncaught JavaScript exceptions in browser');
  console.log('Browser PASS: boot, 8 lessons, real palette clicks, save, kiosk, mobile landscape offline navigation and screenshots');
 }catch(error){console.error('BROWSER SMOKE FAILURE:',error);process.exitCode=1;}
