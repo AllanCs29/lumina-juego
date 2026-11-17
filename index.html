@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.8.0</title>
+<title>Lúmina — Juega para aprender | v0.8.1</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="./icon.svg"/>
@@ -687,6 +687,36 @@ body.reduce-motion .menu-beam{opacity:.55}
  body.touch-enabled .lab-panel .lab-actions button,body.touch-enabled .lab-panel .lab-nav button,
  body.touch-enabled .lab-panel #lab-guide-next{min-height:44px!important}
 }
+/* v0.8.1: simplified primary menu, progressive preferences and keyboard focus */
+.menu-v042 .menu-controls{justify-content:center;gap:12px}
+.menu-v042 .menu-more{width:100%;margin:0;flex:0 0 auto}
+.menu-v042 .menu-more>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:12px 15px;border:1px solid #729aab;border-radius:9px;background:#17394f;color:#e7f6ed;font:800 14px/1.4 system-ui;touch-action:manipulation}
+.menu-v042 .menu-more>summary::-webkit-details-marker{display:none}
+.menu-v042 .menu-more>summary:focus-visible,.menu-v042 .menu-settings>summary:focus-visible,.menu-v042 .menu-chapters>summary:focus-visible{outline:3px solid #ffe3a0;outline-offset:3px}
+.menu-v042 .menu-more[open]>summary{background:#275268;border-color:#98d7cd}
+.menu-v042 .menu-more>summary span{transition:transform .15s ease}
+.menu-v042 .menu-more[open]>summary span{transform:rotate(180deg)}
+.menu-v042 .menu-more-content{display:flex;flex-direction:column;gap:11px;background:#0d283d;border:1px solid #587b8d;border-radius:0 0 9px 9px;padding:13px 11px 15px}
+.menu-v042 .menu-quick-help{width:100%;margin:0;text-align:center;min-height:45px;font:800 14px system-ui;border-radius:8px}
+.menu-v042 .menu-mini-heading{font:800 11px/1.3 ui-monospace,monospace!important;color:#d6ccaa!important;letter-spacing:.09em;margin:2px 0 5px!important}
+.menu-v042 .menu-quick-preferences{display:grid;grid-template-columns:1fr;gap:7px}
+.menu-v042 .menu-quick-preferences>label{font:700 12px/1.5 system-ui;color:#d6f0eb;display:flex;justify-content:space-between;gap:10px}
+.menu-v042 .menu-quick-preferences>label span{color:#8dcebb}
+.menu-v042 .menu-quick-preferences>select{min-height:44px;width:100%;padding:8px;color:#ecfaef;background:#173c51;border:1px solid #86b4b9;border-radius:7px;font:700 13px system-ui}
+.menu-v042 .menu-toggle-pair{display:grid;grid-template-columns:1fr;gap:7px;margin-top:4px}
+.menu-v042 .menu-more-content button{min-height:44px;padding:8px 11px;font:700 12px/1.4 system-ui;border-radius:7px;text-align:left}
+.menu-v042 .menu-extras{display:flex;flex-direction:column;gap:7px}
+.menu-v042 .menu-extras button{width:100%}
+.menu-v042 .menu-extras button small{font:500 10px/1.4 system-ui;color:#acd4d2;display:block}
+.menu-v042 .menu-reset{width:100%;border-color:#9b7c7a;background:#2c394b;color:#ffdfd6}
+.menu-v042 .menu-reset small{display:block;font:500 10px/1.3 system-ui}
+.menu-v042 .menu-settings{margin:0;width:100%;max-width:none}
+.menu-v042 .menu-settings-content{max-height:none;overflow:visible}
+.menu-v042 .menu-settings summary{min-height:44px;text-align:left}
+.menu-v042 .menu-chapters{width:100%}
+.menu-v042 .menu-controls>button.menu-primary{min-height:54px;font-size:17px}
+@media(orientation:landscape) and (max-height:520px){.menu-v042 .menu-hero{padding:12px 18px}.menu-v042 .menu-art{height:80px;margin:5px 0}.menu-v042 .menu-controls{gap:9px}.menu-v042 .menu-controls>button.menu-primary{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.menu-v042 .menu-more>summary span{transition:none}}
 </style>
 
 </head>
@@ -776,7 +806,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.8.0</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.8.1</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -785,51 +815,55 @@ body.reduce-motion .menu-beam{opacity:.55}
    <p class="menu-save-state" id="save-summary">Tu viaje está a punto de comenzar.</p>
   </div>
   <div class="menu-controls">
-   <p class="menu-controls-kicker">EXPEDICIÓN / ARCHIVO 01</p>
-   <button id="start" class="primary menu-primary" type="button"><span id="resume-text">Continuar</span> <span aria-hidden="true">▶</span></button>
-   <button id="restart" class="secondary menu-action" type="button">✦ Nueva partida <small>Reinicia todo el progreso</small></button>
-   <button id="training-open" class="secondary menu-cinematic" type="button">⌁ Aprender controles <small>Tutorial jugable, sin perder progreso</small></button>
-    <button id="lab-open" class="secondary menu-cinematic" type="button">⌘ Laboratorio de lógica <small>Funciones, arreglos y depuración · práctica sin perder progreso</small></button>
-   <button id="watch-opening" class="secondary menu-cinematic" type="button">▣ Ver cinemática <small>La historia de Iris y NIX</small></button>
-   <details class="menu-settings" id="menu-settings"><summary>⚙ Configuración</summary><div class="menu-settings-content">
-    <button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
-    <button id="edit-controls" class="secondary" type="button">✥ Personalizar controles táctiles</button>
-    <label class="mobile-speed-label" for="mobile-speed">Velocidad de movimiento en móvil <span id="mobile-speed-value">78%</span></label><input id="mobile-speed" type="range" min="60" max="110" step="5" value="78"/>
-    <label class="mobile-speed-label" for="guidance-mode">Orientación suave <span id="guidance-mode-label">Flechas discretas</span></label>
-    <select id="guidance-mode" aria-label="Frecuencia de flechas hacia el objetivo">
-      <option value="subtle">Flechas discretas · recomendado</option>
-      <option value="hint">Solo cuando pulso Pista</option>
-      <option value="off">Sin flechas</option>
-    </select>
-    <small>Las flechas indican el siguiente objetivo sin marcar rutas obligatorias. Se ocultan cerca de una interacción y durante los diálogos.</small>
-    <label class="mobile-speed-label" for="reading-scale">Tamaño de lectura <span id="reading-scale-value">100%</span></label>
-     <select id="reading-scale" aria-label="Aumentar tamaño de letra en misiones y tutoriales">
-      <option value="1">Normal · 100%</option><option value="1.15">Grande · 115%</option>
-      <option value="1.3">Muy grande · 130%</option>
-     </select>
-     <label class="mobile-speed-label" for="render-quality">Nitidez <span id="quality-label">Equilibrada · 2×</span></label>
-    <select id="render-quality" aria-label="Nitidez del juego"><option value="retro">Retro · 1× (ahorra batería)</option><option value="balanced" selected>Equilibrada · hasta 2×</option><option value="sharp">Nítida · hasta 3× + microdetalles</option></select>
-    <label class="mobile-speed-label" for="fps-limit">Frecuencia de dibujo <span id="fps-actual">Detectando pantalla…</span></label>
-    <select id="fps-limit" aria-label="Límite de fotogramas"><option value="60">60 FPS · estándar</option><option value="120">120 FPS · probar ProMotion</option></select>
-    <small id="fps-help">La frecuencia depende del navegador; FPS efectivos muestra la velocidad real. La física no se acelera.</small>
-    <button id="fps-retest" class="secondary" type="button">↻ Volver a medir la pantalla</button>
-    <button id="audio-button" class="secondary" type="button">♪ Sonido: activado</button>
-<button id="ambient-button" class="secondary" type="button">♫ Ambiente original: desactivado</button>
-<button id="haptic-button" class="secondary" type="button" hidden>✦ Vibración: desactivada</button>
-<button id="motion-button" class="secondary" type="button" aria-pressed="false">◌ Reducir movimiento: desactivado</button>
-<button id="auto-quality-button" class="secondary" type="button" aria-pressed="false">⚙ Calidad automática: desactivada</button>
-<small>La calidad automática baja el detalle tras varios segundos de FPS bajos.</small>
-   </div></details>
-   <button id="open-notebook" class="secondary menu-notebook" type="button">🔒 Cuaderno · aún sin descubrimientos</button>
-   <p id="notebook-locked" class="notebook-locked">Se llena mientras exploras.</p>
-   <details class="menu-chapters"><summary>🗺 Capítulos y escenas de prueba</summary><div>
-     <button id="city-mode" class="secondary" type="button">✧ Distrito Aurora</button>
-     <button id="old-mode" class="secondary" type="button">❄ Puerto de la Bruma y faro</button>
-     <button id="guardian-replay" class="secondary" type="button">⚔ Desafío Centinela · jefe de lógica</button>
-     <button id="prologue-replay" class="secondary" type="button" hidden>✦ Volver a ver la cinemática</button>
-     <small>Elige capítulos manualmente solo si estás probando mecánicas. Para la historia usa Continuar.</small>
-   </div></details>
-   <small class="menu-hint">Móvil: gira el teléfono y utiliza los controles en pantalla. PC: A/D · Espacio · E · Shift.</small>
+   <p class="menu-controls-kicker">TU AVENTURA</p>
+   <button id="start" class="primary menu-primary" type="button"><span id="resume-text">Continuar</span><span aria-hidden="true">▶</span></button>
+   <button id="training-open" class="secondary menu-quick-help" type="button">⌨ Aprender controles</button>
+   <details id="menu-more" class="menu-more">
+    <summary>⚙ Opciones <span aria-hidden="true">⌄</span></summary>
+    <div class="menu-more-content">
+     <p class="menu-mini-heading">PREFERENCIAS</p>
+     <div class="menu-quick-preferences">
+      <label for="guidance-mode">Orientación <span id="guidance-mode-label">Flechas discretas</span></label>
+      <select id="guidance-mode" aria-label="Flechas hacia el objetivo"><option value="subtle">Flechas discretas</option><option value="hint">Solo al pedir Pista</option><option value="off">Sin flechas</option></select>
+      <label for="reading-scale">Tamaño de texto <span id="reading-scale-value">100%</span></label>
+      <select id="reading-scale" aria-label="Tamaño de lectura de misiones"><option value="1">Normal · 100%</option><option value="1.15">Grande · 115%</option><option value="1.3">Muy grande · 130%</option></select>
+      <div class="menu-toggle-pair"><button id="audio-button" class="secondary" type="button">♪ Sonido: activado</button><button id="motion-button" class="secondary" type="button" aria-pressed="false">◌ Reducir movimiento: desactivado</button></div>
+     </div>
+     <div class="menu-extras" id="menu-extras" hidden>
+      <p class="menu-mini-heading">DESCUBRIMIENTOS</p>
+      <button id="lab-open" class="secondary" type="button" hidden disabled>⌘ Practicar programación <small>Laboratorio de NIX</small></button>
+      <button id="open-notebook" class="secondary" type="button" hidden>📓 Cuaderno de Iris</button>
+      <p id="notebook-locked" hidden>El cuaderno se completa al explorar.</p>
+      <button id="watch-opening" class="secondary" type="button" hidden>▣ Volver a ver la introducción</button>
+     </div>
+     <details class="menu-settings" id="menu-settings">
+      <summary>⚙ Ajustes avanzados</summary>
+      <div class="menu-settings-content">
+       <button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
+       <button id="edit-controls" class="secondary" type="button">✥ Personalizar controles táctiles</button>
+       <label class="mobile-speed-label" for="mobile-speed">Velocidad móvil <span id="mobile-speed-value">78%</span></label><input id="mobile-speed" type="range" min="60" max="110" step="5" value="78"/>
+       <label class="mobile-speed-label" for="render-quality">Nitidez <span id="quality-label">Equilibrada · 2×</span></label>
+       <select id="render-quality" aria-label="Nitidez del juego"><option value="retro">Retro · 1×</option><option value="balanced" selected>Equilibrada · 2×</option><option value="sharp">Nítida · 3× + microdetalles</option></select>
+       <label class="mobile-speed-label" for="fps-limit">Frecuencia de dibujo <span id="fps-actual">Detectando…</span></label>
+       <select id="fps-limit" aria-label="Límite de fotogramas"><option value="60">60 FPS</option><option value="120">120 FPS · si está disponible</option></select>
+       <small id="fps-help">Depende del navegador; la física no cambia de velocidad.</small>
+       <button id="fps-retest" class="secondary" type="button">↻ Volver a medir la pantalla</button>
+       <button id="ambient-button" class="secondary" type="button">♫ Ambiente original: desactivado</button>
+       <button id="haptic-button" class="secondary" type="button" hidden>✦ Vibración: desactivada</button>
+       <button id="auto-quality-button" class="secondary" type="button" aria-pressed="false">⚙ Calidad automática: desactivada</button>
+       <small>Calidad automática reduce el detalle si el rendimiento baja.</small>
+      </div>
+     </details>
+     <button id="restart" class="secondary menu-reset" type="button" hidden>↺ Nueva partida <small>Borra tu avance solo después de confirmarlo</small></button>
+     <details class="menu-chapters" data-dev-only hidden><summary>🧪 Escenas de prueba</summary><div>
+      <button id="city-mode" class="secondary" type="button">✧ Distrito Aurora</button>
+      <button id="old-mode" class="secondary" type="button">❄ Puerto de la Bruma y faro</button>
+      <button id="guardian-replay" class="secondary" type="button">⚔ Desafío Centinela</button>
+      <button id="prologue-replay" class="secondary" type="button" hidden>Volver a ver la cinemática</button>
+      <small>Herramientas de prueba. Solo aparecen con ?dev=1.</small>
+     </div></details>
+    </div>
+   </details>
   </div>
  </div>
 </div>
@@ -3559,15 +3593,15 @@ class Game{
   if(summary)summary.textContent=this.save.started?('✦ PARTIDA GUARDADA · '+(this.scene==='district'?'Distrito Aurora':this.scene==='archive'?'Archivo de Ecos':this.scene==='metro'?'Estación Umbral':this.scene==='rooftops'?'Azoteas de Aurora':this.scene==='harbor'?'Puerto de la Bruma':this.scene==='workshop'?'Taller de NIX':this.scene==='bridge'?'Pasarela Boreal':'Faro del Silencio')):'✦ NUEVA EXPEDICIÓN · PRÓLOGO DISPONIBLE';
   if(summary&&this.save.labCompleted?.length)summary.textContent+=' · LAB '+this.save.labCompleted.length+'/8';
   const button=document.getElementById('lab-open'),status=button?.querySelector('small');
-  if(button){
-    button.disabled=!root.LabUnlock.enabled(this.save);
-    button.setAttribute('aria-label',button.disabled?'Laboratorio bloqueado: descúbrelo en Taller de NIX':'Abrir laboratorio de programación');
-   }
-   if(status)status.textContent=root.LabUnlock.enabled(this.save)
-     ?'Misiones de programación · '+(this.save.labCompleted?.length||0)+'/8 completadas'
-     :'🔒 Primero llega al Taller de NIX y despierta su máquina';
+  if(button){const unlocked=root.LabUnlock.enabled(this.save);button.disabled=!unlocked;button.hidden=!unlocked;button.setAttribute('aria-label',unlocked?'Abrir laboratorio de programación':'Laboratorio aún no descubierto');}
+  if(status)status.textContent='Misiones de programación · '+(this.save.labCompleted?.length||0)+'/8 completadas';
+  const notebook=document.getElementById('open-notebook');if(notebook)notebook.hidden=root.StoryProgress.discovered(this.save).length===0;
+  const opening=document.getElementById('watch-opening');if(opening)opening.hidden=!this.save.cityIntroSeen;
+  const restart=document.getElementById('restart');if(restart)restart.hidden=!this.save.started;
+  const debug=document.querySelector('[data-dev-only]');if(debug)debug.hidden=!new URLSearchParams(window.location.search).has('dev');
+  const extras=document.getElementById('menu-extras');if(extras)extras.hidden=!([button,notebook,opening].some(el=>el&&!el.hidden));
  }
- openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
+ openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();document.getElementById('menu-more')?.removeAttribute('open');document.getElementById('menu-settings')?.removeAttribute('open');this.sfx('menu')}
  say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
  nextDialogue(){if(this.dialogue.length){this.dialogueShown=(this.dialogueShown||0)+1;this.el.storyText.textContent=this.dialogue.shift();const counter=document.getElementById('dialogue-progress');if(counter)counter.textContent=this.dialogueShown+' / '+(this.dialogueTotal||this.dialogueShown);this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
  toast(msg){this.el.toast.textContent=msg;this.el.toast.hidden=false;this.toastTimer=3}
