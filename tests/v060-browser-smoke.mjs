@@ -330,6 +330,77 @@ try{
  const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-distrito-movil.png',Buffer.from(image.data,'base64'));
 
+ const corePuzzle=await evalJs(`(()=>{
+  const g=window.Lumina.game;
+  if(g.logicLab.active)g.logicLab.close();
+  g.el.menu.hidden=true;g.locked=false;g.transition=null;
+  g.scene='metro';g.player.x=710;g.player.y=280;
+  g.save.metroRelays=[true,false];g.save.coreProofs.metro=false;
+  g.interactRegion();
+  const opened=!document.getElementById('world-code-modal').hidden;
+  const add=ops=>{for(const op of ops){
+   const b=document.querySelector('#world-code-palette button[data-op="'+op+'"]');
+   if(!b)throw Error('Missing code block '+op);b.click();
+  }};
+  add(['ENERGY','NETWORK','OR','NOT_ALARM','AND','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const rejected=document.getElementById('world-code-feedback').dataset.correct!=='true'&&!g.save.metroRelays[1];
+  document.getElementById('world-code-clear').click();
+  add(['ENERGY','NETWORK','AND','NOT_ALARM','AND','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const accepted=document.getElementById('world-code-feedback').dataset.correct==='true';
+  const beforeReward=!g.save.metroRelays[1];
+  document.getElementById('world-code-done').click();
+  const rewarded=g.save.metroRelays[1]&&g.save.coreProofs.metro&&document.getElementById('world-code-modal').hidden;
+  g.scene='archive';g.player.x=765;g.player.y=280;g.locked=false;
+  g.save.archiveNodes=[true,true,false];g.save.coreProofs.archive=false;
+  g.interactArchive();
+  const archiveOpened=!document.getElementById('world-code-modal').hidden;
+  add(['SET0','SENSOR0','SENSOR2','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const wrongSensor=document.getElementById('world-code-feedback').dataset.correct!=='true';
+  document.getElementById('world-code-clear').click();
+  add(['SET0','SENSOR0','SENSOR1','OUTPUT']);
+  document.getElementById('world-code-run').click();
+  const archiveAccepted=document.getElementById('world-code-feedback').dataset.correct==='true';
+  document.getElementById('world-code-done').click();
+  const archiveReward=g.save.archiveNodes[2]&&g.save.coreProofs.archive;
+  for(let i=0;i<6&&!g.el.story.hidden;i++)g.nextDialogue();
+  return {opened,rejected,accepted,beforeReward,rewarded,archiveOpened,wrongSensor,archiveAccepted,archiveReward};
+ })()`);
+ for(const [key,message] of Object.entries({
+  opened:'Second metro relay opens real block programming',
+  rejected:'Wrong boolean rule fails on changing sensors',
+  accepted:'Correct logic works across four sensor cases',
+  beforeReward:'World changes after completing the test, not before',
+  rewarded:'Successful program lights real metro relay',
+  archiveOpened:'Third memory requires array programming',
+  wrongSensor:'Wrong sensor index cannot decode the record',
+  archiveAccepted:'Correct array program works across input combinations',
+  archiveReward:'Recovered record changes and persists in the world'
+ }))assert.equal(corePuzzle[key],true,message);
+
+ const checkpointProof=await evalJs(`(()=>{
+  const g=window.Lumina.game,S=window.Lumina.Save,P=window.Lumina.Physics;
+  g.scene='district';g.save.scene='district';g.save.started=true;
+  g.save.cityGate=true;g.save.cityPowered=true;g.save.cityVariableSolved=true;
+  g.player=P.spawn(855,280);g.player.onGround=true;g.locked=false;
+  const written=g.recordWorldCheckpoint(),stored=g.save.checkpoints.district.x;
+  const reloaded=S.load(g.storage),restored=g.spawn('district').x;
+  const invalid=S.clean({...reloaded,checkpoints:{district:{x:9999,y:280}}}).checkpoints.district===undefined;
+  g.scene='guardian';g.guardian.returnScene='archive';g.persist();
+  const bossSave=S.load(g.storage).scene;
+  g.scene='metro';g.save.scene='metro';g.save.checkpoints.metro={x:710,y:280};g.sceneChange('metro',95);
+  return {written,stored,restored,invalid,bossSave,entry:g.player.x};
+ })()`);
+ assert.equal(checkpointProof.written,true,'Standing safely records an autosave checkpoint');
+ assert.ok(checkpointProof.stored>=840&&checkpointProof.stored<=860,'Checkpoint is tied to world position');
+ assert.ok(Math.abs(checkpointProof.restored-checkpointProof.stored)<1,'Reload restores player at checkpoint');
+ assert.equal(checkpointProof.invalid,true,'Untrusted checkpoint outside a level is rejected');
+ assert.equal(checkpointProof.bossSave,'archive','Boss progress never replaces archive scene with temporary arena');
+ assert.equal(checkpointProof.entry,95,'Entering a scene respects the intended entry point');
+ await evalJs(`(()=>{const g=window.Lumina.game;g.scene='metro';g.save.scene='metro';g.player.x=1200;g.player.y=280;g.locked=false;g.transition=null;return true})()`);
+
  const storyGate=await evalJs(`(()=>{
   const g=window.Lumina.game;
   if(g.logicLab.active)g.logicLab.close();
