@@ -712,10 +712,16 @@ body.reduce-motion .menu-beam{opacity:.55}
    <div id="lab-palette" class="lab-palette" aria-label="Bloques disponibles"></div>
    <div class="lab-tips"><button id="lab-clear" type="button" class="secondary">↻ Borrar borrador</button><span>Hasta 14 bloques; guarda automáticamente</span></div>
   </div>
+  <div id="lab-transfer" class="lab-transfer" hidden aria-live="polite">
+   <strong>✦ DOS PRUEBAS · UN ÚNICO PROGRAMA</strong>
+   <div id="lab-transfer-cases">Máquina A: entrada 2 → 5 · Máquina B: entrada 4 → 7</div>
+   <small id="lab-transfer-status">El mismo programa debe resolver ambas entradas. No copies el número inicial.</small>
+  </div>
   <p class="lab-feedback" id="lab-feedback" role="status" aria-live="polite">Observa cada cambio en la máquina.</p>
   <div class="lab-meter" id="lab-meter" aria-label="Estado de la máquina"></div>
   <div class="lab-actions"><button id="lab-hint" type="button" class="secondary">? Pista</button><button id="lab-run" type="button" class="primary">▶ Ejecutar programa</button></div>
   <div class="lab-step" id="lab-step" hidden></div>
+  <button id="lab-world-result" type="button" class="primary lab-world-result" hidden>✦ Volver al mundo y ver el refugio encendido</button>
   <div class="lab-nav"><button id="lab-prev" type="button" class="secondary">← Anterior</button><button id="lab-next" type="button" class="primary">Siguiente misión →</button></div>
  </section>
 </div>
@@ -996,7 +1002,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,learningLanguage:'pseudo',started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,refugePowered:false,learningLanguage:'pseudo',started:false});
   function sanitizeLabDrafts(value){
    const drafts={},ops=['SET0','SET2','SET3','READ_CHARGE','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
@@ -1019,6 +1025,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
         labDrafts:sanitizeLabDrafts(data.labDrafts),
         labMastered:Array.isArray(data.labCompleted)&&[0,1,2,3,4,5,6,7].every(i=>data.labCompleted.includes(i)),
         labEpilogueSeen:!!data.labEpilogueSeen,
+        refugePowered:!!data.refugePowered,
          // Previous v0.6 users who completed lessons keep their existing access.
          labDiscovered:!!data.labDiscovered||(Array.isArray(data.labCompleted)&&data.labCompleted.length>0),
          learningLanguage:['pseudo','python','cpp','javascript'].includes(data.learningLanguage)?data.learningLanguage:'pseudo',
@@ -2989,7 +2996,7 @@ function translateProgram(lang,program,taskCode=''){
 class LogicLab{
  constructor(game){
   this.game=game;this.index=0;this.active=false;this.fromWorld=false;this.draft=[];this.guideOpen=false;this.guideStep=0;
-  for(const [id,fn] of [['lab-open',()=>this.open(false)],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)],['lab-clear',()=>this.clear()],['lab-guide-next',()=>this.advanceGuide()],['lab-guide-reopen',()=>this.reopenGuide()]])
+  for(const [id,fn] of [['lab-open',()=>this.open(false)],['lab-exit',()=>this.close()],['lab-run',()=>this.run()],['lab-hint',()=>this.hint()],['lab-prev',()=>this.move(-1)],['lab-next',()=>this.move(1)],['lab-clear',()=>this.clear()],['lab-world-result',()=>this.close()],['lab-guide-next',()=>this.advanceGuide()],['lab-guide-reopen',()=>this.reopenGuide()]])
    document.getElementById(id)?.addEventListener('click',fn);
   document.getElementById('lab-answer')?.addEventListener('keydown',e=>{if(e.key==='Enter')this.run();});
   document.getElementById('lab-language-select')?.addEventListener('change',e=>{
@@ -3088,6 +3095,27 @@ class LogicLab{
  }
  run(){
   if(this.guideOpen){this.feedback('Lee la explicación antes de ejecutar. Avanza con «Siguiente explicación».');return;}
+  if(this.index===3){
+   const report=validateRefuge(this.draft),[first,second]=report.cases,trace=document.getElementById('lab-step');
+   const row=(env,result,label)=>label+': entrada '+env.initialCharge+' → '+(result.value===null?'sin salida':result.value)
+     +' / meta '+env.target+' · '+(result.correct?'✓ correcto':'✕ revisar')+'\n'+(result.trace||[]).join('\n')
+     +(result.error?'\n'+result.error:'');
+   trace.hidden=false;trace.textContent=row(REFUGE_CASES[0],first,'PRUEBA A')+'\n\n'+row(REFUGE_CASES[1],second,'PRUEBA B');
+   document.getElementById('lab-transfer-status').textContent='A '+(first.correct?'✓':'✕')+' · B '+(second.correct?'✓':'✕');
+   if(report.passed){
+    const justPowered=!this.game.save.refugePowered;
+    this.game.save.refugePowered=true;this.markSuccess();this.game.persist();
+    if(justPowered){this.game.lightFlash=.9;this.game.sfx('gate');
+      if(this.game.scene==='workshop')this.game.fx.burst(631,249,'dash',20);}
+    this.feedback('✓ ¡Las dos máquinas respondieron! El calefactor del taller está encendido. Puedes volver a mirar el cambio.',true);
+   }else{
+    this.feedback(!first.valid?('Prueba A: '+first.error):!first.correct?
+      'Prueba A no alcanzó 5. Revisa qué número quedó en la caja carga.':
+      '¡Prueba A superada! Pero al recibir 4, tu programa también debe llegar a 7. ¿Estás LEYENDO la entrada o fijando siempre un 2?',false);
+    this.game.sfx('deny');
+   }
+   this.drawMeter(second.value);this.updateWorldButton();this.renderNav();return;
+  }
   const task=TASKS[this.index],numeric=task.kind==='answer';
   const result=numeric?evaluate(this.index,document.getElementById('lab-answer').value):runProgram(this.index,this.draft);
   const trace=document.getElementById('lab-step');
@@ -3098,6 +3126,10 @@ class LogicLab{
   trace.textContent='EJECUCIÓN PASO A PASO\n'+(Array.isArray(lines)?lines.join('\n'):lines);
   if(!numeric)this.drawMeter(result.value);
   this.renderNav();
+ }
+ updateWorldButton(){
+  const b=document.getElementById('lab-world-result');
+  b.hidden=!(this.index===3&&this.fromWorld&&this.game.scene==='workshop'&&this.game.save.refugePowered);
  }
  drawMeter(value){const e=document.getElementById('lab-meter');e.replaceChildren();
   if(value===null||value===undefined)return;
@@ -3140,7 +3172,10 @@ class LogicLab{
   document.getElementById('lab-answer').value='';document.getElementById('lab-step').hidden=true;
   document.getElementById('lab-run').textContent=numeric?'▶ Comprobar':'▶ Ejecutar programa';
   this.feedback(this.game.save.labCompleted.includes(this.index)?'✓ Misión superada. Puedes volver a practicar.':'Construye la solución; la respuesta no está prellenada.',this.game.save.labCompleted.includes(this.index));
-  this.drawMeter(null);this.drawBlocks();this.renderNav();this.showGuide();this.updateCodePreview();
+  document.getElementById('lab-transfer').hidden=this.index!==3;
+  if(this.index===3)document.getElementById('lab-transfer-status').textContent=this.game.save.refugePowered?
+    '✓ Refugio activo · repite el reto cuando quieras':'El mismo programa debe superar las dos entradas sin copiar un valor fijo.';
+  this.drawMeter(null);this.drawBlocks();this.renderNav();this.showGuide();this.updateCodePreview();this.updateWorldButton();
  }
 }
 root.LabStations=Object.freeze({district:1360,metro:1100,archive:625,harbor:828,workshop:733,tower:631});
