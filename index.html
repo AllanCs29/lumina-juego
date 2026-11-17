@@ -2737,7 +2737,7 @@ root.Prologue=Prologue;
   hint(){document.getElementById('lab-feedback').textContent='PISTA · '+TASKS[this.index].hint;this.game.sfx('menu');}
   run(){const input=document.getElementById('lab-answer').value,result=evaluate(this.index,input),el=document.getElementById('lab-feedback'),trace=document.getElementById('lab-step');
    if(!result.valid){el.textContent='Introduce un número entero para probar tu respuesta.';el.dataset.success='false';return;}
-   trace.hidden=false;trace.textContent='EJECUCIÓN PASO A PASO\n'+result.trace;
+   trace.hidden=!result.correct;trace.textContent='EJECUCIÓN PASO A PASO\n'+result.trace;
    if(result.correct){if(!this.game.save.labCompleted.includes(this.index)){this.game.save.labCompleted.push(this.index);this.game.persist();}
     el.textContent=TASKS[this.index].success;el.dataset.success='true';this.game.sfx('success');
    }else{el.textContent='Resultado '+input+': todavía no coincide. Revisa el estado de cada variable.';el.dataset.success='false';this.game.sfx('deny');}
