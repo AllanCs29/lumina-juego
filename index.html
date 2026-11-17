@@ -695,6 +695,8 @@ body.touch-enabled .energy-hud{
     <small id="fps-help">La frecuencia depende del navegador; FPS efectivos muestra la velocidad real. La física no se acelera.</small>
     <button id="fps-retest" class="secondary" type="button">↻ Volver a medir la pantalla</button>
     <button id="audio-button" class="secondary" type="button">♪ Sonido: activado</button>
+<button id="ambient-button" class="secondary" type="button">♫ Ambiente original: desactivado</button>
+<button id="haptic-button" class="secondary" type="button" hidden>✦ Vibración: desactivada</button>
    </div></details>
    <button id="open-notebook" class="secondary menu-notebook" type="button">🔒 Cuaderno · aún sin descubrimientos</button>
    <p id="notebook-locked" class="notebook-locked">Se llena mientras exploras.</p>
@@ -2856,6 +2858,8 @@ class Game{
   this.player=this.spawn(this.scene);this.camera={x:0,y:75};this.renderer=new root.Renderer(canvas);this.fx=new root.Effects();this.transition=null;this.lightFlash=0;this.vignette=null;this.nixWake=0;this.stepTimer=0;this.worldTime=0;this.gateHintCooldown=0;
   this.input=new root.Input();this.last=0;this.frameLast=0;this.targetFps=60;this.measuredFps=0;this.renderCount=0;this.renderWindow=0;this.occlusionWait=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
   this.editor=new root.Editor(this);this.touchLayout=new root.TouchLayout(this);root.touchLayout=this.touchLayout;this.shake=0;this.walk=0;this.audioOn=true;this.audio=null;this.toastTimer=0;
+ this.ambientOn=false;this.hapticOn=false;this.nextAmbient=0;
+ try{this.ambientOn=localStorage.getItem('lumina-original-ambient-v1')==='on';this.hapticOn=localStorage.getItem('lumina-haptic-v1')==='on';}catch{}
   this.el={menu:document.getElementById('menu'),story:document.getElementById('story'),storyText:document.getElementById('story-text'),storyButton:document.getElementById('story-next'),objective:document.getElementById('objective'),prompt:document.getElementById('prompt'),toast:document.getElementById('toast'),sceneName:document.getElementById('scene-name'),assist:document.getElementById('assist')};
   this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.controlsTutorial=new root.ControlsTutorial(this);this.guardian=new root.Guardian(this);document.getElementById("guardian-restart")?.addEventListener("click",()=>this.guardian.start(true));this.logicLab=new root.LogicLab(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
   const startBtn=document.getElementById('start');const startGame=()=>{if(!this.el.menu.hidden){this.unlockAudio();this.sfx('start');this.start(false)}};
@@ -2921,7 +2925,22 @@ class Game{
  nextDialogue(){if(this.dialogue.length){this.dialogueShown=(this.dialogueShown||0)+1;this.el.storyText.textContent=this.dialogue.shift();const counter=document.getElementById('dialogue-progress');if(counter)counter.textContent=this.dialogueShown+' / '+(this.dialogueTotal||this.dialogueShown);this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
  toast(msg){this.el.toast.textContent=msg;this.el.toast.hidden=false;this.toastTimer=3}
  unlockAudio(){if(!this.audioOn)return;try{this.audio=this.audio||new (window.AudioContext||window.webkitAudioContext)();if(this.audio.state==='suspended')this.audio.resume()?.catch?.(()=>{});}catch{}}
+ // Original soundscape, user-activated, generated with Web Audio oscillators.
+ ambientTick(){const ctx=this.audio;if(!this.ambientOn||!this.audioOn||this.locked||this.editor.opened||!ctx||ctx.state!=='running')return;
+  const now=ctx.currentTime;if(now<this.nextAmbient)return;this.nextAmbient=now+4.9;
+  const urban=['district','metro','rooftops','archive'].includes(this.scene);
+  const notes=urban?[164.81,246.94,329.63,246.94]:[146.83,220,293.66,220];
+  try{for(let i=0;i<notes.length;i++){const osc=ctx.createOscillator(),gain=ctx.createGain(),t=now+.04+i*1.10;
+   osc.type=i%2?'triangle':'sine';osc.frequency.setValueAtTime(notes[i],t);
+   gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.009,t+.18);
+   gain.gain.exponentialRampToValueAtTime(.0001,t+1.85);
+   osc.connect(gain).connect(ctx.destination);osc.start(t);osc.stop(t+1.9);
+  }}catch{this.ambientOn=false;}
+ }
  sfx(type){
+  if(this.hapticOn&&typeof navigator!=='undefined'&&typeof navigator.vibrate==='function'&&['collect','success','deny','gate','robot'].includes(type)){
+   try{navigator.vibrate(type==='deny'?[15,35,15]:[20]);}catch{}
+  }
   if(!this.audioOn)return;
   const patterns={menu:[[480,0,.055,'sine']],start:[[390,0,.08,'triangle'],[585,.095,.09,'triangle'],[782,.2,.16,'sine']],confirm:[[510,0,.07,'sine'],[760,.075,.11,'sine']],deny:[[220,0,.12,'sawtooth'],[170,.115,.15,'triangle']],collect:[[615,0,.06,'sine'],[810,.07,.07,'sine'],[1100,.15,.13,'sine']],gate:[[450,0,.11,'triangle'],[620,.12,.12,'triangle'],[830,.26,.22,'sine']],bridge:[[175,0,.15,'sawtooth'],[210,.2,.17,'triangle'],[310,.42,.17,'triangle'],[510,.7,.25,'sine']],success:[[480,0,.08,'triangle'],[710,.1,.12,'sine'],[960,.24,.23,'sine']],robot:[[270,0,.08,'square'],[435,.12,.09,'sine'],[660,.26,.2,'sine']],portal:[[255,0,.15,'sine'],[350,.16,.18,'sine'],[475,.3,.22,'triangle']],step:[[140,0,.025,'triangle']]};
   const notes=patterns[type]||patterns.menu;try{this.unlockAudio();const ctx=this.audio;if(!ctx)return;
@@ -3112,6 +3131,17 @@ class Game{
   const mode=document.getElementById('render-quality'),qualityLabel=document.getElementById('quality-label'),fps=document.getElementById('fps-limit'),actual=document.getElementById('fps-actual');
   const qualityNames={retro:'Retro · 1×',balanced:'Equilibrada · 2×',sharp:'Nítida · 3× + microdetalles'};
   mode.value=this.renderer.quality;qualityLabel.textContent=qualityNames[this.renderer.quality];
+ const ambient=document.getElementById('ambient-button'),haptics=document.getElementById('haptic-button');
+ if(ambient){const show=()=>ambient.textContent='♫ Ambiente original: '+(this.ambientOn?'activado':'desactivado');show();
+  ambient.addEventListener('click',()=>{this.ambientOn=!this.ambientOn;this.nextAmbient=0;
+   try{localStorage.setItem('lumina-original-ambient-v1',this.ambientOn?'on':'off')}catch{}
+   if(this.ambientOn){this.unlockAudio();this.sfx('confirm');}show();
+  });}
+ if(haptics){haptics.hidden=!(typeof navigator!=='undefined'&&typeof navigator.vibrate==='function');
+  const show=()=>haptics.textContent='✦ Vibración: '+(this.hapticOn?'activada':'desactivada');show();
+  haptics.addEventListener('click',()=>{this.hapticOn=!this.hapticOn;
+   try{localStorage.setItem('lumina-haptic-v1',this.hapticOn?'on':'off')}catch{};show();this.sfx('confirm');
+  });}
   mode.addEventListener('change',()=>{this.renderer.setQuality(mode.value);qualityLabel.textContent=qualityNames[mode.value];this.toast('Nitidez: '+qualityNames[mode.value]);});
   fps.addEventListener('change',()=>{this.targetFps=Number(fps.value)===120?120:60;fps.value=String(this.targetFps);this.frameLast=0;});
   this.supports120=false;
@@ -3154,7 +3184,7 @@ class Game{
   if(this.guardian.active&&!this.locked)this.guardian.update(dt);
   this.doorFailFlash=Math.max(0,this.doorFailFlash-dt*2);if(this.doorOpening){this.doorProgress=Math.min(1,this.doorProgress+dt*.95);if(this.doorProgress>=1){this.doorOpening=false;this.sfx('success')}}
   this.lightFlash=Math.max(0,this.lightFlash-dt*1.8);if(this.vignette){this.vignette.time-=dt;if(this.vignette.time<=0)this.vignette=null;}
-  this.energyNotice=Math.max(0,this.energyNotice-dt);this.gateHintCooldown=Math.max(0,this.gateHintCooldown-dt);this.worldTime+=dt;this.updateTransition(dt);this.fx.update(dt);this.nixWake=Math.max(0,this.nixWake-dt);
+  this.energyNotice=Math.max(0,this.energyNotice-dt);this.gateHintCooldown=Math.max(0,this.gateHintCooldown-dt);this.worldTime+=dt;this.updateTransition(dt);this.fx.update(dt);this.nixWake=Math.max(0,this.nixWake-dt);this.ambientTick();
   const w=root.Physics.levels[this.scene]?.width||1180,viewW=this.renderer.w||480;
   if(['district','metro','rooftops','archive','training','guardian'].includes(this.scene)){
    const zone=this.frameSafeZone();const frame=root.SafeCamera.calculate(viewW,w,this.player.x+root.Physics.W/2,zone.left,zone.right,document.body.classList.contains('touch-enabled'));
