@@ -921,7 +921,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
        spawn:data.spawn&&Number.isFinite(data.spawn.x)&&Number.isFinite(data.spawn.y)?{x:data.spawn.x,y:data.spawn.y}:f.spawn,
        cityGate:!!data.cityGate,cityPowered:!!data.cityPowered,cityDay:!!data.cityDay,cityIntroSeen:!!data.cityIntroSeen,cinematicSeenV043:!!data.cinematicSeenV043,cityDiscovered:Array.isArray(data.cityDiscovered)?data.cityDiscovered.filter(t=>['intro','logic','variables','nix','data'].includes(t)):[],metroRelays:[!!data.metroRelays?.[0],!!data.metroRelays?.[1]],roofAntennas:[!!data.roofAntennas?.[0],!!data.roofAntennas?.[1]],archiveNodes:[!!data.archiveNodes?.[0],!!data.archiveNodes?.[1],!!data.archiveNodes?.[2]],archiveVisited:!!data.archiveVisited,metroVisited:!!data.metroVisited,roofsVisited:!!data.roofsVisited,cityLessons:Array.isArray(data.cityLessons)?data.cityLessons.filter(x=>['intro','logic','variables','nix','data'].includes(x)):[],cityProgram:root.CityVariables?.valid(data.cityProgram)?data.cityProgram.slice():[],cityVariableSolved:!!data.cityVariableSolved,cityNixAwake:!!data.cityNixAwake,cityCompleted:!!data.cityCompleted,cityFragments:Array.isArray(data.cityFragments)?[...new Set(data.cityFragments.filter(x=>Number.isInteger(x)&&x>=0&&x<3))]:[],cityPuzzle:{power:!!data.cityPuzzle?.power,network:!!data.cityPuzzle?.network,alarm:data.cityPuzzle?.alarm!==false},robot:!!data.robot,bridgeCheckpoint:!!data.bridgeCheckpoint,bridgeMiniCheckpoint:!!data.bridgeMiniCheckpoint,beacon:!!data.beacon,completed:!!data.completed,gateBroken:!!data.gateBroken,shards:Array.isArray(data.shards)?data.shards.filter(n=>Number.isInteger(n)&&n>=0&&n<3).slice(0,3):[],
        controlsOffered:!!data.controlsOffered,controlsLearned:!!data.controlsLearned,guardianDefeated:!!data.guardianDefeated,
-       guardianCheckpoint:data.guardianDefeated?3:Math.max(0,Math.min(2,Math.floor(Number(data.guardianCheckpoint)||0))),
+       guardianCheckpoint:data.guardianCheckpoint===undefined&&data.guardianDefeated?3:Math.max(0,Math.min(3,Math.floor(Number(data.guardianCheckpoint)||0))),
        labCompleted:Array.isArray(data.labCompleted)?[...new Set(data.labCompleted.filter(v=>Number.isInteger(v)&&v>=0&&v<3))]:[],
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
@@ -2168,7 +2168,7 @@ class Renderer{
    this.contactShadow(x,305,32,5,.44);this.r(x-28,261,56,46,'#142b40');this.r(x-25,259,50,40,'#516c7e');this.r(x-22,264,44,27,'#1a3a51');
    this.r(x-19,267,38,21,color);this.r(x-16,269,32,2,'#fff3d3');this.r(x-20,296,41,4,'#253c51');
    this.text(word,x,281,'#142a3c',word==='VERDADERO'?8:10,'center');}
-  this.guardianModel(585,306,b.phase,b.warning,b.pulse,b.clock,game.save.guardianDefeated);
+  this.guardianModel(585,306,b.phase,b.warning,b.pulse,b.clock,game.save.guardianDefeated&&!b.active);
   if(b.pulse>0){this.r(b.pulse-8,263,16,42,'#64ebd778');this.glow(b.pulse,273,38,'#7cfff38e');this.r(b.pulse-6,257,12,4,'#effff1');}
   if(b.pulse2>0){this.r(b.pulse2-6,272,13,33,'#ffa5a785');this.glow(b.pulse2,281,24,'#ffc2c450');this.r(b.pulse2-8,270,17,3,'#ffdbcb');}
   if(b.beamWarning||b.beamActive){const x=b.beamX;this.r(x-20,306,40,3,b.beamActive?'#ff8e99':'#f5c77e');this.r(x-2,126,4,180,b.beamActive?'#ffc29eaa':'#f7d0a73c');if(b.beamActive){this.glow(x,217,40,'#ffe3ab55');this.r(x-6,112,12,194,'#ffe4b4a6');}}
