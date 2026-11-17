@@ -22,7 +22,8 @@ class Game{
  scenePrompt(){return null}
 }
 const root={Game};
-const document={querySelector(){return null},getElementById(){return null}};
+const activators={};
+const document={querySelector(){return null},getElementById(){return null},addEventListener(name,fn){activators[name]=fn}};
 const ctx={window:{Lumina:root,AudioContext},localStorage,document,navigator:{},console};
 vm.runInNewContext(audio,ctx,{filename:'audio-system.js'});
 const {Soundtrack}=root;
@@ -36,6 +37,8 @@ const game=new Game();
 assert.equal(game.setupDisplay(),'ok');
 assert.equal(game.audioOn,true);
 assert.equal(game.soundEngine.musicOn,true,'Music enabled by default');
+assert.equal(typeof activators.pointerdown,'function','First real touch can start the soundtrack');
+root.game=game;activators.pointerdown();
 assert.equal(game.unlockAudio(),true);
 assert.ok(game.audio instanceof AudioContext);
 game.ambientTick();
