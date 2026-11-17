@@ -166,6 +166,19 @@ try{
  assert.equal(world.opened,true,'Open educational kiosk by interacting in playable world');
  assert.equal(world.unlocked,true,'Close kiosk and resume play');
  assert.equal(world.menuHidden,true,'Do not send player to menu after world kiosk');
+ const streetLesson=await evalJs(`(()=>{
+  const game=window.Lumina.game;
+  game.academy.openVariable();
+  const guide=document.getElementById('variable-teacher').textContent;
+  const pseudo=document.getElementById('variable-output').textContent;
+  const logic=document.querySelector('#logic-modal .explain-code').textContent;
+  game.academy.closeVariable();
+  return {explains:guide.includes('cajita'),pseudocode:pseudo.includes('INICIO')&&!pseudo.includes('let carga'),logicPseudo:logic.includes('FIN SI')};
+ })()`);
+ assert.equal(streetLesson.explains,true,'Variable machine explains before showing code');
+ assert.equal(streetLesson.pseudocode,true,'District uses pseudocode, not JavaScript syntax');
+ assert.equal(streetLesson.logicPseudo,true,'Logic door also teaches pseudocode');
+
  await delay(320);
  const image=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-distrito-movil.png',Buffer.from(image.data,'base64'));
@@ -177,8 +190,10 @@ try{
  await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await send('Page.reload',{ignoreCache:false});
  await until(async()=>await evalJs("document.documentElement.dataset.luminaReady==='true'"),12000);
- const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice()})");
+ const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered})");
  assert.equal(offline.ready,true,'Lúmina should start without network');
+ assert.equal(offline.language,'python','Chosen language survives offline restart');
+ assert.equal(offline.discovered,true,'Laboratory discovery remains stored offline');
  assert.equal(offline.levels.includes(3),true,'Lab progress survives offline restart');
  assert.equal(offline.levels.length,8,'All missions survive offline reload');
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
