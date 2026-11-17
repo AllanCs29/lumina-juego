@@ -308,11 +308,20 @@ body.touch-enabled .menu-settings{max-width:min(460px,100%);margin:2px auto}
 @media(orientation:landscape) and (max-height:650px){body.touch-enabled .menu-panel>button{min-height:41px}body.touch-enabled .menu-settings summary{min-height:42px}}
 body.editing-controls.touch-enabled #touch-dash[hidden]{display:grid!important}
 
+/* v0.3.8.1 — clear view of Iris, crisp high-density canvas and responsive gamepad. */
+body.touch-enabled .controls #touch-pad.hero-overlap,
+body.touch-enabled .controls .circle-btn.hero-overlap{opacity:.16!important;filter:saturate(.6);pointer-events:auto!important;}
+body.touch-enabled .controls #touch-pad.hero-overlap:active,
+body.touch-enabled .controls .circle-btn.hero-overlap:active{opacity:.26!important;}
+.menu-settings-content select{width:100%;min-height:38px;padding:7px 10px;border:1px solid #82b3bd;background:#173a51;color:#f0f8eb;border-radius:6px;font:800 12px system-ui;}
+.menu-settings-content #fps-help{font:500 10px/1.35 system-ui;color:#acc9d8;display:block;text-align:left;max-width:100%;}
+body.touch-enabled .screen canvas{image-rendering:pixelated;}
+
 </style>
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.3.8</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.3.8.1</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -340,9 +349,14 @@ body.editing-controls.touch-enabled #touch-dash[hidden]{display:grid!important}
  </div>
 </div>
 <div id="menu" class="modal backdrop" role="dialog" aria-modal="true" aria-labelledby="menu-title">
- <div class="menu-panel"><div class="star-row">✧ · ✦ · ✧</div><p class="eyebrow">UN MISTERIO ENTRE LUCES DE NEÓN</p><h1 id="menu-title">LÚMINA</h1><p class="subtitle">DISTRITO AURORA · DEMO 0.3.8</p><div class="menu-art city-menu-art"><span class="moon">☾</span><span class="island">▂▅▃▇▆▃▇▅▂</span><span class="light">✦</span></div><p>Recorre una ciudad nocturna como Iris, explora sus rincones y resuelve lógica para devolver la energía a un distrito. Prueba un sistema por vez.</p><button id="start" class="primary" type="button"><span id="resume-text">Nueva expedición</span> →</button><button id="city-mode" class="secondary" type="button">✧ Probar distrito nocturno</button><button id="old-mode" class="secondary" type="button">↺ Volver al capítulo del faro</button><button id="restart" class="secondary" type="button">↺ Reiniciar aventura urbana</button><details class="menu-settings" id="menu-settings"><summary>⚙ Ajustes de juego y controles</summary><div class="menu-settings-content"><button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
+ <div class="menu-panel"><div class="star-row">✧ · ✦ · ✧</div><p class="eyebrow">UN MISTERIO ENTRE LUCES DE NEÓN</p><h1 id="menu-title">LÚMINA</h1><p class="subtitle">DISTRITO AURORA · DEMO 0.3.8.1</p><div class="menu-art city-menu-art"><span class="moon">☾</span><span class="island">▂▅▃▇▆▃▇▅▂</span><span class="light">✦</span></div><p>Recorre una ciudad nocturna como Iris, explora sus rincones y resuelve lógica para devolver la energía a un distrito. Prueba un sistema por vez.</p><button id="start" class="primary" type="button"><span id="resume-text">Nueva expedición</span> →</button><button id="city-mode" class="secondary" type="button">✧ Probar distrito nocturno</button><button id="old-mode" class="secondary" type="button">↺ Volver al capítulo del faro</button><button id="restart" class="secondary" type="button">↺ Reiniciar aventura urbana</button><details class="menu-settings" id="menu-settings"><summary>⚙ Ajustes de juego y controles</summary><div class="menu-settings-content"><button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
  <button id="edit-controls" class="secondary" type="button">✥ Personalizar controles táctiles</button>
  <label class="mobile-speed-label" for="mobile-speed">Velocidad de movimiento en móvil <span id="mobile-speed-value">78%</span></label><input id="mobile-speed" type="range" min="60" max="110" step="5" value="78"/>
+ <label class="mobile-speed-label" for="render-quality">Nitidez de imagen <span id="quality-label">Equilibrada · 2×</span></label>
+ <select id="render-quality" aria-label="Nitidez del juego"><option value="retro">Retro · 1× (ahorra batería)</option><option value="balanced" selected>Equilibrada · hasta 2×</option><option value="sharp">Nítida · hasta 3×</option></select>
+ <label class="mobile-speed-label" for="fps-limit">Frecuencia de dibujo <span id="fps-actual">Detectando pantalla…</span></label>
+ <select id="fps-limit" aria-label="Límite de fotogramas"><option value="60">60 FPS · estándar</option><option value="120" hidden disabled>120 FPS · alta frecuencia</option></select>
+ <small id="fps-help">El modo 120 aparece si el navegador permite más de 60 fotogramas reales. La física mantiene su velocidad.</small>
  <button id="audio-button" class="secondary" type="button">♫ Sonido: desactivado</button></div></details><small>A / D: caminar · ESPACIO: saltar · SHIFT: impulso · E: interactuar</small></div>
 </div>
 <div id="story" class="story-overlay" hidden role="dialog" aria-modal="true" aria-label="Conversación del juego"><div class="story-card"><div class="speaker">✦ TRANSMISIÓN DE LÚMINA</div><p id="story-text"></p><div class="story-actions"><button id="story-skip" type="button" class="secondary">Omitir texto</button><button id="story-next" type="button" class="primary">Continuar ›</button></div></div></div>
@@ -817,12 +831,17 @@ function door(r,x,y,open){r.glow(x,y-64,open?66:37,open?'#75edb966':'#eab37f34')
  r.r(x-54,y-119,108,11,'#9da9b1');r.r(x-57,y-6,114,7,'#526a7a');r.r(x-41,y-129,82,8,'#273d56');r.text('ZONA 02',x,y-123,'#ade5e0',9,'center')}
 function relay(r,x,y,active,day){const shine=active?Math.sin(r.t*3)*12:0;r.glow(x,y-83,active?124+shine:64,active?'#fff4c34f':'#fca28b33');r.r(x-35,y-11,70,18,'#3b4c63');r.r(x-28,y-99,56,89,'#76889b');r.r(x-23,y-94,45,78,'#33415a');r.r(x-14,y-89,28,58,active?'#6cf4d8':'#be799c');r.r(x-11,y-84,22,50,active?'#d6fff0':'#e8a7b5');r.poly([[x,y-143],[x-23,y-114],[x,y-122],[x+23,y-114]],active?'#fff8d6':'#eab9be');if(active){for(let i=0;i<14;i++){const px=x-33+(i*29)%70,py=y-160+(i*31+r.t*16)%95;r.r(px,py,2,3,day?'#fff9ce':'#93fff0')}}r.text(active?'ON':'OFF',x,y-50,'#183448',12,'center')}
 function foreground(r,cam,day){
- // Partial near-lens elements. This layer shifts MORE than distant buildings,
- // but never masks interactive terminals, the door or the protagonist.
- const off=((cam*.72)%600+600)%600;
- for(let x=55-off;x<r.w+300;x+=600){
-  r.r(x,21,4,84,day?'#4d657d':'#1e334b');r.r(x-4,26,16,5,day?'#8ca3ac':'#526b7f');
-  r.line(x+6,34,x+114,44,day?'#6a889c':'#4d607a',2);
+ // Foreground details stay in WORLD coordinates, not parallax screen coordinates.
+ // Each pole is anchored in a real alley gap: none may cross a building facade.
+ const gaps=[{x:253,min:239,max:279},{x:630,min:588,max:676},{x:872,min:862,max:883}];
+ for(const gap of gaps){
+  const x=gap.x;
+  const color=day?'#566e82':'#31475f';
+  r.r(x-2,229,5,78,color);r.r(x-5,225,11,6,day?'#a0afb7':'#647e8e');
+  r.r(x-5,304,11,3,'#526879');
+  // Short cable exists entirely within its alley instead of piercing a roof.
+  const right=Math.min(gap.max,x+23);
+  r.line(x+3,230,right,233,day?'#738ca0':'#52667c',1.5);
  }
 }
 function draw(r,game){const cam=game.camera.x,day=!!game.save.cityDay,ctx=r.ctx,level=root.Physics.levels.district;
@@ -834,13 +853,12 @@ function draw(r,game){const cam=game.camera.x,day=!!game.save.cityDay,ctx=r.ctx,
   r.r(x,295,12,12,'#455e70');r.r(x-6,290,24,5,'#708a98');
  }
  for(const x of [253,652,867])utility(r,x,day);
- walkway(r,level,day);anchoredPlatforms(r,level);
+ walkway(r,level,day);anchoredPlatforms(r,level);foreground(r,cam,day);
  // Playable world actors, all drawn in the SAME plane as their collisions.
  info(r,215,285,day);terminal(r,606,287);door(r,766,306,game.save.cityGate);relay(r,1090,304,game.save.cityPowered,day);
  r.r(1149,260,80,45,'#1d2c49');r.r(1158,266,62,30,'#385671');r.text(day?'DÍA  →':'NOCHE →',1187,285,'#a6f5e3',10,'center');
  for(const x of [425,720,930]){r.r(x,297,42,9,'#263e56');r.r(x+4,293,33,5,'#6a8aa0')}
  r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
- foreground(r,cam,day);
  for(let i=0;i<18;i++){const x=(i*83+r.t*(17+i%3*5))%(r.w+8),y=(i*73+r.t*(24+i%5*4))%267;r.r(x,y,1,4,day?'#edf7ff19':'#97c8ec35')}
 }
 root.City={draw,blocks:BLOCKS,platformAnchors:LEDGES};
@@ -850,11 +868,20 @@ root.City={draw,blocks:BLOCKS,platformAnchors:LEDGES};
 /* LÚMINA v0.3 · bespoke pixel-art scene renderer. No third-party art. */
 (function(root){'use strict';
 class Renderer{
- constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.ctx.imageSmoothingEnabled=false;this.w=480;this.h=270;this.t=0;
+ constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.ctx.imageSmoothingEnabled=false;this.w=480;this.h=270;this.t=0;this.quality=this.readQuality();this.pixelScale=1;
   this.snow=Array.from({length:66},(_,i)=>({x:(i*163.41)%510,y:(i*97.13)%270,r:1+(i%7===0),speed:4+(i%4)*3}));this.spark=[];this.hero=new Image();this.hero.src=(window.LuminaHeroAtlas||'assets/iris-expedicion-atlas.png');this.hero.onerror=()=>{this.heroFailed=true}}
+ readQuality(){try{const choice=localStorage.getItem('lumina-render-quality-v0381');return ['retro','balanced','sharp'].includes(choice)?choice:'balanced'}catch{return 'balanced'}}
+ setQuality(choice){if(!['retro','balanced','sharp'].includes(choice))return;this.quality=choice;try{localStorage.setItem('lumina-render-quality-v0381',choice)}catch{};const rect=this.canvas.getBoundingClientRect();this.resizeTo(rect.width,rect.height,document.body.classList.contains('touch-enabled')&&!document.body.classList.contains('portrait-device'));}
  resizeTo(cssW,cssH,adaptive){
   const desired=adaptive&&cssW>cssH?Math.max(480,Math.min(740,Math.round(270*cssW/cssH))):480;
-  if(desired!==this.w){this.w=desired;this.canvas.width=desired;this.canvas.height=270;this.ctx.imageSmoothingEnabled=false;}
+  // Increase raster density without changing world coordinates, physics, or camera range.
+  const ratio=Math.min(3,Math.max(1,Math.round((Number(window.devicePixelRatio)||1)*Math.max(1,cssH)/270)));
+  const qualityLimit=this.quality==='retro'?1:this.quality==='sharp'?3:2;
+  const scale=Math.min(qualityLimit,ratio);
+  if(desired!==this.w||scale!==this.pixelScale||this.canvas.width!==desired*scale||this.canvas.height!==270*scale){
+   this.w=desired;this.pixelScale=scale;this.canvas.width=desired*scale;this.canvas.height=270*scale;
+   this.ctx.setTransform(scale,0,0,scale,0,0);this.ctx.imageSmoothingEnabled=false;
+  }
  }
  r(x,y,w,h,c){this.ctx.fillStyle=c;this.ctx.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h))}
  poly(points,c){const ctx=this.ctx;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const p of points.slice(1))ctx.lineTo(p[0],p[1]);ctx.closePath();ctx.fill()}
@@ -897,7 +924,8 @@ class Renderer{
   this.r(x+87,y+18,135,8,'#3b5364');for(let i=0;i<5;i++){this.r(x+94+i*24,y+5,8,13,['#c0c8bf','#d79a70','#85a6a4','#d1b8a0','#a2a3c9'][i]);this.r(x+94+i*24,y+3,8,2,'#e7dbbd')}
   // hanging wires and amber bulbs
   for(const [xx,len] of [[x+85,37],[x+208,47]]){this.r(xx,y-15,2,len,'#647e85');this.r(xx-4,y-15+len,11,8,'#eec98a');this.glow(xx,y-10+len,44,'#ffc57240')}
-  this.r(x+62,y+101,210,13,'#96766f');this.r(x+66,y+114,12,27,'#39485d');this.r(x+256,y+114,12,27,'#39485d');  this.r(x+104,y+90,47,22,'#3e5367');this.r(x+111,y+79,31,23,'#91a8ad');this.r(x+114,y+81,25,17,'#152e42');this.r(x+119,y+87,14,3,'#65e7cd');this.r(x+117,y+94,8,2,'#5abfae');this.glow(x+125,y+91,33,'#57ffcc33');
+  this.r(x+62,y+101,210,13,'#96766f');this.r(x+66,y+114,12,27,'#39485d');this.r(x+256,y+114,12,27,'#39485d');
+  this.r(x+104,y+90,47,22,'#3e5367');this.r(x+111,y+79,31,23,'#91a8ad');this.r(x+114,y+81,25,17,'#152e42');this.r(x+119,y+87,14,3,'#65e7cd');this.r(x+117,y+94,8,2,'#5abfae');this.glow(x+125,y+91,33,'#57ffcc33');
   this.r(x+180,y+94,37,19,'#687583');this.r(x+190,y+88,20,7,'#abafa8');this.r(x+222,y+91,19,20,'#8f6f5d');
   this.r(x+82,y+115,135,4,'#3d3549');this.r(x+80,y+119,138,7,'#514358');
   this.r(x+113,y-42,133,25,'#1d3048');this.r(x+119,y-37,121,14,'#cba071');this.text('N I X  ·  0 7',x+141,y-26,'#2e3849',11);this.icicles(x+6,y-20,8);this.icicles(x+258,y-20,7);
@@ -969,8 +997,7 @@ class Renderer{
   this.text('SALIDA',97,200,'#e7c09a',10,'center');
   // Shelves and actual objects with contact shadows.
   for(const [sx,sy] of [[300,123],[570,120],[323,178],[580,179]]){
-   this.r(sx-5,sy,120,8,'#a77b68');this.r(sx-5,sy+8,120,4,'#372f43');
-   for(let i=0;i<5;i++){let px=sx+8+i*20;this.r(px,sy-22+(i%2)*7,13,24-(i%2)*7,['#97b4b2','#d49a76','#a9a1b2','#b6ad8f','#739aa2'][i]);this.r(px+2,sy-23+(i%2)*7,9,3,'#d8c1a1')}
+   this.r(sx-5,sy,120,8,'#a77b68');this.r(sx-5,sy+8,120,4,'#372f43');   for(let i=0;i<5;i++){let px=sx+8+i*20;this.r(px,sy-22+(i%2)*7,13,24-(i%2)*7,['#97b4b2','#d49a76','#a9a1b2','#b6ad8f','#739aa2'][i]);this.r(px+2,sy-23+(i%2)*7,9,3,'#d8c1a1')}
   }
   for(const bx of [346,472,626]){
    this.r(bx-31,270,66,25,'#614c56');this.r(bx-37,264,77,9,'#ad7d6b');this.r(bx-30,295,7,16,'#353a4a');this.r(bx+28,295,7,16,'#353a4a');
@@ -1182,14 +1209,14 @@ class Renderer{
  floorAt(level,x){for(const f of level.ground)if(x>=f.x&&x<=f.x+f.w)return f.y;return 355}
  drawTransition(t){
   if(!t)return;const v=Math.min(1,t.elapsed/t.duration),cover=v<.5?v*2:(1-v)*2;
-  const side=Math.round(cover*248),ctx=this.ctx;
+  const side=Math.round(cover*(this.w/2+10)),ctx=this.ctx;
   // Sliding architecture silhouettes act as a doorway closing and opening in depth.
-  this.r(0,0,side,270,'#0b1827');this.r(480-side,0,side,270,'#0b1827');
+  this.r(0,0,side,270,'#0b1827');this.r(this.w-side,0,side,270,'#0b1827');
   if(cover>.40){ctx.save();ctx.globalAlpha=Math.min(1,(cover-.4)/.33);
-   this.r(0,0,480,270,'#0c1829');this.r(44,115,392,1,'#7cbdb68a');this.r(44,158,392,1,'#7cbdb68a');
-   this.text('✦    L Ú M I N A    ✦',240,100,'#f4dbb2',13,'center');
-   this.text(t.label,240,138,'#cce9df',13,'center');
-   this.text('· · ·',240,154,'#a6c0c0',12,'center');ctx.restore()}
+   this.r(0,0,this.w,270,'#0c1829');this.r(44,115,this.w-88,1,'#7cbdb68a');this.r(44,158,this.w-88,1,'#7cbdb68a');
+   this.text('✦    L Ú M I N A    ✦',this.w/2,100,'#f4dbb2',13,'center');
+   this.text(t.label,this.w/2,138,'#cce9df',13,'center');
+   this.text('· · ·',this.w/2,154,'#a6c0c0',12,'center');ctx.restore()}
  }
  draw(game,dt){this.t+=Math.min(dt,.05);this.ctx.clearRect(0,0,this.w,270);this.world(game);
   if(game.scene!=='district'){this.r(8,246,100,16,'#12263dc9');this.text(game.player.anim==='dash'?'¡IMPULSO!':game.energy>=100?'IMPULSO LISTO':`ENERGÍA ${Math.round(game.energy)}%`,16,257,game.energy>=100?'#a7efe0':'#cdb0b0',8);}
@@ -1417,7 +1444,7 @@ class Game{
   this.storage=this.safeStorage();this.save=root.Save.load(this.storage);this.energy=this.save.energy||0;this.orbDialog=null;this.energyNotice=0;
   this.scene=this.save.scene==='ending'?'tower':this.save.scene;
   this.player=this.spawn(this.scene);this.camera={x:0,y:75};this.renderer=new root.Renderer(canvas);this.fx=new root.Effects();this.transition=null;this.lightFlash=0;this.vignette=null;this.nixWake=0;this.stepTimer=0;this.worldTime=0;this.gateHintCooldown=0;
-  this.input=new root.Input();this.last=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
+  this.input=new root.Input();this.last=0;this.frameLast=0;this.targetFps=60;this.measuredFps=0;this.renderCount=0;this.renderWindow=0;this.occlusionWait=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
   this.editor=new root.Editor(this);this.touchLayout=new root.TouchLayout(this);root.touchLayout=this.touchLayout;this.shake=0;this.walk=0;this.audioOn=false;this.audio=null;this.toastTimer=0;
   this.el={menu:document.getElementById('menu'),story:document.getElementById('story'),storyText:document.getElementById('story-text'),storyButton:document.getElementById('story-next'),objective:document.getElementById('objective'),prompt:document.getElementById('prompt'),toast:document.getElementById('toast'),sceneName:document.getElementById('scene-name'),assist:document.getElementById('assist')};
   this.el.assist.checked=this.save.assist;
@@ -1441,7 +1468,7 @@ class Game{
   document.getElementById('hint-button').addEventListener('click',()=>this.hint());
   this.el.assist.addEventListener('change',()=>{this.save.assist=this.el.assist.checked;this.persist();this.toast(this.save.assist?'Asistencia de salto activada':'Asistencia desactivada')});
   document.getElementById('audio-button').addEventListener('click',()=>{this.audioOn=!this.audioOn;document.getElementById('audio-button').textContent=this.audioOn?'♪ Sonido: activado':'♫ Sonido: desactivado';this.beep(560)});
-  this.updateObjective();this.updateHud();this.el.menu.hidden=false;document.getElementById('resume-text').textContent=this.save.started?'Continuar desde el último checkpoint':'Nueva expedición';
+  this.setupDisplay();this.updateObjective();this.updateHud();this.el.menu.hidden=false;document.getElementById('resume-text').textContent=this.save.started?'Continuar desde el último checkpoint':'Nueva expedición';
   requestAnimationFrame(ts=>this.frame(ts));
  }
  safeStorage(){try{const store=window.localStorage;const probe='lumina-storage-check';store.setItem(probe,'1');store.removeItem(probe);return store}catch{{const pill=document.querySelector('.save-pill');if(pill)pill.textContent='GUARDADO NO DISPONIBLE';}return {getItem:()=>null,setItem:()=>{},removeItem:()=>{}}}}
@@ -1564,14 +1591,53 @@ class Game{
   }else if(p.y>435){p=this.spawn(this.scene)}
   this.player=p;
  }
- frame(ts){const dt=Math.min(.033,(ts-(this.last||ts))/1000);this.last=ts;
+ setupDisplay(){
+  const mode=document.getElementById('render-quality'),qualityLabel=document.getElementById('quality-label'),fps=document.getElementById('fps-limit'),actual=document.getElementById('fps-actual');
+  const qualityNames={retro:'Retro · 1×',balanced:'Equilibrada · 2×',sharp:'Nítida · 3×'};
+  mode.value=this.renderer.quality;qualityLabel.textContent=qualityNames[this.renderer.quality];
+  mode.addEventListener('change',()=>{this.renderer.setQuality(mode.value);qualityLabel.textContent=qualityNames[mode.value];this.toast('Nitidez: '+qualityNames[mode.value]);});
+  fps.addEventListener('change',()=>{this.targetFps=Number(fps.value)===120&&this.supports120?120:60;fps.value=String(this.targetFps);this.frameLast=0;});
+  this.supports120=false;
+  // Probe the real rAF frequency. A ProMotion screen alone does not imply Safari
+  // exposes 120 callbacks; do not offer a setting the browser cannot honor.
+  const samples=[];let previous=0,tries=0;
+  const probe=(ts)=>{if(previous>0&&ts>previous&&ts-previous<42)samples.push(ts-previous);previous=ts;tries++;
+   if(tries<125){requestAnimationFrame(probe);return;}
+   if(samples.length>35){samples.sort((a,b)=>a-b);const median=samples[Math.floor(samples.length/2)];const observed=Math.round(1000/median);
+    this.supports120=observed>=90;
+    const high=fps.querySelector('option[value="120"]');high.hidden=!this.supports120;high.disabled=!this.supports120;
+    actual.textContent=this.supports120?'Pantalla detectada: ~'+observed+' Hz':'Navegador: ~'+observed+' Hz';
+    document.getElementById('fps-help').textContent=this.supports120?'Puedes habilitar 120 FPS; consume más batería.':'Safari puede limitar a 60 FPS aunque el iPhone tenga pantalla ProMotion.';
+   }else actual.textContent='No se pudo medir la frecuencia';
+  };requestAnimationFrame(probe);
+ }
+ updateControlOcclusion(dt){
+  this.occlusionWait+=dt;if(this.occlusionWait<.08)return;this.occlusionWait=0;
+  const mobile=document.body.classList.contains('touch-enabled')&&!document.body.classList.contains('editing-controls')&&!this.locked;
+  const rect=this.renderer.canvas.getBoundingClientRect();
+  const x=rect.left+(this.player.x+root.Physics.W*.5-this.camera.x)/this.renderer.w*rect.width;
+  const y=rect.top+(this.player.y+root.Physics.H*.42-this.camera.y)/270*rect.height;
+  for(const id of ['touch-pad','touch-jump','touch-action','touch-dash']){
+   const el=document.getElementById(id);if(!el)continue;
+   const box=el.getBoundingClientRect();const near=mobile&&!el.hidden&&x>box.left-20&&x<box.right+20&&y>box.top-27&&y<box.bottom+23;
+   el.classList.toggle('hero-overlap',!!near);
+  }
+ }
+ frame(ts){
+  const minFrameMs=1000/this.targetFps-1.0;
+  if(this.frameLast&&ts-this.frameLast<minFrameMs){requestAnimationFrame(t=>this.frame(t));return;}
+  const dt=Math.min(.033,(ts-(this.frameLast||ts))/1000);this.frameLast=ts;
+  this.renderCount++;if(!this.renderWindow)this.renderWindow=ts;
+  if(ts-this.renderWindow>950){this.measuredFps=Math.round(this.renderCount*1000/(ts-this.renderWindow));this.renderWindow=ts;this.renderCount=0;
+   const actual=document.getElementById('fps-actual');if(actual)actual.textContent=this.measuredFps+' FPS efectivos · límite '+this.targetFps;
+  }
   if(!this.locked&&!this.editor.opened){this.move(dt);if(this.input.consumeAction())this.interact()}else{this.input.consumeAction();this.input.consumeJump();this.input.consumeDash()}
   this.lightFlash=Math.max(0,this.lightFlash-dt*1.8);if(this.vignette){this.vignette.time-=dt;if(this.vignette.time<=0)this.vignette=null;}
   this.energyNotice=Math.max(0,this.energyNotice-dt);this.gateHintCooldown=Math.max(0,this.gateHintCooldown-dt);this.worldTime+=dt;this.updateTransition(dt);this.fx.update(dt);this.nixWake=Math.max(0,this.nixWake-dt);
   const w=root.Physics.levels[this.scene]?.width||1180,viewW=this.renderer.w||480,targetX=Math.max(0,Math.min(Math.max(0,w-viewW),this.player.x-viewW*.44+(this.player.facing||1)*30));
   this.camera.x+=(targetX-this.camera.x)*Math.min(1,dt*(document.body.classList.contains('touch-enabled')?4.3:5.9));this.camera.y+=(76-this.camera.y)*Math.min(1,dt*3);
-  this.shake=Math.max(0,this.shake-dt);this.renderer.draw(this,dt);
-  const prompt=!this.locked&&!this.editor.opened?this.scenePrompt():null;this.el.prompt.hidden=!prompt;if(prompt)this.el.prompt.textContent=prompt;
+  this.shake=Math.max(0,this.shake-dt);this.renderer.draw(this,dt);this.updateControlOcclusion(dt);
+  const prompt=!this.locked&&!this.editor.opened?this.scenePrompt():null;this.el.prompt.hidden=!prompt;if(prompt){const mobile=document.body.classList.contains('touch-enabled');this.el.prompt.textContent=mobile?prompt.replace(/^E · /,'Toca USAR · ').replace(/^SHIFT · /,'Toca IMPULSO · ').replace('ESPACIO / SALTAR · SHIFT / IMPULSO','Toca SALTAR o IMPULSO'):prompt;}
   if(this.toastTimer>0){this.toastTimer-=dt;if(this.toastTimer<=0)this.el.toast.hidden=true}
   // Input-device controls are CSS/capability driven, never forced visible each frame.
   requestAnimationFrame(t=>this.frame(t));
