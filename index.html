@@ -945,7 +945,15 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,started:false});
+  function sanitizeLabDrafts(value){
+   const drafts={},ops=['SET0','SET2','SET3','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
+   if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
+   for(let i=3;i<8;i++){
+    const candidate=value[i];if(Array.isArray(candidate))drafts[i]=candidate.slice(0,14).filter(op=>typeof op==='string'&&ops.includes(op));
+   }
+   return drafts;
+  }
   function clean(data){
     const f=fresh(); if(!data||data.version!==1)return f;
     const drafts={};for(const id of ['nix','beacon','cityNix']){const draft=data.drafts?.[id];if(root.Program?.validate(draft)&&draft.length<=root.Program.puzzles[id].maxBlocks)drafts[id]=draft;}
@@ -956,7 +964,9 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
        cityGate:!!data.cityGate,cityPowered:!!data.cityPowered,cityDay:!!data.cityDay,cityIntroSeen:!!data.cityIntroSeen,cinematicSeenV043:!!data.cinematicSeenV043,cityDiscovered:Array.isArray(data.cityDiscovered)?data.cityDiscovered.filter(t=>['intro','logic','variables','nix','data'].includes(t)):[],metroRelays:[!!data.metroRelays?.[0],!!data.metroRelays?.[1]],roofAntennas:[!!data.roofAntennas?.[0],!!data.roofAntennas?.[1]],archiveNodes:[!!data.archiveNodes?.[0],!!data.archiveNodes?.[1],!!data.archiveNodes?.[2]],archiveVisited:!!data.archiveVisited,metroVisited:!!data.metroVisited,roofsVisited:!!data.roofsVisited,cityLessons:Array.isArray(data.cityLessons)?data.cityLessons.filter(x=>['intro','logic','variables','nix','data'].includes(x)):[],cityProgram:root.CityVariables?.valid(data.cityProgram)?data.cityProgram.slice():[],cityVariableSolved:!!data.cityVariableSolved,cityNixAwake:!!data.cityNixAwake,cityCompleted:!!data.cityCompleted,cityFragments:Array.isArray(data.cityFragments)?[...new Set(data.cityFragments.filter(x=>Number.isInteger(x)&&x>=0&&x<3))]:[],cityPuzzle:{power:!!data.cityPuzzle?.power,network:!!data.cityPuzzle?.network,alarm:data.cityPuzzle?.alarm!==false},robot:!!data.robot,bridgeCheckpoint:!!data.bridgeCheckpoint,bridgeMiniCheckpoint:!!data.bridgeMiniCheckpoint,beacon:!!data.beacon,completed:!!data.completed,gateBroken:!!data.gateBroken,shards:Array.isArray(data.shards)?data.shards.filter(n=>Number.isInteger(n)&&n>=0&&n<3).slice(0,3):[],
        controlsOffered:!!data.controlsOffered,controlsLearned:!!data.controlsLearned,guardianDefeated:!!data.guardianDefeated,
        guardianCheckpoint:data.guardianCheckpoint===undefined&&data.guardianDefeated?3:Math.max(0,Math.min(3,Math.floor(Number(data.guardianCheckpoint)||0))),
-       labCompleted:Array.isArray(data.labCompleted)?[...new Set(data.labCompleted.filter(v=>Number.isInteger(v)&&v>=0&&v<3))]:[],
+       labCompleted:Array.isArray(data.labCompleted)?[...new Set(data.labCompleted.filter(v=>Number.isInteger(v)&&v>=0&&v<8))]:[],
+        labDrafts:sanitizeLabDrafts(data.labDrafts),
+        labMastered:Array.isArray(data.labCompleted)&&[0,1,2,3,4,5,6,7].every(i=>data.labCompleted.includes(i)),
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
   }
