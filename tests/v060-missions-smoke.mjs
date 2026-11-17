@@ -1,4 +1,4 @@
-// Lúmina v0.6.0 — educational block engine, persistence and offline shell.
+// Lúmina v0.6.1 — educational block engine, persistence and offline shell.
 // Run with Node.js 20+: node tests/v060-missions-smoke.mjs
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
@@ -13,6 +13,28 @@ vm.runInNewContext(modelSource,sandbox);
 vm.runInNewContext(saveSource,sandbox);
 const {LogicLabModel:m,Save}=sandbox.window.Lumina;
 assert.equal(m.TASKS.length,8);
+assert.equal(m.GUIDES.length,8,'Every task must teach before asking');
+for(let i=0;i<8;i++)assert.equal(m.GUIDES[i].length,4,'Three guided explanation panels');
+assert.match(m.TASKS[0].code,/INICIO/);
+assert.match(m.TASKS[1].code,/carga ←/);
+assert.doesNotMatch(m.TASKS[0].code,/function|let|const/,'No JS syntax in introductory lessons');
+const unlock=sandbox.window.Lumina.LabUnlock;
+const locked=Save.fresh();
+assert.equal(locked.labDiscovered,false,'New game does not unlock advanced program lab');
+assert.equal(unlock.enabled(locked),false);
+assert.equal(unlock.visible(locked,'district'),false);
+assert.equal(unlock.visible(locked,'workshop'),false);
+assert.equal(unlock.canDiscover({...locked,cityVariableSolved:true,robot:true},'workshop'),true);
+assert.equal(unlock.canDiscover({...locked,cityVariableSolved:true,robot:true},'district'),false);
+assert.equal(Save.clean({...locked,labCompleted:[0]}).labDiscovered,true,'Legacy completion restores lab access');
+assert.equal(Save.clean({...locked,labDiscovered:true}).labDiscovered,true,'Discovered workshop persists after saving');
+assert.equal(Save.clean({...locked,learningLanguage:'python'}).learningLanguage,'python');
+assert.equal(Save.clean({...locked,learningLanguage:'unknown'}).learningLanguage,'pseudo');
+const program=['SET2','ADD3','OUTPUT'];
+for(const [language,expected] of [['pseudo','INICIO'],['python','carga = 2'],['cpp','int main()'],['javascript','let carga = 2']]){
+ assert.match(m.translateProgram(language,program),new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g,'\\assert.equal(m.TASKS.length,8);')),'Code preview '+language);
+}
+
 assert.equal(m.MAX_BLOCKS,14);
 for(const [index,input,result] of [[0,12,true],[0,11,false],[1,10,true],[2,5,true]])assert.equal(m.evaluate(index,input).correct,result);
 const recipes=[
@@ -64,4 +86,4 @@ assert.equal(manifest.display,'standalone');assert.equal(manifest.scope,'./');
 assert.match(html,/rel="manifest" href="\.\/manifest.webmanifest"/);
 assert.match(html,/id="lab-blocks"/);assert.match(html,/id="lab-palette"/);
 assert.match(html,/root.LabStations=Object.freeze/);
-console.log('Lúmina v0.6.0 PASS — 8 missions, safe interpreter, save migration, in-world terminals & PWA assets');
+console.log('Lúmina v0.6.1 PASS — 8 missions, safe interpreter, save migration, in-world terminals & PWA assets');
