@@ -135,10 +135,10 @@ try{
   const game=window.Lumina.game,lab=game.logicLab;
   const solutions={
    1:10,2:5,
-   4:['SET0','REPEAT3_ADD2','OUTPUT'],
+   4:['READ_CHARGE','REPEAT3_ADD2','OUTPUT'],
    5:['SET0','SENSOR0','SENSOR1','OUTPUT'],
    6:['ENERGY','NETWORK','AND','NOT_ALARM','AND','OUTPUT'],
-   7:['SET2','ADD3','TEST5','OUTPUT']
+   7:['READ_CHARGE','ADD3','TEST5','OUTPUT']
   };
   const results=[];
   for(const [key,answer] of Object.entries(solutions)){
