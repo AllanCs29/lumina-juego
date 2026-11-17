@@ -603,6 +603,9 @@ body.touch-enabled .energy-hud{
  background:#0b253ad9;
 }
 
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+body.reduce-motion .menu-beam{opacity:.55}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 /* v0.6.0 — real educational block-editor / touch-first landscape */
 .lab-panel{width:min(730px,98vw);max-height:96dvh;overscroll-behavior:contain;scrollbar-gutter:stable}
 .lab-panel .lab-story{margin:7px 0;background:#132f45;border-left:4px solid #f1c982;padding:8px 11px;color:#ffe4b4;font:12px/1.5 monospace}
@@ -731,6 +734,9 @@ body.touch-enabled .energy-hud{
     <button id="audio-button" class="secondary" type="button">♪ Sonido: activado</button>
 <button id="ambient-button" class="secondary" type="button">♫ Ambiente original: desactivado</button>
 <button id="haptic-button" class="secondary" type="button" hidden>✦ Vibración: desactivada</button>
+<button id="motion-button" class="secondary" type="button" aria-pressed="false">◌ Reducir movimiento: desactivado</button>
+<button id="auto-quality-button" class="secondary" type="button" aria-pressed="false">⚙ Calidad automática: desactivada</button>
+<small>La calidad automática baja el detalle tras varios segundos de FPS bajos.</small>
    </div></details>
    <button id="open-notebook" class="secondary menu-notebook" type="button">🔒 Cuaderno · aún sin descubrimientos</button>
    <p id="notebook-locked" class="notebook-locked">Se llena mientras exploras.</p>
@@ -1178,7 +1184,7 @@ root.Physics={levels,movingAt,ground:levels.bridge.ground,ledges:levels.bridge.l
 (function(root){'use strict';
 class Effects{
  constructor(){this.particles=[];this.ranStep=0}
- burst(x,y,kind,count=8){
+ burst(x,y,kind,count=8){if(this.reduced)count=Math.min(count,3);
   const shade=kind==='error'?['#ff9a9e','#ff6379','#fbd0a5']:kind==='dash'?['#99f1dc','#f4d4b1','#7acfcf']:['#eaf9f2','#bad4db','#809fb2'];
   for(let i=0;i<count;i++){
    const angle=(Math.PI*2*i/count)+(kind==='land'?-Math.PI/2:0);
@@ -1704,7 +1710,7 @@ class Renderer{
  }
  // Original slow parallax snow haze in open winter scenes, always behind gameplay.
  windDepth(cam,scene){if(!['bridge','harbor','tower'].includes(scene))return;
-  const base=scene==='bridge'?219:227,shift=(cam*.17+this.t*1.7)%(this.w+220);
+  const base=scene==='bridge'?219:227,shift=(cam*.17+(this.reduceMotion?0:this.t)*1.7)%(this.w+220);
   for(let k=-1;k<4;k++){const x=k*260-shift;
    this.poly([[x,base+21],[x+60,base-12],[x+98,base-10],[x+130,base-28],[x+205,base+23]],scene==='bridge'?'#778ca627':'#9b9dad19');
    this.r(x+28,base-11,38,2,'#d8edf71c');
@@ -2178,10 +2184,11 @@ class Renderer{
   this.poly([[x,y-7+bob],[x+4,y+bob],[x,y+6+bob]],'#fcf5ff');
  }
  atmosphere(game){const cam=game?.camera?.x||0,scene=game?.scene||'bridge';
-  const density=this.quality==='retro'?35:scene==='workshop'?25:66;
+  const density=this.reduceMotion?16:this.quality==='retro'?35:scene==='workshop'?25:66;
   for(let i=0;i<density;i++){const flake=this.snow[i],layer=i%3,scale=layer===0?.4:layer===1?.75:1.2;
-   const width=this.w+20,x=((flake.x+this.t*flake.speed*scale-cam*(layer===0?.035:layer===1?.07:.11))%width+width)%width-10;
-   const y=((flake.y+this.t*flake.speed*scale*1.5)%280+280)%280-5;
+   const phase=this.reduceMotion?0:this.t;
+  const width=this.w+20,x=((flake.x+phase*flake.speed*scale-cam*(layer===0?.035:layer===1?.07:.11))%width+width)%width-10;
+   const y=((flake.y+phase*flake.speed*scale*1.5)%280+280)%280-5;
    const warm=scene==='workshop'||scene==='district'&&game.save?.cityDay;
    this.r(x,y,layer===2?flake.r:1,layer===2?3:1,warm?'#ffe3bb37':layer===2?'#e8f6f5a0':'#aecfdf4f');
    if(layer===2&&i%5===0)this.r(x-3,y+1,3,1,warm?'#ffbd8540':'#b6dfe377');
@@ -2295,7 +2302,7 @@ class Renderer{
     this.player(game.player,this.t);game.fx.draw(this);
   }
   this.ctx.restore();this.atmosphere(game);
-  if(game.shake>0)this.r(0,0,this.w,270,game.shake>.20?'#f8e8ef0d':'#ffffff04');
+  if(game.shake>0&&!game.reduceMotion)this.r(0,0,this.w,270,game.shake>.20?'#f8e8ef0d':'#ffffff04');
  }
  floorAt(level,x){for(const f of level.ground)if(x>=f.x&&x<=f.x+f.w)return f.y;return 355}
  drawTransition(t){
@@ -2309,12 +2316,12 @@ class Renderer{
    this.text(t.label,this.w/2,138,'#cce9df',13,'center');
    this.text('· · ·',this.w/2,154,'#a6c0c0',12,'center');ctx.restore()}
  }
- draw(game,dt){this.t+=Math.min(dt,.05);
+ draw(game,dt){this.reduceMotion=!!game.reduceMotion;this.t+=Math.min(dt,.05);
   this.artVisibleLeft=(game.camera?.x||0)-90;this.artVisibleRight=(game.camera?.x||0)+this.w+90;
   this.ctx.clearRect(0,0,this.w,270);this.world(game);
   if(!['district','metro','rooftops'].includes(game.scene)){this.r(8,246,100,16,'#12263dc9');this.text(game.player.anim==='dash'?'¡IMPULSO!':game.energy>=100?'IMPULSO LISTO':`ENERGÍA ${Math.round(game.energy)}%`,16,257,game.energy>=100?'#a7efe0':'#cdb0b0',8);}
   this.drawTransition(game.transition);
-  if(game.lightFlash>0){this.r(0,0,this.w,270,`rgba(245,255,227,${Math.min(.78,game.lightFlash*.45)})`);}
+  if(game.lightFlash>0){this.r(0,0,this.w,270,`rgba(245,255,227,${Math.min(game.reduceMotion?.08:.78,game.lightFlash*(game.reduceMotion?.08:.45))})`);}
   if(game.vignette&&game.vignette.time>0){
    // Compact two-line status; no giant banner hiding buildings or puzzle props.
    const words=String(game.vignette.text||'').split(/\s+/), lines=[];let line='';
@@ -3067,6 +3074,12 @@ class Game{
   this.input=new root.Input();this.last=0;this.frameLast=0;this.targetFps=60;this.measuredFps=0;this.renderCount=0;this.renderWindow=0;this.occlusionWait=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
   this.editor=new root.Editor(this);this.touchLayout=new root.TouchLayout(this);root.touchLayout=this.touchLayout;this.shake=0;this.walk=0;this.audioOn=true;this.audio=null;this.toastTimer=0;
  this.ambientOn=false;this.hapticOn=false;this.nextAmbient=0;
+ this.reduceMotion=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+ this.autoQuality=false;this.lowFpsStreak=0;this.autoQualityDrops=0;
+ try{const preference=localStorage.getItem('lumina-motion-v060');
+  if(preference!==null)this.reduceMotion=preference==='on';
+  this.autoQuality=localStorage.getItem('lumina-auto-quality-v060')==='on';
+ }catch{}
  try{this.ambientOn=localStorage.getItem('lumina-original-ambient-v1')==='on';this.hapticOn=localStorage.getItem('lumina-haptic-v1')==='on';}catch{}
   this.el={menu:document.getElementById('menu'),story:document.getElementById('story'),storyText:document.getElementById('story-text'),storyButton:document.getElementById('story-next'),objective:document.getElementById('objective'),prompt:document.getElementById('prompt'),toast:document.getElementById('toast'),sceneName:document.getElementById('scene-name'),assist:document.getElementById('assist')};
   this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.controlsTutorial=new root.ControlsTutorial(this);this.guardian=new root.Guardian(this);document.getElementById("guardian-restart")?.addEventListener("click",()=>this.guardian.start(true));this.logicLab=new root.LogicLab(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
@@ -3342,6 +3355,17 @@ class Game{
   const qualityNames={retro:'Retro · 1×',balanced:'Equilibrada · 2×',sharp:'Nítida · 3× + microdetalles'};
   mode.value=this.renderer.quality;qualityLabel.textContent=qualityNames[this.renderer.quality];
  const ambient=document.getElementById('ambient-button'),haptics=document.getElementById('haptic-button');
+ const motion=document.getElementById('motion-button'),auto=document.getElementById('auto-quality-button');
+ const updateMotion=()=>{motion.textContent='◌ Reducir movimiento: '+(this.reduceMotion?'activado':'desactivado');
+  motion.setAttribute('aria-pressed',String(this.reduceMotion));document.body.classList.toggle('reduce-motion',this.reduceMotion);this.fx.reduced=this.reduceMotion;};
+ const updateAuto=()=>{auto.textContent='⚙ Calidad automática: '+(this.autoQuality?'activada':'desactivada');auto.setAttribute('aria-pressed',String(this.autoQuality));};
+ updateMotion();updateAuto();
+ motion.addEventListener('click',()=>{this.reduceMotion=!this.reduceMotion;updateMotion();
+  try{localStorage.setItem('lumina-motion-v060',this.reduceMotion?'on':'off')}catch{}
+ });
+ auto.addEventListener('click',()=>{this.autoQuality=!this.autoQuality;this.lowFpsStreak=0;this.autoQualityDrops=0;updateAuto();
+  try{localStorage.setItem('lumina-auto-quality-v060',this.autoQuality?'on':'off')}catch{}
+ });
  if(ambient){const show=()=>ambient.textContent='♫ Ambiente original: '+(this.ambientOn?'activado':'desactivado');show();
   ambient.addEventListener('click',()=>{this.ambientOn=!this.ambientOn;this.nextAmbient=0;
    try{localStorage.setItem('lumina-original-ambient-v1',this.ambientOn?'on':'off')}catch{}
@@ -3352,7 +3376,8 @@ class Game{
   haptics.addEventListener('click',()=>{this.hapticOn=!this.hapticOn;
    try{localStorage.setItem('lumina-haptic-v1',this.hapticOn?'on':'off')}catch{};show();this.sfx('confirm');
   });}
-  mode.addEventListener('change',()=>{this.renderer.setQuality(mode.value);qualityLabel.textContent=qualityNames[mode.value];this.toast('Nitidez: '+qualityNames[mode.value]);});
+  mode.addEventListener('change',()=>{this.renderer.setQuality(mode.value);qualityLabel.textContent=qualityNames[mode.value];
+  this.autoQualityDrops=0;this.lowFpsStreak=0;this.toast('Nitidez: '+qualityNames[mode.value]);});
   fps.addEventListener('change',()=>{this.targetFps=Number(fps.value)===120?120:60;fps.value=String(this.targetFps);this.frameLast=0;});
   this.supports120=false;
   // Probe the real rAF frequency. A ProMotion screen alone does not imply Safari
@@ -3387,6 +3412,15 @@ class Game{
   const dt=Math.min(.033,(ts-(this.frameLast||ts))/1000);this.frameLast=ts;
   this.renderCount++;if(!this.renderWindow)this.renderWindow=ts;
   if(ts-this.renderWindow>950){this.measuredFps=Math.round(this.renderCount*1000/(ts-this.renderWindow));this.renderWindow=ts;this.renderCount=0;
+  if(this.autoQuality&&!this.locked&&this.measuredFps<this.targetFps*.64)this.lowFpsStreak++;
+  else this.lowFpsStreak=0;
+  if(this.autoQuality&&this.lowFpsStreak>=4&&this.autoQualityDrops<2&&this.renderer.quality!=='retro'){
+   const next=this.renderer.quality==='sharp'?'balanced':'retro';
+   this.renderer.setQuality(next);this.lowFpsStreak=0;this.autoQualityDrops++;
+   const picker=document.getElementById('render-quality'),label=document.getElementById('quality-label');
+   if(picker)picker.value=next;if(label)label.textContent=next==='balanced'?'Equilibrada · 2×':'Retro · 1×';
+   this.toast('Rendimiento: reduje la nitidez para mejorar los FPS.');
+  }
    const actual=document.getElementById('fps-actual');if(actual)actual.textContent=this.measuredFps+' FPS efectivos · límite '+this.targetFps;
   }
   if(this.bridgeDeploying){this.bridgeProgress=Math.min(1,this.bridgeProgress+dt*.75);if(this.bridgeProgress>=1){this.bridgeDeploying=false;root.Physics.setDistrictBridge(true);this.sfx('success');this.flashCaption('✦ PUENTE DESPLEGADO · paso seguro',2.1);this.fx.burst(1770,299,'dash',24);}}
