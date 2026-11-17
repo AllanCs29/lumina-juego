@@ -47,7 +47,7 @@
   o.connect(g);g.connect(bus);o.start(at);o.stop(at+dur+.02);
  }
  class SoundEngine{
-  constructor(game){this.game=game;this.ctx=null;this.musicBus=null;this.fxBus=null;this.next=0;this.step=0;this.theme='';this.lastStep=0;this.musicOn=read(KEY.music,'on')!=='off';this.musicVol=clamp(read(KEY.musicVol,.55));this.fxVol=clamp(read(KEY.fxVol,.72));}
+  constructor(game){this.game=game;this.ctx=null;this.musicBus=null;this.fxBus=null;this.next=0;this.step=0;this.theme='';this.lastStep=0;this.stepNoise=null;this.musicOn=read(KEY.music,'on')!=='off';this.musicVol=clamp(read(KEY.musicVol,.55));this.fxVol=clamp(read(KEY.fxVol,.72));}
   unlock(){
    try{
     const Audio=window.AudioContext||window.webkitAudioContext;
@@ -91,9 +91,29 @@
   effect(type){
    if(!this.game.audioOn||this.fxVol<=0||!this.ctx||this.ctx.state!=='running')return;
    const notes=EFFECTS[type]||EFFECTS.menu,t=this.ctx.currentTime;
+   const foot=['step','snowStep','metalStep'].includes(type);
+   const pitch=foot?(this.lastStep++%2===0?1.07:.94):1;
    try{
-    for(const [f,offset,duration,wave] of notes)tone(this.ctx,this.fxBus,f,t+offset,duration,wave,type==='step'||type==='snowStep'||type==='metalStep'?.035:.087,type==='dash'?.58:type==='land'?.69:1);
+    for(const [f,offset,duration,wave] of notes)tone(this.ctx,this.fxBus,f*pitch,t+offset,duration,wave,foot?.052:.087,type==='dash'?.58:type==='land'?.69:1);
+    if(['snowStep','metalStep','land','dash'].includes(type))this.texture(type,t);
    }catch{}
+  }
+  texture(type,t){
+   const ctx=this.ctx;
+   if(!ctx?.createBuffer||!ctx.createBufferSource||!ctx.createBiquadFilter)return;
+   if(!this.stepNoise){
+    const rate=ctx.sampleRate||44100,size=Math.max(128,Math.floor(rate*.07));
+    this.stepNoise=ctx.createBuffer(1,size,rate);
+    const samples=this.stepNoise.getChannelData(0);let state=38591;
+    for(let i=0;i<size;i++){state=(Math.imul(1664525,state)+1013904223)>>>0;samples[i]=((state/4294967295)*2-1)*Math.pow(1-i/size,1.25);}
+   }
+   const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();
+   src.buffer=this.stepNoise;
+   filter.type=type==='snowStep'?'lowpass':'highpass';
+   filter.frequency.setValueAtTime(type==='snowStep'?700:type==='metalStep'?1400:950,t);
+   gain.gain.setValueAtTime(type==='dash'?.072:.062,t);
+   gain.gain.exponentialRampToValueAtTime(.0001,t+.062);
+   src.connect(filter).connect(gain).connect(this.fxBus);src.start(t);src.stop(t+.067);
   }
   beep(freq,dur){
    if(!this.game.audioOn||this.fxVol<=0||!this.ctx||this.ctx.state!=='running')return;
@@ -103,7 +123,6 @@
  root.Soundtrack={THEMES,EFFECTS,KEY,clamp,hz,SoundEngine};
  const Game=root.Game;
  if(!Game)throw Error('Game must be loaded before soundtrack');
- const originalUnlock=Game.prototype.unlockAudio;
  Game.prototype.unlockAudio=function(){
   if(!this.soundEngine)this.soundEngine=new SoundEngine(this);
   return this.soundEngine.unlock();
@@ -180,4 +199,8 @@
   if(this.soundEngine){this.soundEngine.theme='';this.soundEngine.next=0;}
   return out;
  };
+ // Web Audio is permission-gated: unlock on the first genuine keyboard or pointer interaction.
+ const activate=()=>{root.game?.unlockAudio();};
+ document.addEventListener('pointerdown',activate,{once:true,passive:true});
+ document.addEventListener('keydown',activate,{once:true});
 })(window.Lumina=window.Lumina||{});
