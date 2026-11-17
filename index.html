@@ -606,6 +606,20 @@ body.touch-enabled .energy-hud{
 body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 body.reduce-motion .menu-beam{opacity:.55}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* v0.6.1: explanations precede practice; languages remain optional. */
+.lab-guide{border:2px solid #85cabc;background:#112e43;padding:10px 13px;margin:10px 0;color:#e5f6e7}
+.lab-guide-head{display:flex;justify-content:space-between;gap:12px;align-items:center;font:800 12px/1.4 monospace;color:#ffe1a3}
+.lab-guide-head span{color:#8deacc;white-space:nowrap}
+.lab-guide p{font-size:13px;line-height:1.65;margin:10px 0;color:#e5f4ec}
+.lab-guide button{width:100%;min-height:39px}
+.lab-code-caption{font:800 10px monospace!important;color:#9ce3d4!important;letter-spacing:.06em;margin:7px 0 4px!important}
+.lab-language-panel{background:#173349;border:1px solid #82b6b2;padding:9px 11px;margin:9px 0}
+.lab-language-panel summary{cursor:pointer;color:#f7d49c;font:800 12px monospace}
+.lab-language-panel label{display:block;margin:9px 0 4px}
+.lab-language-panel select{width:100%;min-height:39px;background:#091e32;color:#ddfbeb;border:1px solid #8cb7ba;padding:6px}
+.lab-language-panel p{font-size:11px;color:#b6cecc}
+.lab-language-locked{color:#9dbcc4!important;font-size:11px!important}
+@media(max-height:500px) and (orientation:landscape){.lab-guide{padding:6px 9px}.lab-guide p{font-size:11px;margin:5px 0}.lab-guide button{min-height:31px}}
 /* v0.6.0 — real educational block-editor / touch-first landscape */
 .lab-panel{width:min(730px,98vw);max-height:96dvh;overscroll-behavior:contain;scrollbar-gutter:stable}
 .lab-panel .lab-story{margin:7px 0;background:#132f45;border-left:4px solid #f1c982;padding:8px 11px;color:#ffe4b4;font:12px/1.5 monospace}
@@ -671,7 +685,24 @@ body.reduce-motion .menu-beam{opacity:.55}
   <h2 id="lab-title">Laboratorio de programación</h2>
   <p id="lab-story" class="lab-story"></p>
   <p id="lab-description"></p>
+  <div id="lab-guide" class="lab-guide" role="group" aria-labelledby="lab-guide-title">
+   <div class="lab-guide-head"><strong id="lab-guide-title">📖 Aprende antes de practicar</strong><span id="lab-guide-count">1 / 3</span></div>
+   <p id="lab-guide-content">Explicación del concepto</p>
+   <button id="lab-guide-next" type="button" class="primary">Siguiente explicación ›</button>
+  </div>
+  <button id="lab-guide-reopen" type="button" class="secondary" hidden>📖 Volver a leer la explicación</button>
+  <p class="lab-code-caption">PSEUDOCÓDIGO · INSTRUCCIONES SIN LENGUAJE ESPECÍFICO</p>
   <pre class="lab-code" id="lab-code"></pre>
+  <details id="lab-language-panel" class="lab-language-panel" hidden>
+   <summary>⌘ Ver las instrucciones en un lenguaje real</summary>
+   <label for="lab-language-select">¿Qué lenguaje quieres aprender después?</label>
+   <select id="lab-language-select">
+    <option value="pseudo">Pseudocódigo</option><option value="python">Python</option><option value="cpp">C++</option><option value="javascript">JavaScript</option>
+   </select>
+   <p>Traducción explicativa de tu programa. No se ejecuta el código de este panel.</p>
+   <pre id="lab-code-preview" class="lab-code" aria-label="Código en el lenguaje elegido"></pre>
+  </details>
+  <p id="lab-language-locked" class="lab-language-locked">🔒 Los lenguajes se descubren después de completar las primeras cuatro misiones. Primero se aprende lógica y pseudocódigo.</p>
   <div id="lab-answer-wrap" class="lab-answer-wrap">
    <label for="lab-answer">¿Qué valor produce? <input id="lab-answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Número"/></label>
   </div>
