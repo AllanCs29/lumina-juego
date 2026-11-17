@@ -1951,11 +1951,21 @@ root.Regions={REGIONS,draw,status,complete};
   if(scene==='tower')return save.beacon?goal(975,save.signalBalanced?'Señal del norte lista':'Verificar la señal'):goal(350,'Consola de pulsos');
   return null; // Training and guardian already provide their own guidance.
  }
- function direction(scene,save,x){
+ function direction(scene,save,x,y=null){
   const target=pick(scene,save,x);
   if(!target)return null;
   const distance=target.x-(x+8);
-  if(Math.abs(distance)<64)return null; // Interaction prompts take over nearby.
+  if(Math.abs(distance)<64){
+   const heights=scene==='bridge'?[[310,239],[432,266],[817,251],[1290,281]]:
+    scene==='archive'?[[275,259],[520,238],[765,252]]:
+    scene==='metro'?[[340,249],[710,251]]:[];
+   const found=heights.find(([px])=>Math.abs(px-target.x)<26);
+   if(Number.isFinite(y)&&found){
+    const dy=found[1]-(y+14);
+    if(Math.abs(dy)>36)return {...target,side:0,vertical:Math.sign(dy),distance:Math.abs(dy)};
+   }
+   return null;
+  }
   return {...target,side:Math.sign(distance),distance:Math.abs(distance)};
  }
  root.Guidance={pick,direction};
@@ -2665,19 +2675,25 @@ class Renderer{
   drawGuidance(game){
    if(game.locked||game.transition||game.editor?.opened||game.guidanceMode==='off')return null;
    if(game.guidanceMode==='hint'&&!(game.guidancePulse>0))return null;
-   const target=root.Guidance.direction(game.scene,game.save,game.player.x);
+   const target=root.Guidance.direction(game.scene,game.save,game.player.x,game.player.y);
    if(!target)return null;
    const x=Math.max(23,Math.min(this.w-23,Math.round(game.player.x+8-game.camera.x)));
    const y=Math.max(68,Math.min(203,Math.round(game.player.y-game.camera.y-45)));
-   const side=target.side,dx=side*15;
+   const side=target.side,dx=side*15,vertical=target.vertical||0;
    const ctx=this.ctx;ctx.save();
    ctx.globalAlpha=game.reduceMotion?.56:.45+.10*Math.sin(this.t*2.5);
-   this.poly([[x+dx-side*4,y-5],[x+dx+side*3,y],[x+dx-side*4,y+5],
-    [x+dx-side*2,y+2],[x+dx+side,y],[x+dx-side*2,y-2]],'#d5f5df');
-   this.r(x+dx-side*10,y-1,2,2,'#9ddbc9');
+   if(vertical){
+    const yy=y+(vertical<0?-15:15);
+    this.poly([[x,yy+vertical*5],[x-6,yy-vertical*3],[x+6,yy-vertical*3]],'#d5f5df');
+    this.r(x-1,yy-vertical*9,2,4,'#9ddbc9');
+   }else{
+    this.poly([[x+dx-side*4,y-5],[x+dx+side*3,y],[x+dx-side*4,y+5],
+     [x+dx-side*2,y+2],[x+dx+side,y],[x+dx-side*2,y-2]],'#d5f5df');
+    this.r(x+dx-side*10,y-1,2,2,'#9ddbc9');
+   }
    if(game.guidanceMode==='hint'){
     this.r(x-47,y-26,94,14,'#17364cb3');
-    this.text((side<0?'← ':'→ ')+target.label,x,y-17,'#e0f9e8',8,'center');
+    this.text((vertical?(vertical<0?'↑ ':'↓ '):side<0?'← ':'→ ')+target.label,x,y-17,'#e0f9e8',8,'center');
    }
    ctx.restore();return target;
   }
