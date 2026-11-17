@@ -32,7 +32,7 @@ assert.equal(Save.clean({...locked,learningLanguage:'python'}).learningLanguage,
 assert.equal(Save.clean({...locked,learningLanguage:'unknown'}).learningLanguage,'pseudo');
 const program=['SET2','ADD3','OUTPUT'];
 for(const [language,expected] of [['pseudo','INICIO'],['python','carga = 2'],['cpp','int main()'],['javascript','let carga = 2']]){
- assert.match(m.translateProgram(language,program),new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g,'\\assert.equal(m.TASKS.length,8);')),'Code preview '+language);
+ assert.ok(m.translateProgram(language,program).includes(expected),'Code preview '+language);
 }
 
 assert.equal(m.MAX_BLOCKS,14);
