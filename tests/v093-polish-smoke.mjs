@@ -49,7 +49,7 @@ for(const lang of ['python','cpp','javascript']){
 function runPython(program,inputs){
  const out=spawnSync('python3',['-c',program],{input:inputs.join('\n')+'\n',encoding:'utf8',timeout:4000});
  assert.equal(out.status,0,'Python preview should actually execute: '+out.stderr);
- return out.stdout.trim().split('\n').at(-1);
+ return out.stdout.trim().match(/(?:True|False|[0-9]+)\s*$/)?.[0]?.trim();
 }
 function runCpp(program,inputs){
  const tmp=spawnSync('bash',['-lc','command -v g++'],{encoding:'utf8',timeout:4000});
@@ -65,7 +65,7 @@ function runCpp(program,inputs){
   assert.equal(compile.status,0,'C++ preview should compile: '+compile.stderr);
   const run=spawnSync(exe,[],{input:inputs.join('\n')+'\n',encoding:'utf8',timeout:4000});
   assert.equal(run.status,0,'C++ preview should execute: '+run.stderr);
-  return run.stdout.trim().split('\n').at(-1);
+  return run.stdout.trim().match(/[0-9]+\s*$/)?.[0]?.trim();
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 }
 function runJS(program,inputs){
