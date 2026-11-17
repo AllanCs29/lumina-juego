@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.6.0</title>
+<title>Lúmina — Juega para aprender | v0.6.1</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="./icon.svg"/>
@@ -646,7 +646,7 @@ body.reduce-motion .menu-beam{opacity:.55}
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.6.0</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.6.1</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -706,7 +706,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.6.0</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.6.1</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -2093,16 +2093,16 @@ class Renderer{
   if(mode==='run'){
    this.r(-11+a.left,23+a.heel,7,2,'#c6d4d2');this.r(3+a.right,24-a.heel,7,2,'#859ba8');
    this.r(-13,12+a.hand,3,5,'#d7b2a7');this.r(12,12-a.hand,3,5,'#e2bdab');
-   this.r(13+a.fold,4,5,2,'#f2c990');this.r(17+a.fold,6,3,2,'#946878');
+   this.r(-17-a.fold,4,5,2,'#f2c990');this.r(-20-a.fold,6,3,2,'#946878');
   }else if(mode==='jump'){
    this.r(-9,17,6,3,'#647a92');this.r(4,18,6,3,'#a5b3b0');
-   this.r(12,5,8,3,'#dba479');this.r(19,6,3,2,'#8a596b');
+   this.r(-19,5,8,3,'#dba479');this.r(-21,6,3,2,'#8a596b');
   }else if(mode==='fall'){
    this.r(-11,23,5,2,'#96b4c0');this.r(5,24,6,2,'#a9c3c1');
-   this.r(13,9,6,2,'#e9b288');this.r(18,8,3,2,'#946878');
+   this.r(-19,9,6,2,'#e9b288');this.r(-22,8,3,2,'#946878');
   }else if(mode==='dash'){
    this.r(-15,20,9,2,'#eff8ea');this.r(8,23,8,2,'#a1c7c1');
-   this.r(16,3,14,3,'#f3c78f');this.r(27,5,5,2,'#a36d7d');
+   this.r(-30,3,14,3,'#f3c78f');this.r(-32,5,5,2,'#a36d7d');
    for(let i=1;i<4;i++)this.r(-20-i*9,10+i*4,7,2,'#a3fff5');
   }else{this.r(-11,24,5,2,'#a9bfc1');this.r(5,24,5,2,'#9ac4bb');}
  }
@@ -2131,8 +2131,10 @@ class Renderer{
    const dh=mode==='dash'?40:mode==='jump'?46:mode==='fall'?45:43-Math.round(land*4)+breath;
    const wind=mode==='dash'?13:mode==='run'?6*speed:mode==='jump'?5:2;
    const flutter=Math.round(Math.sin(this.t*(mode==='run'?16:5))*2);
-   this.poly([[9,4],[14+wind,3+flutter],[12+wind,7+flutter],[7,10]],'#8d5c67');
-   this.poly([[8,3],[12+wind,3+flutter],[11+wind,5+flutter],[8,7]],'#edb985');
+   // Positive local X is Iris's FRONT. The cape trails toward negative X
+   // and the canvas flip mirrors it naturally when facing left.
+   this.poly([[-8,5],[-13-wind,4+flutter],[-17-wind,7+flutter],[-8,12]],'#8d5c67');
+   this.poly([[-9,4],[-13-wind,4+flutter],[-14-wind,6+flutter],[-9,8]],'#edb985');
    if(mode==='dash')for(let i=2;i<=4;i++){this.ctx.save();this.ctx.globalAlpha=.11/i;
     this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2-i*8,27-dh,dw,dh);this.ctx.restore();}
    this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2,27-dh-bounce,dw,dh);
@@ -2157,7 +2159,7 @@ class Renderer{
   this.r(-9,-3,4,8,'#45637a');this.r(9,-2,4,7,'#45637a');
   this.r(-2,5,2,2,'#26364a');this.r(5,5,2,2,'#26364a');
   this.r(-8,10,20,3,'#f1c78d');
-  this.r(9,12,9,3,'#db9f75');this.r(15,13,mode==='dash'?16:mode==='run'?10:7,3,'#f4be7e');
+  this.r(-17,12,9,3,'#db9f75');this.r(mode==='dash'?-31:mode==='run'?-25:-22,13,mode==='dash'?16:mode==='run'?10:7,3,'#f4be7e');
   this.ctx.restore();this.ctx.restore();
  }
 
