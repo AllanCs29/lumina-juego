@@ -354,6 +354,7 @@ try{
   const opened=!document.getElementById('route-modal').hidden;
   document.getElementById('route-operator').value='OR';
   document.getElementById('route-alarm').value='negate';
+  document.getElementById('route-prediction').value='AISLAR';
   document.getElementById('route-run').click();
   return {opened,failed:document.getElementById('route-status').dataset.success==='false',
    trace:document.getElementById('route-trace').textContent.includes('BOREAL'),
@@ -370,6 +371,10 @@ try{
   const g=window.Lumina.game;
   document.getElementById('route-operator').value='AND';
   document.getElementById('route-alarm').value='negate';
+  document.getElementById('route-prediction').value='TRANSMITIR';
+  document.getElementById('route-run').click();
+  const predictionBlocked=document.getElementById('route-status').dataset.success==='false';
+  document.getElementById('route-prediction').value='AISLAR';
   document.getElementById('route-run').click();
   const accepted=document.getElementById('route-status').dataset.success==='true';
   const transmitted=g.save.signalBalanced;
@@ -379,10 +384,11 @@ try{
   try{g.renderer.world(g);}finally{r.tower=orig;}
   document.getElementById('route-finish').click();
   for(let i=0;i<12&&!g.el.story.hidden;i++)g.nextDialogue();
-  return {accepted,transmitted,available,light:flags[0],completed:g.save.completed,
+  return {accepted,predictionBlocked,transmitted,available,light:flags[0],completed:g.save.completed,
     ending:!document.getElementById('ending').hidden,title:document.querySelector('#ending h1')?.textContent};
  })()`);
- assert.equal(routeWin.accepted,true,'One rule works across three environments');
+ assert.equal(routeWin.predictionBlocked,true,'Correct rule needs a correct prediction');
+ assert.equal(routeWin.accepted,true,'One rule works across four channel states');
  assert.equal(routeWin.transmitted,true,'The valid routing state is saved');
  assert.equal(routeWin.available,true,'Only valid rule unlocks completion');
  assert.equal(routeWin.light,true,'Lighthouse visibly illuminates on valid routing');
