@@ -16,7 +16,7 @@ assert.ok(saveScript&&bossScript,'Save and Guardian modules must remain present'
 vm.runInNewContext(saveScript,context);
 vm.runInNewContext(bossScript,context);
 const {Save,Guardian,LogicLabModel}=context.window.Lumina;
-assert.equal(LogicLabModel.TASKS.length,3);
+assert.equal(LogicLabModel.TASKS.length,8);
 for(const [i,answer] of [[0,12],[1,10],[2,5]]){
  assert.equal(LogicLabModel.evaluate(i,answer).correct,true,'lesson '+i+' correct');
  assert.equal(LogicLabModel.evaluate(i,answer+1).correct,false,'lesson '+i+' incorrect');
