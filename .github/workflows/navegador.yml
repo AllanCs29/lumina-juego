@@ -1,0 +1,26 @@
+name: Lúmina · navegador real
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  chromium-e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Diagnosticar navegador
+        run: command -v google-chrome || command -v chromium || command -v chromium-browser
+      - name: Probar interfaz real y modo móvil
+        run: node tests/v060-browser-smoke.mjs
+      - name: Capturas de regresión
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumina-v060-capturas
+          path: artifacts/*.png
+          if-no-files-found: ignore
