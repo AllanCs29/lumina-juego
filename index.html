@@ -656,6 +656,9 @@ body.reduce-motion .menu-beam{opacity:.55}
 @media(orientation:landscape) and (max-height:500px){.training-hud,.guardian-hud{top:9%;padding:4px 9px;width:45%;max-width:45%}.training-topline,.guardian-heading{font-size:9px}.training-objective{margin-top:2px;gap:6px}.training-objective span{font-size:10px}.guardian-hud strong{font-size:13px}.training-offer-card{padding:10px 17px;max-height:90dvh}.training-offer-card .training-crest{font-size:24px}.training-offer-card p{font-size:12px;margin:5px 0}.training-offer-buttons{margin:6px 0}.training-offer-buttons button{min-height:35px;padding:5px}}
 
 
+/* v0.8.0 · learning progress: concise summary, readable on landscape mobile. */
+.lab-panel .lab-skills{margin:3px 0 9px;padding:7px 10px;background:#173e49;border-left:3px solid #8ddcbe;color:#e5f8ec;font:700 12px/1.5 system-ui;overflow-wrap:anywhere}
+@media(max-height:500px) and (orientation:landscape){.lab-panel .lab-skills{font-size:11px;padding:4px 7px;margin:2px 0 5px}}
 /* v0.7.0 · teaching UI and touch sizes: adaptive, without resizing the game hitbox. */
 :root{--reading-scale:1}
 .lab-transfer{padding:11px 12px;background:#153c48;border:2px solid #91d8ba;border-left:6px solid #f3cf95;margin:12px 0;color:#effce9;font:700 13px/1.55 ui-monospace,monospace}
@@ -711,6 +714,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div class="lab-top"><span>ACADEMIA DE IRIS · EXPEDICIÓN DE NIX</span><button id="lab-exit" type="button" aria-label="Cerrar laboratorio">✕</button></div>
   <div class="lab-counter" id="lab-counter">MISIÓN 1 / 8</div>
   <div class="lab-progress" id="lab-progress" aria-label="Progreso de misiones"></div>
+  <p class="lab-skills" id="lab-skills" aria-live="polite">Empieza con secuencias: cada reto aprendido desbloquea una habilidad.</p>
   <h2 id="lab-title">Laboratorio de programación</h2>
   <p id="lab-story" class="lab-story"></p>
   <p id="lab-description"></p>
@@ -3045,6 +3049,7 @@ const OPS=Object.freeze({
  OUTPUT:'MOSTRAR resultado'
 });
 const MAX_BLOCKS=14;
+const SKILL_NAMES=Object.freeze(['secuencias','variables','condiciones','entradas variables','bucles','arreglos','lógica booleana','depuración']);
 // Original mastery uses identical instructions for two different initial charges.
 const REFUGE_CASES=Object.freeze([{initialCharge:2,target:5},{initialCharge:4,target:7}]);
 function validateRefuge(program){
@@ -3337,6 +3342,8 @@ class LogicLab{
   document.getElementById('lab-prev').disabled=this.index===0;
   document.getElementById('lab-next').disabled=this.index===TASKS.length-1||!completed.includes(this.index);
   document.getElementById('lab-counter').textContent='MISIÓN '+(this.index+1)+' / '+TASKS.length+' · '+completed.length+' completadas';
+   const skills=SKILL_NAMES.filter((_,i)=>completed.includes(i));
+   document.getElementById('lab-skills').textContent=skills.length===8?'✦ HABILIDADES: ¡Dominaste las ocho bases! Ya puedes revisarlas.':skills.length?'✓ APRENDIDO: '+skills.join(', ')+' · SIGUIENTE: '+SKILL_NAMES[this.index]:'PRIMER OBJETIVO: aprender '+SKILL_NAMES[this.index]+' con ayuda de NIX.';
  }
  render(){
   const task=TASKS[this.index],numeric=task.kind==='answer';this.draft=this.getDraft();
