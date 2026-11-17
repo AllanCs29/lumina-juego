@@ -951,7 +951,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,guardianCheckpoint:0,labCompleted:[],labDrafts:{},labMastered:false,labEpilogueSeen:false,labDiscovered:false,learningLanguage:'pseudo',started:false});
   function sanitizeLabDrafts(value){
    const drafts={},ops=['SET0','SET2','SET3','ADD2','ADD3','MUL2','REPEAT3_ADD2','SENSOR0','SENSOR1','SENSOR2','ENERGY','NETWORK','NOT_ALARM','AND','OR','TEST4','TEST5','OUTPUT'];
    if(!value||typeof value!=='object'||Array.isArray(value))return drafts;
@@ -974,6 +974,9 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
         labDrafts:sanitizeLabDrafts(data.labDrafts),
         labMastered:Array.isArray(data.labCompleted)&&[0,1,2,3,4,5,6,7].every(i=>data.labCompleted.includes(i)),
         labEpilogueSeen:!!data.labEpilogueSeen,
+         // Previous v0.6 users who completed lessons keep their existing access.
+         labDiscovered:!!data.labDiscovered||(Array.isArray(data.labCompleted)&&data.labCompleted.length>0),
+         learningLanguage:['pseudo','python','cpp','javascript'].includes(data.learningLanguage)?data.learningLanguage:'pseudo',
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
   }
@@ -1595,7 +1598,7 @@ function draw(r,game){const cam=game.camera.x,day=!!game.save.cityDay,ctx=r.ctx,
   // Ground signage tells the player what each station actually teaches.
   // Variable station and bridge have their own physically mounted displays; no overlays across the sidewalk.
   r.r(1489,213,4,11,'#3c6574');r.r(1508,213,4,11,'#3c6574');
-  r.labStation(root.LabStations.district,307,(game.save.labCompleted||[]).length);
+  if(root.LabUnlock.enabled(game.save))r.labStation(root.LabStations.district,307,(game.save.labCompleted||[]).length);
   r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
  for(let i=0;i<18;i++){const x=(i*83+r.t*(17+i%3*5))%(r.w+8),y=(i*73+r.t*(24+i%5*4))%267;r.r(x,y,1,4,day?'#edf7ff19':'#97c8ec35')}
 }
@@ -1674,7 +1677,7 @@ function draw(r,game){const scene=game.scene,metro=scene==='metro',archive=scene
   for(const [i,x] of REGIONS.rooftops.switches.entries()){const on=!!game.save.roofAntennas?.[i];r.r(x-3,201,7,105,'#59788c');r.r(x-18,198,37,6,'#abc1c0');r.line(x,198,x+44,182,'#76a8b7',2);r.glow(x,191,on?30:16,on?'#77fad35e':'#bca7fc3d');r.r(x-20,278,41,23,on?'#5bd5ad':'#885c87');r.text(on?'OK':'?',x,291,'#0e2635',13,'center')}
   const sync=complete(game.save,'rooftops');r.text(sync?'SEÑAL AL FARO: RECIBIDA':'SINCRONIZA 2 ANTENAS',570,166,'#ffedab',14,'center');r.text('← VOLVER A LA CIUDAD',85,254,'#c5ece0',10,'center');
  }
- if(root.LabStations?.[scene])r.labStation(root.LabStations[scene],307,(game.save.labCompleted||[]).length);
+ if(root.LabStations?.[scene]&&root.LabUnlock.visible(game.save,scene))r.labStation(root.LabStations[scene],307,(game.save.labCompleted||[]).length);
   r.player(game.player,r.t);game.fx.draw(r);ctx.restore();
  if(metro){for(let i=0;i<8;i++){const x=(i*84+t*13)%w;r.r(x,28,22,2,'#94ddc322')}}
 }
@@ -2305,7 +2308,7 @@ class Renderer{
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
   if(game.scene==='workshop'){
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
-   this.labStation(root.LabStations.workshop,307,(game.save.labCompleted||[]).length);
+   if(root.LabUnlock.visible(game.save,'workshop'))this.labStation(root.LabStations.workshop,307,(game.save.labCompleted||[]).length);
     this.player(game.player,this.t);game.fx.draw(this);this.interiorForeground();
   }else{
     // Background-only pines, occluded by the road and its interactive props.
@@ -2317,7 +2320,7 @@ class Renderer{
     if(game.scene==='harbor'){
      const doorOpening=game.transition?.scene==='workshop'?Math.min(1,game.transition.elapsed/.35):0;
      this.workshopExterior(doorOpening);if(!game.save.orbs.includes('move'))this.orb(185,285,'move');this.lamp(160,307);this.lamp(698,307);this.lamp(925,307);
-     this.arch(1140,307,game.save.robot);this.labStation(root.LabStations.harbor,307,(game.save.labCompleted||[]).length);
+     this.arch(1140,307,game.save.robot);if(root.LabUnlock.enabled(game.save))this.labStation(root.LabStations.harbor,307,(game.save.labCompleted||[]).length);
     }else if(game.scene==='bridge'){
      for(const x of [180,515,940,1300,1680])this.lamp(x,this.floorAt(level,x));
      this.beacon(432,295,game.save.bridgeMiniCheckpoint);if(!game.save.orbs.includes('jump'))this.orb(310,239,'jump');if(!game.save.orbs.includes('dash'))this.orb(1290,281,'dash');if(game.save.orbs.includes('dash')&&!game.save.gateBroken)this.charger(1380,305);this.seal(608,302,!game.save.orbs.includes('jump'));this.seal(1389,305,!game.save.orbs.includes('dash'));this.beacon(817,295,game.save.bridgeCheckpoint);
@@ -2331,7 +2334,7 @@ class Renderer{
     }else{
      this.lamp(107,308);this.lamp(570,308);
      this.terminal(350,294,game.save.beacon);this.bot(455,281,true);this.tower(975,305,game.save.beacon);
-   this.labStation(root.LabStations.tower,307,(game.save.labCompleted||[]).length);
+   if(root.LabUnlock.enabled(game.save))this.labStation(root.LabStations.tower,307,(game.save.labCompleted||[]).length);
     }
     this.player(game.player,this.t);game.fx.draw(this);
   }
@@ -2899,7 +2902,12 @@ class LogicLab{
   document.getElementById('logic-lab')?.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();this.close();}});
  }
  open(fromWorld=false){
-  if(this.active)return;this.active=true;this.fromWorld=fromWorld;
+  if(this.active)return false;
+  if(!root.LabUnlock.enabled(this.game.save)){
+   this.game.toast('🔒 Primero aprende lógica y variables; después repara a NIX y encuentra el LAB en su taller.');
+   this.game.updateMenuState();return false;
+  }
+  this.active=true;this.fromWorld=fromWorld;
   const completed=this.game.save.labCompleted||[];let next=TASKS.findIndex((_,i)=>!completed.includes(i));
   if(next<0)next=TASKS.length-1;this.index=next;
   this.game.locked=true;this.game.input.reset();this.game.el.menu.hidden=true;
@@ -2999,6 +3007,13 @@ class LogicLab{
  }
 }
 root.LabStations=Object.freeze({district:1360,metro:1100,archive:625,harbor:828,workshop:733,tower:631});
+root.LabUnlock={
+  // The player first discovers the programming annex at NIX's actual workshop,
+  // after the city has already taught logic/variables and the NIX machine is solved.
+  canDiscover(save,scene){return scene==='workshop'&&!!save.robot&&!!save.cityVariableSolved;},
+  visible(save,scene){return !!save.labDiscovered||this.canDiscover(save,scene);},
+  enabled(save){return !!save.labDiscovered;}
+};
 root.LogicLab=LogicLab;root.LogicLabModel={TASKS,OPS,MAX_BLOCKS,evaluate,runProgram,sanitizedDraft};
 })(window.Lumina=window.Lumina||{});
 
@@ -3176,7 +3191,13 @@ class Game{
   if(summary)summary.textContent=this.save.started?('✦ PARTIDA GUARDADA · '+(this.scene==='district'?'Distrito Aurora':this.scene==='archive'?'Archivo de Ecos':this.scene==='metro'?'Estación Umbral':this.scene==='rooftops'?'Azoteas de Aurora':this.scene==='harbor'?'Puerto de la Bruma':this.scene==='workshop'?'Taller de NIX':this.scene==='bridge'?'Pasarela Boreal':'Faro del Silencio')):'✦ NUEVA EXPEDICIÓN · PRÓLOGO DISPONIBLE';
   if(summary&&this.save.labCompleted?.length)summary.textContent+=' · LAB '+this.save.labCompleted.length+'/8';
   const button=document.getElementById('lab-open'),status=button?.querySelector('small');
-  if(status)status.textContent='Misiones de programación · '+(this.save.labCompleted?.length||0)+'/8 completadas';
+  if(button){
+    button.disabled=!root.LabUnlock.enabled(this.save);
+    button.setAttribute('aria-label',button.disabled?'Laboratorio bloqueado: descúbrelo en Taller de NIX':'Abrir laboratorio de programación');
+   }
+   if(status)status.textContent=root.LabUnlock.enabled(this.save)
+     ?'Misiones de programación · '+(this.save.labCompleted?.length||0)+'/8 completadas'
+     :'🔒 Primero llega al Taller de NIX y despierta su máquina';
  }
  openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
  say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
@@ -3249,7 +3270,8 @@ class Game{
   if(t.elapsed>=t.duration){this.transition=null;this.locked=false;if(t.dialogue)this.say(t.dialogue);else if(t.scene==='metro')this.introduceMetro();else if(t.scene==='rooftops')this.introduceRoofs();else if(t.scene==='archive')this.introduceArchive();}
  }
  near(x,range){return Math.abs(this.player.x-x)<range&&this.player.y>165}
- scenePrompt(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&this.near(root.LabStations[this.scene],42))return 'E · Laboratorio de programación · '+this.save.labCompleted.length+'/8';
+ scenePrompt(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&root.LabUnlock.visible(this.save,this.scene)&&this.near(root.LabStations[this.scene],42))
+    return root.LabUnlock.enabled(this.save)?'E · Laboratorio de programación · '+this.save.labCompleted.length+'/8':'E · Descubrir terminal de lógica con NIX';
   if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
   if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(425,56)?'E · VERDADERO':null;
   if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?(this.save.guardianDefeated?'E · Consultar memoria':'E · Desafiar Centinela de lógica'):null;
@@ -3266,7 +3288,18 @@ class Game{
   if(this.scene==='workshop')return this.near(95,80)?'E · Salir al puerto':this.near(435,72)?'E · Usar banco de programación NIX':null;
   if(this.scene==='tower')return this.near(350,73)?'E · Programar los tres pulsos':this.near(975,90)?'E · Encender el faro':null;
   if(this.scene==='bridge')return this.player.x>1625?'E · Entrar a la torre':this.player.x>1330&&!this.save.gateBroken?'SHIFT · Rompe el cristal con impulso':this.player.x>560&&this.player.x<810?'Sube a la plataforma móvil':'ESPACIO / SALTAR · SHIFT / IMPULSO';return null}
- interact(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&this.near(root.LabStations[this.scene],42)){this.logicLab.open(true);return;}
+ interact(){if(this.scene!=='training'&&this.scene!=='guardian'&&root.LabStations?.[this.scene]&&root.LabUnlock.visible(this.save,this.scene)&&this.near(root.LabStations[this.scene],42)){
+    if(!root.LabUnlock.enabled(this.save)){
+     if(!root.LabUnlock.canDiscover(this.save,this.scene))return;
+     this.save.labDiscovered=true;this.persist();this.updateMenuState();
+     this.say(['TALLER DE NIX · LABORATORIO DESBLOQUEADO',
+      'NIX: «Ya sabes observar una condición y trabajar con una variable. Ahora vamos a ordenar las instrucciones como una receta».',
+      'Iris: «¿Y los lenguajes de programación?» NIX: «Después. Primero dominarás lógica y pseudocódigo: los mismos conceptos sirven para muchos lenguajes».',
+      'NIX: «Cada reto tiene una explicación, un ejemplo y una práctica. Podrás regresar aquí o abrir el laboratorio desde el menú».'],
+      ()=>this.logicLab.open(true));return;
+    }
+    this.logicLab.open(true);return;
+   }
   if(this.scene==='training'){this.controlsTutorial.action();return;}if(this.scene==='guardian'){this.guardian.action();return;}if(this.scene==='district'){this.interactDistrict();return;}if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){this.interactRegion();return;}
   if(this.scene==='harbor'){
    if(this.near(65,55)&&this.save.metroVisited){this.startTransition('metro','VOLVIENDO A ESTACIÓN UMBRAL',1205);return;}
