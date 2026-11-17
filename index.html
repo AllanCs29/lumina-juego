@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.4.5</title>
+<title>Lúmina — Juega para aprender | v0.4.7</title>
 <style>
 :root{color-scheme:dark;--ink:#071b2d;--navy:#0d273c;--deep:#0c2131;--raised:#19374b;--mint:#88e7d0;--snow:#ecf7ef;--mist:#9bbac1;--gold:#f0bd73;--line:#48677b;--edge:#31516a}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#061c2f;color:var(--snow);font-family:Trebuchet MS,system-ui,-apple-system,sans-serif}body{background:radial-gradient(ellipse at 50% -20%,#26455c 0,transparent 65%),#071d2e}.shell{max-width:1260px;margin:auto;padding:14px 22px 8px}button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid #f8cc7d;outline-offset:3px}button:disabled{opacity:.45;cursor:default}button:not(:disabled):active{transform:translateY(2px)}[hidden]{display:none!important}.site-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:5px 0 17px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:43px;height:43px;display:grid;place-items:center;background:#23465b;color:#fbdf92;border:2px solid #8bb1b0;box-shadow:4px 4px #071627;font-size:27px}.brand strong{display:block;font-size:22px;letter-spacing:.22em;font-weight:900}.brand small{display:block;color:#a0cad1;font:700 9px ui-monospace,monospace;letter-spacing:.12em}.top-actions{display:flex;gap:8px;align-items:center}.top-actions button{background:#173448;color:#d6f1ef;border:1px solid #5a7885;padding:8px 11px;font-weight:800;font-size:12px;min-height:37px}.save-pill{border:1px solid #3d666e;padding:8px 10px;color:#95caba;font:800 10px ui-monospace,monospace;letter-spacing:.07em}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 258px;gap:20px;align-items:start}.game-column{min-width:0}.screen{position:relative;border:4px solid #6c929c;outline:4px solid #153548;background:#0a2639;box-shadow:9px 11px 0 #0008;overflow:hidden}.screen:after{content:'';position:absolute;pointer-events:none;inset:0;border:3px solid #122b44}.screen canvas{width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated;display:block}.prompt,.toast{position:absolute;left:50%;transform:translateX(-50%);width:max-content;max-width:90%;text-align:center;padding:8px 13px;background:#132d42ec;color:#ffdfa3;border:2px solid #9fb9b5;font:800 12px ui-monospace,monospace;bottom:14px;box-shadow:3px 4px #07121e}.toast{bottom:auto;top:33px;color:#a8ffe1;border-color:#66c5a7}.hud{display:flex;justify-content:space-between;gap:16px;border:1px solid #4f6d7d;border-top:0;padding:13px 14px 14px;background:#102b40;min-height:70px}.hud-main{display:flex;flex-direction:column;gap:5px}.hud-tag{font:800 10px ui-monospace,monospace;color:#76dfcb;letter-spacing:.06em}.hud-main #objective{font-size:13px;color:#e1f1ed;line-height:1.4}.hud-end{display:flex;flex-shrink:0;flex-direction:column;align-items:end;justify-content:space-between;font:800 10px ui-monospace,monospace;color:#9ebcc2}.hud-end b{color:#fcd289}.assist-label{cursor:pointer;display:flex;align-items:center;gap:6px}.assist-label input{accent-color:#6fddbb;width:17px;height:17px;margin:0}.controls{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 9px 5px;min-height:160px;user-select:none;-webkit-user-select:none}.touch-left,.touch-right{display:flex;align-items:center;gap:12px}.touch-right{gap:13px}.control-text{display:flex;flex-direction:column;gap:3px;white-space:nowrap}.control-text strong{font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#dcece9}.control-text small{font:11px ui-monospace,monospace;color:#81aab6}.touch-pad{width:116px;height:116px;border-radius:50%;background:linear-gradient(135deg,#1e4257,#11283e);border:2px solid #678898;display:grid;place-items:center;position:relative;touch-action:none;flex-shrink:0;box-shadow:inset 0 0 0 7px #112c3e}.dpad-axis{font-size:57px;color:#44677b;line-height:1}.touch-knob{width:46px;height:46px;border-radius:50%;position:absolute;inset:0;margin:auto;background:#90bfba;border:5px solid #d3e8db;box-shadow:3px 4px 0 #0b2236;pointer-events:none;transition:transform .025s linear}.circle-btn{width:91px;height:91px;border-radius:50%;font-weight:900;font-size:11px;letter-spacing:.05em;border:4px solid #f5e3ba;color:#123044;box-shadow:4px 6px 0 #061525}.circle-btn.action{background:linear-gradient(#f9d58f,#d1a35f)}.circle-btn.jump{background:linear-gradient(#a2f1e1,#56bda6);border-color:#dbf9ed}.journal{border:2px solid #506e7c;background:linear-gradient(160deg,#17384b,#102b40);padding:17px 17px 22px;box-shadow:6px 7px 0 #061526}.journal-header,.eyebrow{font:900 10px ui-monospace,monospace;letter-spacing:.1em;color:var(--mint)}.journal h2{font-size:24px;line-height:1.12;letter-spacing:-.02em;margin:16px 0 9px}.journal p{font-size:13px;color:#c2d8da;line-height:1.55}.journal-rule{height:2px;background:#446574;margin:20px 0}.milestone{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}.milestone>span{padding:7px 8px;background:#2c5462;font:900 13px ui-monospace,monospace;color:#f8c87b;border:1px solid #65828d}.milestone b{font-size:12px;display:block;margin-bottom:4px}.milestone small{display:block;font-size:11px;line-height:1.3;color:#9fbabd}.journal .journal-note{margin-top:32px;font-style:italic;color:#80aaa9}footer{font-size:10px;color:#6f97a6;text-align:center;padding:18px 0 5px;letter-spacing:.04em}.backdrop{position:fixed;inset:0;z-index:30;background:#051523ee;display:flex;justify-content:center;align-items:center;padding:14px;overflow:auto}.menu-panel,.editor-panel{width:min(460px,100%);max-height:calc(100dvh - 28px);overflow:auto;background:linear-gradient(155deg,#18374a,#0d2539);border:3px solid #92bdb8;box-shadow:8px 8px 0 #030d18;padding:25px;text-align:center}.menu-panel{border-top:6px solid #b8ded6}.star-row{letter-spacing:.35em;color:#f5d49a;font-size:20px}.menu-panel .eyebrow{margin-top:21px}.menu-panel h1{font-size:clamp(47px,11vw,76px);line-height:1;margin:10px 0 0;letter-spacing:.19em;color:#f2f7e8;text-shadow:4px 5px #234b64}.subtitle{color:#9cdbc9;font:800 15px ui-monospace,monospace;letter-spacing:.36em!important;margin:8px 0!important}.menu-art{height:100px;margin:10px auto;background:radial-gradient(circle at 52% 65%,#466b7b,transparent 62%);position:relative;overflow:hidden}.menu-art .moon{font-size:70px;position:absolute;top:-17px;left:42%;color:#fff5d7}.menu-art .island{font-size:130px;letter-spacing:-.25em;position:absolute;left:22%;top:0;color:#7aa4a5;line-height:1}.menu-art .light{font-size:40px;position:absolute;left:60%;top:24px;color:#f3cb87}.menu-panel p{font-size:13px;line-height:1.55;color:#c8e1de}.primary,.secondary{min-height:43px;padding:11px 18px;font-weight:900;letter-spacing:.02em;border-radius:0}.primary{border:2px solid #faf2d1;background:#f0c780;color:#173349;box-shadow:3px 4px 0 #051827}.primary.success{background:#89dfc7}.secondary{border:1px solid #7ea5aa;background:#17384c;color:#d9f2eb}.menu-panel>button{width:100%;margin-top:10px}.menu-panel>small{display:block;margin-top:23px;color:#91b9bf;font-size:10px;line-height:1.5}.story-overlay{position:fixed;z-index:35;inset:0;background:#051526a3;display:flex;align-items:flex-start;justify-content:center;padding:14px 22px 22px}.story-card{background:#0c2439;border:3px solid #a4c8bf;box-shadow:6px 7px 0 #010e1c;width:min(820px,100%);padding:18px 22px;display:flex;flex-direction:column;gap:10px}.touch-enabled .story-overlay{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:12px}.touch-enabled .story-card{max-width:min(96vw,900px)}.story-card .speaker{font:900 12px ui-monospace,monospace;color:#eac57f;letter-spacing:.06em}.story-card p{font-size:16px;line-height:1.6;min-height:50px;margin:5px 0}.story-card button{align-self:flex-end}.editor-panel{width:min(950px,100%);padding:18px 22px;text-align:left}.editor-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.editor-heading h2{font-size:23px;line-height:1.2;margin:6px 0}.exit{width:39px;height:39px;border:1px solid #a4c5c2;background:#2b4759;color:#effaf3;font-size:24px}.mission-text{background:#244457;color:#d8ecdf;border-left:3px solid #d2ba85;margin:10px 0 18px;padding:10px 12px;font-size:13px;line-height:1.5}.editor-columns{display:grid;grid-template-columns:minmax(230px,.95fr) minmax(270px,1fr);gap:21px}#program-board{display:block;width:100%;max-width:410px;image-rendering:pixelated;background:#0f293b;border:2px solid #5b8590;margin:0 auto}.board-legend{font:800 9px ui-monospace,monospace;color:#b7d3d0;display:flex;flex-wrap:wrap;justify-content:space-around;gap:8px;margin-top:11px}.editor-info{margin-top:17px;padding:13px;background:#1e4553;border:1px solid #5e998b}.editor-info span{color:#99f4d3;font:900 10px ui-monospace,monospace}.editor-info p{line-height:1.5;font-size:13px;min-height:43px;margin:7px 0 0}.explanation{color:#a5c3c9;font-size:12px;line-height:1.5;margin-top:14px}.list-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}.list-title small{color:#9fc5c3;font:800 10px ui-monospace,monospace}.block-list{display:flex;flex-direction:column;gap:7px;margin:9px 0 12px;min-height:44px;padding:8px;border:1px dashed #68858f;background:#0d2638}.block-list:empty:before{content:'Coloca aquí tus órdenes';font-size:12px;font-style:italic;color:#85a8b1;margin:auto}.command{display:flex;align-items:center;justify-content:space-between;gap:5px;background:#366279;border-left:5px solid #98e6ce;padding:7px;font:800 11px ui-monospace,monospace;min-height:36px}.command.repeat{border-left-color:#f6c781;background:#59566c}.command>span:first-child{flex:1}.command-tools,.count-tools{display:flex;gap:3px}.command button{width:25px;height:25px;padding:0;background:#16364a;border:1px solid #a2c6ca;color:#eef7ec;font-size:15px;font-weight:900}.count-tools button{background:#424358}.palette-caption{font:900 10px ui-monospace,monospace;color:#d6bd89;margin:14px 0 7px}.palette{display:flex;gap:6px;flex-wrap:wrap}.palette button{background:#2a5362;color:#e2f6ef;border:1px solid #6e9998;min-height:34px;padding:6px 9px;font-weight:900;font-size:11px}.inner-wrap{padding:6px 9px 10px;border:1px solid #9a809c;background:#232f45;margin-top:10px}.inner-wrap .block-list{border-color:#a98fa9}.code-view{background:#0c2236;border:1px solid #486b7c;margin-top:17px}.code-view summary{cursor:pointer;font-size:12px;padding:9px;color:#c7e2df}.code-view pre{padding:9px 12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;color:#95ebd1;line-height:1.5}.editor-footer{border-top:1px solid #547686;margin-top:17px;padding-top:14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.footer-left,.footer-right{display:flex;gap:7px;flex-wrap:wrap}.ending-panel h1{font-size:49px;letter-spacing:.05em}.startup-error{position:fixed;inset:auto 10px 10px;z-index:999;background:#442534;padding:30px;color:#fff}@media(max-width:980px){.game-layout{grid-template-columns:1fr}.journal{display:none}.shell{max-width:820px}.screen{box-shadow:4px 5px 0 #0006}.save-pill{display:none}}@media(max-width:550px){.shell{padding:8px 8px 2px}.site-header{padding:3px 2px 12px}.brand-mark{width:33px;height:33px;font-size:19px}.brand strong{font-size:16px;letter-spacing:.12em}.brand small{font-size:8px}.top-actions{gap:4px}.top-actions button{font-size:10px;min-height:32px;padding:6px}.screen{border-width:3px;outline-width:2px}.hud{padding:9px;gap:6px;min-height:72px}.hud-main #objective{font-size:11px}.hud-tag,.hud-end{font-size:9px}.controls{min-height:132px;padding:10px 4px 0}.touch-pad{width:105px;height:105px}.touch-knob{width:40px;height:40px}.circle-btn{width:67px;height:67px;border-width:3px;font-size:9px;box-shadow:3px 4px #061525}.touch-right{gap:6px}.control-text small{display:none}.control-text strong{font-size:9px}.touch-left{gap:8px}.touch-right .control-text{display:none}.prompt{bottom:8px;font-size:9px;white-space:normal}.story-overlay{padding:9px}.story-card{padding:14px}.story-card p{font-size:14px;min-height:45px}.backdrop{padding:8px}.editor-panel{padding:11px;max-height:calc(100dvh - 16px);box-shadow:2px 3px #000}.editor-columns{grid-template-columns:1fr;gap:12px}#program-board{max-width:320px}.editor-heading h2{font-size:18px}.mission-text{font-size:12px;margin:7px 0}.board-legend{font-size:8px}.explanation{display:none}.editor-info{margin-top:8px}.editor-info p{min-height:0;font-size:12px}.editor-footer{position:sticky;bottom:-11px;background:#0b2639;padding:9px 0 12px;margin-top:8px}.primary,.secondary{padding:9px 11px;font-size:12px;min-height:38px}.menu-panel{padding:16px}.menu-panel h1{font-size:48px}.menu-art{height:69px}.menu-art .island{font-size:100px}}@media(max-width:375px){.brand small{font-size:7px}.top-actions button{padding:5px}.circle-btn{width:62px;height:62px}.control-text{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:0s!important;animation-duration:0s!important}}
 /* =========================================================
@@ -598,16 +598,28 @@ body.touch-enabled .energy-hud{
  background:#0b253ad9;
 }
 
+/* v0.4.7 — optional playable onboarding + compact teaching boss */
+.training-hud,.guardian-hud{position:absolute;z-index:15;left:50%;top:13%;transform:translateX(-50%);pointer-events:none;max-width:68%;width:min(510px,68vw);border:1px solid #8ac8ba;border-radius:10px;background:#0c2438e9;color:#f0f9ee;padding:8px 12px;box-shadow:0 6px 22px #07111ebb;font:700 12px/1.35 system-ui}
+.training-topline,.guardian-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#8de8d2;font:800 10px monospace;letter-spacing:.06em}
+.training-objective{display:flex;align-items:center;gap:12px;margin-top:4px}.training-objective b{color:#ffe1a3;font:900 14px monospace}.training-objective span{font-size:11px}
+.training-hud button,.guardian-hud button{pointer-events:auto;padding:3px 7px;border:1px solid #639c9d;border-radius:6px;background:#1b3b53;color:#f1f8f3;font:700 11px system-ui}
+.training-dots{display:flex;gap:5px;margin-top:5px}.training-dot{height:4px;flex:1;border-radius:4px;background:#436071}.training-dot.current{background:#f1d094}.training-dot.complete{background:#7ce8c4}
+.guardian-hud{left:48%;top:16%;max-width:50%;width:min(405px,50vw)}.guardian-hud strong{display:block;font:900 16px monospace;color:#ffe1a2;margin:3px 0}.guardian-hud small,.guardian-hud>span{display:block;font-size:11px;color:#c6edeb}
+.training-offer{z-index:300}.training-offer-card{width:min(440px,95vw);border:2px solid #b1e1d4;border-radius:18px;background:linear-gradient(160deg,#1b344b,#0b2037);box-shadow:0 25px 80px #000b;padding:23px;text-align:center}.training-offer-card .training-crest{font-size:39px;color:#f2cf88}.training-offer-card h2{margin:8px 0;font-size:clamp(21px,3vw,28px)}.training-offer-card p{font-size:14px;line-height:1.5;color:#d1e9e5}.training-offer-card small{color:#8dddcf}.training-offer-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:17px 0}
+@media(orientation:landscape) and (max-height:500px){.training-hud,.guardian-hud{top:9%;padding:4px 9px;width:45%;max-width:45%}.training-topline,.guardian-heading{font-size:9px}.training-objective{margin-top:2px;gap:6px}.training-objective span{font-size:10px}.guardian-hud strong{font-size:13px}.training-offer-card{padding:10px 17px;max-height:90dvh}.training-offer-card .training-crest{font-size:24px}.training-offer-card p{font-size:12px;margin:5px 0}.training-offer-buttons{margin:6px 0}.training-offer-buttons button{min-height:35px;padding:5px}}
+
 </style>
 
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.6</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.4.7</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
   <div class="quick-actions" id="quick-actions"><button id="hint-button" type="button" aria-label="Ver una pista contextual">? Pista</button><button id="menu-button" type="button" aria-label="Abrir menú">☰ Menú</button></div>
+  <div id="training-hud" class="training-hud" hidden><div class="training-topline"><span>ACADEMIA DE IRIS · <b id="training-stage">1 / 4</b></span><button id="training-exit" type="button">Salir</button></div><div class="training-objective"><b id="training-title">CAMINA</b><span id="training-instruction">Mueve a Iris</span></div><div class="training-dots"><i class="training-dot current"></i><i class="training-dot"></i><i class="training-dot"></i><i class="training-dot"></i></div></div>
+  <div id="guardian-hud" class="guardian-hud" hidden><div class="guardian-heading">CENTINELA DEL ARCHIVO <span id="guardian-round">1 / 3</span><button id="guardian-leave" type="button">Salir</button></div><strong id="guardian-expression">NO alarma</strong><small id="guardian-values">alarma = FALSO</small><span id="guardian-feedback">Elige VERDADERO o FALSO.</span></div>
   <div id="learning-progress" class="learning-progress" hidden></div><div id="scene-intro" class="scene-intro" aria-live="off" aria-hidden="true"></div>
   <div class="controls" id="controls" aria-label="Controles táctiles de Lúmina"><div class="touch-left"><div id="touch-pad" class="touch-pad" role="group" aria-label="Joystick de movimiento"><span class="dpad-axis">✛</span><span id="touch-knob" class="touch-knob"></span></div></div><div class="touch-right"><button id="touch-dash" type="button" class="circle-btn dash">IMPULSO</button><button id="touch-jump" type="button" class="circle-btn jump">SALTAR</button><button id="touch-action" type="button" class="circle-btn action">USAR</button></div></div>
   <div class="touch-editor" id="touch-editor" hidden><div class="touch-editor-card"><strong>Editar controles</strong><label>Botón <select id="control-target"><option value="pad">Joystick</option><option value="jump">Saltar</option><option value="action">Usar</option><option value="dash">Impulso</option></select></label><label>Tamaño <input id="control-size" type="range" min="46" max="126" step="2" value="76"/></label><span id="control-size-label">76 px</span><button id="control-reset" type="button">Restaurar</button><button id="control-done" type="button">Listo ✓</button><small>Arrastra los controles y ajusta su tamaño. Se guardarán automáticamente.</small></div></div>
@@ -617,6 +629,7 @@ body.touch-enabled .energy-hud{
  <footer>Distrito Aurora · Prototipo interactivo · Funciona sin conexión después de descargar el archivo único</footer>
 </div>
 <div id="rotate-overlay" class="rotate-overlay" hidden role="status" aria-live="polite"><div class="rotate-card"><div class="phone-rotate">▯ <span>↻</span></div><h2>Gira tu teléfono</h2><p>Lúmina se juega en horizontal. El progreso no se pierde al girar.</p><small>Si tu teléfono no gira, desactiva el bloqueo de orientación.</small></div></div>
+<div id="training-offer" class="modal backdrop training-offer" role="dialog" aria-modal="true" aria-labelledby="training-offer-title" hidden><div class="training-offer-card"><div class="training-crest">✦</div><small>ANTES DE COMENZAR · OPCIONAL</small><h2 id="training-offer-title">¿Practicamos los controles?</h2><p>Una zona breve para caminar, saltar, usar el impulso y activar una máquina. Aprendes jugando.</p><div class="training-offer-buttons"><button id="training-offer-play" type="button" class="primary">▶ Aprender controles</button><button id="training-offer-skip" type="button" class="secondary">Ahora no</button></div><small>Podrás repetirlo desde el menú cuando quieras.</small></div></div>
 <div id="orb-modal" class="modal backdrop orb-modal" role="dialog" aria-modal="true" aria-labelledby="orb-title" hidden><div class="orb-panel"><div class="orb-emblem" id="orb-icon">✦</div><small>MEMORIA DE LÚMINA · HABILIDAD DESBLOQUEADA</small><h2 id="orb-title">Nuevo conocimiento</h2><p id="orb-text"></p><div class="orb-actions"><button id="orb-skip" type="button" class="secondary">Seguir jugando</button><button id="orb-continue" type="button" class="primary">Entendido ✓</button></div></div></div>
 <!-- Estado visible cuando se abre como documento y el visor no ejecuta JavaScript.
      El juego lo retira únicamente DESPUÉS de que sus controles han inicializado. -->
@@ -635,7 +648,7 @@ body.touch-enabled .energy-hud{
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.6</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.4.7</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -647,6 +660,7 @@ body.touch-enabled .energy-hud{
    <p class="menu-controls-kicker">EXPEDICIÓN / ARCHIVO 01</p>
    <button id="start" class="primary menu-primary" type="button"><span id="resume-text">Continuar</span> <span aria-hidden="true">▶</span></button>
    <button id="restart" class="secondary menu-action" type="button">✦ Nueva partida <small>Reinicia todo el progreso</small></button>
+   <button id="training-open" class="secondary menu-cinematic" type="button">⌁ Aprender controles <small>Tutorial jugable, sin perder progreso</small></button>
    <button id="watch-opening" class="secondary menu-cinematic" type="button">▣ Ver cinemática <small>La historia de Iris y NIX</small></button>
    <details class="menu-settings" id="menu-settings"><summary>⚙ Configuración</summary><div class="menu-settings-content">
     <button id="touch-toggle" class="secondary" type="button">Controles táctiles: automático</button>
@@ -665,6 +679,7 @@ body.touch-enabled .energy-hud{
    <details class="menu-chapters"><summary>🗺 Capítulos y escenas de prueba</summary><div>
      <button id="city-mode" class="secondary" type="button">✧ Distrito Aurora</button>
      <button id="old-mode" class="secondary" type="button">❄ Puerto de la Bruma y faro</button>
+     <button id="guardian-replay" class="secondary" type="button">⚔ Desafío Centinela · jefe de lógica</button>
      <button id="prologue-replay" class="secondary" type="button" hidden>✦ Volver a ver la cinemática</button>
      <small>Elige capítulos manualmente solo si estás probando mecánicas. Para la historia usa Continuar.</small>
    </div></details>
@@ -872,7 +887,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
 (function(root){
   'use strict';
   const KEY='lumina-ecos-hielo-independent-v1';
-  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],started:false});
+  const fresh=()=>({version:1,scene:'district',spawn:{x:82,y:280},robot:false,bridgeCheckpoint:false,bridgeMiniCheckpoint:false,beacon:false,completed:false,gateBroken:false,shards:[],orbs:[],energy:0,assist:false,failures:{nix:0,beacon:0,cityNix:0},drafts:{},cityGate:false,cityPowered:false,cityDay:false,cityPuzzle:{power:false,network:false,alarm:true},cityIntroSeen:false,cinematicSeenV043:false,cityLessons:[],cityDiscovered:[],metroRelays:[false,false],roofAntennas:[false,false],archiveNodes:[false,false,false],archiveVisited:false,metroVisited:false,roofsVisited:false,cityProgram:[],cityVariableSolved:false,cityNixAwake:false,cityCompleted:false,cityFragments:[],controlsOffered:false,controlsLearned:false,guardianDefeated:false,started:false});
   function clean(data){
     const f=fresh(); if(!data||data.version!==1)return f;
     const drafts={};for(const id of ['nix','beacon','cityNix']){const draft=data.drafts?.[id];if(root.Program?.validate(draft)&&draft.length<=root.Program.puzzles[id].maxBlocks)drafts[id]=draft;}
@@ -881,6 +896,7 @@ root.StoryProgress={TOPICS,discovered,canRead,discover,nextRegion};
     return {...f,orbs:[...new Set(existing)],energy:Math.max(0,Math.min(100,Number(data.energy) || (data.gateBroken?0:0))),drafts,scene:['district','metro','rooftops','archive','harbor','workshop','bridge','tower','ending'].includes(data.scene)?data.scene:f.scene,
        spawn:data.spawn&&Number.isFinite(data.spawn.x)&&Number.isFinite(data.spawn.y)?{x:data.spawn.x,y:data.spawn.y}:f.spawn,
        cityGate:!!data.cityGate,cityPowered:!!data.cityPowered,cityDay:!!data.cityDay,cityIntroSeen:!!data.cityIntroSeen,cinematicSeenV043:!!data.cinematicSeenV043,cityDiscovered:Array.isArray(data.cityDiscovered)?data.cityDiscovered.filter(t=>['intro','logic','variables','nix','data'].includes(t)):[],metroRelays:[!!data.metroRelays?.[0],!!data.metroRelays?.[1]],roofAntennas:[!!data.roofAntennas?.[0],!!data.roofAntennas?.[1]],archiveNodes:[!!data.archiveNodes?.[0],!!data.archiveNodes?.[1],!!data.archiveNodes?.[2]],archiveVisited:!!data.archiveVisited,metroVisited:!!data.metroVisited,roofsVisited:!!data.roofsVisited,cityLessons:Array.isArray(data.cityLessons)?data.cityLessons.filter(x=>['intro','logic','variables','nix','data'].includes(x)):[],cityProgram:root.CityVariables?.valid(data.cityProgram)?data.cityProgram.slice():[],cityVariableSolved:!!data.cityVariableSolved,cityNixAwake:!!data.cityNixAwake,cityCompleted:!!data.cityCompleted,cityFragments:Array.isArray(data.cityFragments)?[...new Set(data.cityFragments.filter(x=>Number.isInteger(x)&&x>=0&&x<3))]:[],cityPuzzle:{power:!!data.cityPuzzle?.power,network:!!data.cityPuzzle?.network,alarm:data.cityPuzzle?.alarm!==false},robot:!!data.robot,bridgeCheckpoint:!!data.bridgeCheckpoint,bridgeMiniCheckpoint:!!data.bridgeMiniCheckpoint,beacon:!!data.beacon,completed:!!data.completed,gateBroken:!!data.gateBroken,shards:Array.isArray(data.shards)?data.shards.filter(n=>Number.isInteger(n)&&n>=0&&n<3).slice(0,3):[],
+       controlsOffered:!!data.controlsOffered,controlsLearned:!!data.controlsLearned,guardianDefeated:!!data.guardianDefeated,
        assist:!!data.assist,started:!!data.started,
        failures:{nix:Math.max(0,Math.min(100,Number(data.failures?.nix)||0)),beacon:Math.max(0,Math.min(100,Number(data.failures?.beacon)||0)),cityNix:Math.max(0,Math.min(100,Number(data.failures?.cityNix)||0))}};
   }
@@ -981,8 +997,7 @@ root.TouchLayout=TouchLayout;
     if(!e.repeat&&['KeyE','Enter'].includes(e.code))this.action=true;
     this.keys.add(e.code);
    });
-   window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>this.reset());this.setupTouch();this.preventStageZoom();
-  }
+   window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>this.reset());this.setupTouch();this.preventStageZoom();  }
   isEditing(){return !!document.querySelector('.modal:not([hidden]),.story-overlay:not([hidden])')}
   reset(){this.keys.clear();this.pad={x:0,y:0};this.touchJump=false;this.action=false;this.jumpQueued=false;this.dashQueued=false;this.padVisual(0,0)}
   // Safari occasionally handles double taps on absolutely positioned stage overlays
@@ -997,7 +1012,8 @@ root.TouchLayout=TouchLayout;
    const canvas=document.getElementById('game');
    canvas?.addEventListener('touchend',e=>{if(document.body.classList.contains('touch-enabled')&&e.cancelable)e.preventDefault()},{passive:false});
   }
-  setupTouch(){const zone=document.getElementById('touch-pad');if(!zone)return;   const update=e=>{const r=zone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),radius=r.width*.35,scale=d?Math.min(d,radius)/d:0;
+  setupTouch(){const zone=document.getElementById('touch-pad');if(!zone)return;
+   const update=e=>{const r=zone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),radius=r.width*.35,scale=d?Math.min(d,radius)/d:0;
     this.pad={x:dx*scale/radius,y:dy*scale/radius};this.padVisual(dx*scale,dy*scale)};
    zone.addEventListener('pointerdown',e=>{e.preventDefault();zone.setPointerCapture(e.pointerId);update(e)});
    zone.addEventListener('pointermove',e=>{if(zone.hasPointerCapture(e.pointerId))update(e)});
@@ -1025,6 +1041,8 @@ root.TouchLayout=TouchLayout;
 (function(root){'use strict';
 const H=27,W=17;
 const levels={
+ training:{width:945,ground:[{x:0,y:307,w:945,h:105}],ledges:[{x:404,y:246,w:108,h:11}],hurdles:[{x:317,y:279,w:40,h:28}]},
+ guardian:{width:920,ground:[{x:0,y:307,w:920,h:105}],ledges:[{x:170,y:250,w:90,h:10},{x:591,y:246,w:80,h:10}],hurdles:[]},
  metro:{width:1370,ground:[{x:0,y:307,w:1370,h:110}],ledges:[{x:260,y:249,w:105,h:10},{x:641,y:251,w:118,h:10}],hurdles:[{x:480,y:278,w:30,h:29}]},
  rooftops:{width:1070,ground:[{x:0,y:307,w:1070,h:100}],ledges:[{x:260,y:261,w:116,h:10},{x:641,y:243,w:125,h:10}],hurdles:[{x:530,y:280,w:30,h:27}]},
  district:{width:2380,ground:[{x:0,y:307,w:1728,h:90},{x:1812,y:307,w:568,h:90}],bridgeDeck:{x:1728,y:307,w:84,h:12,id:'carga-bridge'},ledges:[{x:302,y:266,w:113,h:10},{x:448,y:247,w:105,h:10},{x:1375,y:265,w:105,h:10},{x:1510,y:242,w:95,h:10},{x:1990,y:259,w:102,h:10}],hurdles:[{x:362,y:285,w:25,h:22},{x:1435,y:280,w:26,h:27}]},
@@ -1665,6 +1683,8 @@ class Renderer{
       this.poly([[x,top+q(2)],[x-q(6),top+q(10)],[x-q(9),top+q(18)],[x-q(3),top+q(11)]],p.snow);
     }
     this.r(x-q(9)+(i%2)*q(4),b-q(5),q(3),q(2),p.base);
+    this.r(x-q(6),b-q(9),q(3),q(1),p.snow);
+    this.r(x+q(6),b-q(7),q(2),q(2),p.base);
   }
   // A tiny foot/shadow behind the front curb, mostly hidden by terrain.
   this.r(x-q(12),cy-q(2),q(24),q(3),far?'#34466066':'#1a314b66');
@@ -1931,7 +1951,7 @@ class Renderer{
   if(this.hero.complete&&this.hero.naturalWidth>=768&&!this.heroFailed){
    const walk=[1,2,3,2];const stride=Math.floor(((p.gait||0)%(Math.PI*2))/(Math.PI/2))%4;
    const poseIndex=mode==='dash'?7:mode==='jump'?5:mode==='fall'?6:mode==='run'?walk[stride]:(p.jumpTimer||0)>.08?4:0;
-   const dw=mode==='dash'?46:37,dh=mode==='dash'?38:39;
+   const dw=mode==='dash'?48:41,dh=mode==='dash'?41:43;
    const ybob=mode==='idle'?Math.sin(this.t*1.8)*.3:0;
    this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2,27-dh+ybob,dw,dh);
    if(mode==='dash'){this.r(-27,18,12,2,'#80e9ed');this.r(-34,24,13,2,'#8bf6df')}
@@ -1976,12 +1996,12 @@ class Renderer{
  }
  hurdle(o){
   // Warm industrial cargo boxes read as solid obstacles; cool evergreens stay decorative.
-  this.r(o.x-8,o.y+o.h-4,o.w+16,6,'#0b1b2d8f');
-  this.poly([[o.x,o.y],[o.x+o.w,o.y],[o.x+o.w-4,o.y+6],[o.x-4,o.y+6]],'#f5c48c');
+  this.r(o.x-8,o.y+o.h-4,o.w+16,6,'#0b1b2d8f');  this.poly([[o.x,o.y],[o.x+o.w,o.y],[o.x+o.w-4,o.y+6],[o.x-4,o.y+6]],'#f5c48c');
   this.r(o.x,o.y+6,o.w,o.h-6,'#926e65');this.r(o.x+4,o.y+9,o.w-8,o.h-13,'#c99a77');
   this.r(o.x+4,o.y+12,3,o.h-16,'#705b5f');this.r(o.x+o.w-8,o.y+12,3,o.h-16,'#705b5f');
   this.r(o.x+5,o.y+o.h-8,o.w-10,3,'#efd2a0');this.r(o.x+4,o.y+9,o.w-8,3,'#f6d6aa');
   this.r(o.x+o.w/2-2,o.y+14,4,5,'#4a5763');
+  this.r(o.x+7,o.y+o.h-6,2,2,'#f7deb0');this.r(o.x+o.w-9,o.y+o.h-6,2,2,'#f7deb0');
   this.text('↑',o.x+o.w/2,o.y-12,'#ffdfaa',13,'center');
  }
  orb(x,y,kind){
@@ -1996,7 +2016,8 @@ class Renderer{
  charger(x,y){
   this.glow(x,y-14,34,'#ffcc8649');this.r(x-20,y-4,40,6,'#536c7b');this.r(x-14,y-14,28,11,'#c7b47f');
   this.circ(x,y-16,8,'#6ad3d1');this.circ(x,y-16,4,'#fff4b9');this.text('↻',x,y-32,'#ffe0ad',13,'center');
- } seal(x,y,active){if(!active)return;this.glow(x,y-35,37,'#a1dcff4d');this.r(x-9,y-84,18,84,'#255170');for(let i=0;i<3;i++)this.r(x-6,y-74+i*22,12,8,'#8bebef');this.text('ORBE',x,y-90,'#d6f5eb',9,'center')}
+ }
+ seal(x,y,active){if(!active)return;this.glow(x,y-35,37,'#a1dcff4d');this.r(x-9,y-84,18,84,'#255170');for(let i=0;i<3;i++)this.r(x-6,y-74+i*22,12,8,'#8bebef');this.text('ORBE',x,y-90,'#d6f5eb',9,'center')}
  memoryShard(x,y){
   const bob=Math.sin(this.t*3+x)*3;
   this.glow(x,y+bob,29,'#d6aaff66');
@@ -2004,7 +2025,68 @@ class Renderer{
   this.poly([[x,y-7+bob],[x+4,y+bob],[x,y+6+bob]],'#fcf5ff');
  }
  atmosphere(){for(const s of this.snow){const xx=((s.x+this.t*s.speed)%500),yy=((s.y+this.t*s.speed*1.4)%270);this.r(xx,yy,s.r,s.r,'#e3f1f280')} }
+ // Two new self-contained locations share the same physics and camera as the campaign.
+ trainingWorld(game){
+  const cam=game.camera.x,level=root.Physics.levels.training;
+  const c=this.ctx,g=c.createLinearGradient(0,0,0,270);g.addColorStop(0,'#0d1c37');g.addColorStop(1,'#314865');c.fillStyle=g;c.fillRect(0,0,this.w,270);
+  for(let i=0;i<56;i++)this.r(((i*91+17-cam*.14)%1010+1010)%1010,18+i*31%195,i%8===0?2:1,1,i%3?'#709cb4':'#d1efe0');
+  this.ctx.save();this.ctx.translate(-Math.round(cam),-Math.round(game.camera.y));
+  // Recessed technical wall with layered returns, not a pasted sign.
+  this.r(-100,85,1190,224,'#253b55');this.r(-96,91,1178,195,'#3d586d');
+  for(let x=-70;x<=1010;x+=92){this.r(x,111,65,125,'#263f55');this.r(x+4,117,57,105,'#1b3348');this.r(x+7,120,51,4,'#6a95a0');
+   this.r(x+12,131,11,68,'#3b586d');this.r(x+34,131,12,68,'#3b586d');this.r(x+9,211,51,8,'#152b40');}
+  this.r(0,242,945,10,'#688b98');for(let x=0;x<945;x+=36)this.r(x,244,19,2,'#e1cda2');
+  for(const f of level.ground)this.terrain(f,0);for(const l of level.ledges)this.ledge(l);for(const h of level.hurdles)this.hurdle(h);
+  // Tutorial target flags use unique shapes rather than raw instructional paragraphs.
+  for(const [x,label,lit] of [[190,'01',game.controlsTutorial.step>=1],[388,'02',game.controlsTutorial.step>=2],[605,'03',game.controlsTutorial.step>=3]]){
+   this.contactShadow(x,305,17,4,.32);this.r(x-2,249,5,52,'#243d53');this.r(x-12,246,27,18,'#526f80');this.r(x-10,244,23,5,'#bedcd6');
+   this.r(x-8,253,19,7,lit?'#72ecca':'#f1c983');this.text(label,x+1,259,'#172c42',8,'center');
+   if(!lit)this.glow(x,250,24,'#efcf7b3e');
+  }
+  // A physical practice terminal with working state indicator, bolts and contact shadow.
+  this.contactShadow(792,305,39,7,.5);this.r(763,218,59,89,'#1b2d45');this.r(767,217,51,79,'#647c8b');this.r(773,227,39,54,'#132c41');
+  this.r(777,231,31,24,game.controlsTutorial.step===3?'#5ce4c7':'#567a86');
+  for(let j=0;j<4;j++)this.r(779+j*8,261,5,3,'#e8d8a9');this.r(780,294,29,3,'#b1c9c8');this.text('USAR',794,251,'#071c2d',10,'center');
+  this.player(game.player,this.t);game.fx.draw(this);this.ctx.restore();
+ }
+ guardianWorld(game){
+  const cam=game.camera.x,level=root.Physics.levels.guardian,b=game.guardian;
+  const c=this.ctx,g=c.createLinearGradient(0,0,0,270);g.addColorStop(0,'#091c2d');g.addColorStop(.5,'#20334a');g.addColorStop(1,'#4d4661');c.fillStyle=g;c.fillRect(0,0,this.w,270);
+  this.ctx.save();this.ctx.translate(-Math.round(cam),-Math.round(game.camera.y));
+  // Underground data vault: proper middle-ground consoles and raised ceiling beams.
+  this.r(0,78,920,225,'#25394d');this.r(0,85,920,10,'#627583');
+  for(let x=0;x<930;x+=106){this.r(x,100,95,183,'#192f43');this.r(x+8,110,78,135,'#37536a');
+   this.r(x+11,112,72,4,'#6898a4');for(let y=126;y<225;y+=18)this.r(x+20,y,48,3,y%2?'#243c56':'#294960');
+   this.r(x+14,246,65,5,'#152c42');}
+  for(const f of level.ground)this.terrain(f,0);for(const l of level.ledges)this.ledge(l);
+  // Data pads: the face, lit top and pedestal communicate that both can be touched.
+  for(const [x,word,color] of [[365,'FALSO','#ffc38e'],[455,'VERDADERO','#83f3d7']]){
+   this.contactShadow(x,305,32,5,.44);this.r(x-28,261,56,46,'#142b40');this.r(x-25,259,50,40,'#516c7e');this.r(x-22,264,44,27,'#1a3a51');
+   this.r(x-19,267,38,21,color);this.r(x-16,269,32,2,'#fff3d3');this.r(x-20,296,41,4,'#253c51');
+   this.text(word,x,281,'#142a3c',word==='VERDADERO'?8:10,'center');}
+  this.guardianModel(585,306,b.phase,b.warning,b.pulse,b.clock,game.save.guardianDefeated);
+  if(b.pulse>0){this.r(b.pulse-8,263,16,42,'#64ebd778');this.glow(b.pulse,273,38,'#7cfff38e');this.r(b.pulse-6,257,12,4,'#effff1');}
+  this.player(game.player,this.t);game.fx.draw(this);this.ctx.restore();
+ }
+ guardianModel(x,y,stage,warning,pulse,t,won){
+  const bob=Math.sin(t*2.4)*3,glow=won?'#77f1b9':'#f2a9aa';
+  this.contactShadow(x+2,y-1,55,8,.56);
+  // Multi-layer silhouette, separate legs, broad torso, shoulder plating, articulated hands.
+  this.r(x-39,y-39,21,37,'#23374c');this.r(x+22,y-39,21,37,'#23374c');
+  for(const side of [-1,1]){const xx=x+side*30;this.r(xx-7,y-44,16,28,'#75808d');this.r(xx-4,y-39,11,21,'#364b63');this.r(xx-12,y-22,24,5,'#1b2f45');}
+  this.r(x-55,y-102+bob,110,83,'#1e3149');this.r(x-50,y-107+bob,100,81,'#718494');
+  this.poly([[x-48,y-102+bob],[x+47,y-102+bob],[x+37,y-94+bob],[x-42,y-94+bob]],'#aac9c5');
+  this.r(x-45,y-91+bob,90,62,'#2a4660');this.r(x-38,y-84+bob,76,45,'#152e43');
+  for(let i=0;i<6;i++){this.r(x-34+i*11,y-76+bob,5,3,'#9ec7c4');this.r(x-34+i*11,y-47+bob,5,2,'#39536a');}
+  this.r(x-19,y-65+bob,37,19,stage===3?'#73e6ba':warning?'#ef7d8e':'#d9ba85');
+  this.r(x-15,y-60+bob,9,5,'#192e44');this.r(x+6,y-60+bob,9,5,'#192e44');
+  this.r(x-34,y-111+bob,68,5,'#c0d5ca');this.r(x-4,y-122+bob,8,16,'#e8c889');
+  for(let i=0;i<3;i++)this.r(x-22+i*18,y-25+bob,12,5,i<stage?'#4f736c':'#eebc85');
+  this.glow(x,y-66+bob,warning?70:42,warning?'#ff738859':'#83ebe52c');
+  if(warning)this.text('!',x,y-145+bob,'#ffe0a2',20,'center');
+ }
  world(game){const level=root.Physics.levels[game.scene]||root.Physics.levels.tower,camX=game.camera.x,camY=game.camera.y;
+  if(game.scene==='training'){this.trainingWorld(game);return;}if(game.scene==='guardian'){this.guardianWorld(game);return;}
   if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}
   if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
@@ -2472,6 +2554,99 @@ root.Prologue=Prologue;
 })(window.Lumina=window.Lumina||{});
 
 </script><script>
+/* LÚMINA — original playable controls classroom, no borrowed art or level designs. */
+(function(root){'use strict';
+ const STEPS=Object.freeze([
+  {label:'CAMINA',pc:'A / D o ← →',mobile:'Mueve el joystick',hint:'Llega hasta el círculo brillante.',goal:190},
+  {label:'SALTA',pc:'ESPACIO',mobile:'Toca SALTAR',hint:'Supera la caja y aterriza al otro lado.',goal:388},
+  {label:'IMPULSO',pc:'SHIFT',mobile:'Toca IMPULSO',hint:'Usa el impulso cerca de la línea azul.',goal:605},
+  {label:'USA',pc:'E',mobile:'Toca USAR',hint:'Acércate al panel y actívalo.',goal:790}
+ ]);
+ class ControlsTutorial{
+  constructor(game){this.game=game;this.active=false;this.step=0;this.hasJumped=false;this.hasDashed=false;this.snapshot=null;
+   document.getElementById('training-open')?.addEventListener('click',()=>this.start());
+   document.getElementById('training-offer-play')?.addEventListener('click',()=>{this.dismissOffer();this.start()});
+   document.getElementById('training-offer-skip')?.addEventListener('click',()=>this.dismissOffer());
+   document.getElementById('training-exit')?.addEventListener('click',()=>this.finish(false));
+  }
+  offer(){if(this.game.save.controlsOffered)return;this.game.locked=true;this.game.el.menu.hidden=false;document.getElementById('training-offer').hidden=false;}
+  dismissOffer(){this.game.save.controlsOffered=true;this.game.persist();document.getElementById('training-offer').hidden=true;this.game.locked=true;this.game.el.menu.hidden=false;}
+  start(){const g=this.game;if(this.active)return;this.dismissOffer();this.snapshot={scene:g.scene,player:{...g.player},energy:g.energy,camera:{...g.camera},started:g.save.started};
+   this.active=true;this.step=0;this.hasJumped=false;this.hasDashed=false;g.scene='training';g.player=root.Physics.spawn(74,280);g.energy=100;g.locked=false;g.input.reset();g.camera={x:0,y:76};g.el.menu.hidden=true;g.el.toast.hidden=true;document.getElementById('training-hud').hidden=false;g.updateObjective();g.updateHud();g.sfx('start');this.render();}
+  render(){const g=this.game,s=STEPS[this.step];if(!s)return;
+   document.getElementById('training-stage').textContent=(this.step+1)+' / '+STEPS.length;
+   document.getElementById('training-title').textContent=s.label;
+   document.getElementById('training-instruction').textContent=(document.body.classList.contains('touch-enabled')?s.mobile:s.pc)+' · '+s.hint;
+   document.querySelectorAll('.training-dot').forEach((d,i)=>{d.classList.toggle('complete',i<this.step);d.classList.toggle('current',i===this.step)});
+  }
+  tick(p){if(!this.active)return;const g=this.game;
+   if(p.justJumped)this.hasJumped=true;if(p.justDashed)this.hasDashed=true;
+   const past=[p.x>=STEPS[0].goal,this.hasJumped&&p.x>=STEPS[1].goal,this.hasDashed&&p.x>=STEPS[2].goal,false][this.step];
+   if(past)this.advance();
+   // Teaching dash cannot consume the real saved battery; refill until the final activation.
+   if(this.step===2)g.energy=100;
+   if(p.y>414){g.player=root.Physics.spawn(this.step>1?420:74,280);g.sfx('deny');}
+  }
+  action(){if(!this.active)return false;const p=this.game.player;
+   if(this.step===3&&p.x>=745&&p.x<=830){this.game.fx.burst(790,251,'dash',25);this.game.sfx('success');this.finish(true);return true;}
+   this.game.sfx('deny');this.game.flashCaption('Acércate al terminal iluminado →',1.2);return true;
+  }
+  advance(){if(this.step>=STEPS.length-1)return;this.step++;this.game.updateObjective();this.game.sfx('collect');this.game.fx.burst(this.game.player.x+8,this.game.player.y+13,'dash',10);this.render();}
+  finish(completed=false){if(!this.active)return;const g=this.game,old=this.snapshot;this.active=false;document.getElementById('training-hud').hidden=true;
+   g.scene=old.scene;g.player={...old.player};g.energy=old.energy;g.camera={...old.camera};g.locked=true;g.input.reset();g.save.controlsOffered=true;
+   if(completed)g.save.controlsLearned=true;g.persist();g.updateObjective();g.updateHud();g.el.menu.hidden=false;g.updateMenuState();this.snapshot=null;
+   if(completed)g.toast('✓ ¡Controles aprendidos! Ya puedes comenzar la aventura.');
+  }
+ }
+ root.ControlsTutorial=ControlsTutorial;root.ControlsTutorialSteps=STEPS;
+})(typeof window!=='undefined'?(window.Lumina=window.Lumina||{}):(globalThis.Lumina=globalThis.Lumina||{}));
+
+</script><script>
+/* First original teaching boss: answers are Boolean expressions; no random one-shot deaths. */
+(function(root){'use strict';
+ const QUESTIONS=Object.freeze([
+  {expression:'NO alarma',values:'alarma = FALSO',answer:true,lesson:'NO invierte FALSO a VERDADERO.'},
+  {expression:'energía Y red',values:'energía = VERDADERO · red = FALSO',answer:false,lesson:'Y exige que ambos sean verdaderos.'},
+  {expression:'red O energía',values:'red = VERDADERO · energía = FALSO',answer:true,lesson:'O acepta que al menos uno sea verdadero.'}
+ ]);
+ class Guardian{
+  constructor(game){this.game=game;this.active=false;this.phase=0;this.pulse=0;this.warning=0;this.hurtCooldown=0;this.mistakes=0;this.returnScene='archive';this.returnX=918;
+   document.getElementById('guardian-replay')?.addEventListener('click',()=>this.start(true));
+   document.getElementById('guardian-leave')?.addEventListener('click',()=>this.leave());
+  }
+  start(replay=false){const g=this.game;if(this.active)return;this.returnScene=g.scene==='archive'?'archive':g.scene;this.returnX=g.player.x;
+   this.active=true;this.phase=0;this.pulse=0;this.warning=0;this.hurtCooldown=0;this.mistakes=0;this.clock=0;this.replay=replay;
+   g.el.menu.hidden=true;g.scene='guardian';g.player=root.Physics.spawn(275,280);g.energy=100;g.locked=false;g.camera={x:105,y:76};g.vignette=null;g.el.toast.hidden=true;g.input.reset();g.updateObjective();g.updateHud();document.getElementById('guardian-hud').hidden=false;this.display();g.sfx('robot');}
+  display(){const q=QUESTIONS[this.phase];if(!q)return;document.getElementById('guardian-round').textContent=(this.phase+1)+' / '+QUESTIONS.length;
+   document.getElementById('guardian-expression').textContent=q.expression;
+   document.getElementById('guardian-values').textContent=q.values;
+   document.getElementById('guardian-feedback').textContent='Elige VERDADERO o FALSO en el escenario.';
+  }
+  update(dt){if(!this.active)return;this.clock+=dt;this.hurtCooldown=Math.max(0,this.hurtCooldown-dt);
+   // Pulses are slow and telegraphed; jump or dash evades them. Losing a pulse never resets the puzzle.
+   if(this.clock>4&&this.clock<4.7)this.warning=1;
+   if(this.clock>=4.7&&this.clock<7.5){this.warning=0;this.pulse=715-(this.clock-4.7)*255;const p=this.game.player;
+    if(this.hurtCooldown===0&&Math.abs(p.x+9-this.pulse)<21&&p.onGround&&p.dashTime===0){p.vx=-85;p.x=Math.max(20,p.x-28);this.hurtCooldown=1.7;this.game.sfx('deny');this.game.fx.burst(p.x+9,p.y+22,'dash',6);}}
+   if(this.clock>=8){this.clock=0;this.pulse=0;this.warning=0;}
+  }
+  action(){if(!this.active)return false;const x=this.game.player.x+8;
+   const choose=x>320&&x<408?false:x>425&&x<488?true:null;
+   if(choose===null){this.game.flashCaption('Acércate a VERDADERO o FALSO y pulsa USAR.',1.6);return true;}
+   const q=QUESTIONS[this.phase];if(choose!==q.answer){this.mistakes++;this.game.sfx('deny');this.game.fx.burst(x,257,'dash',8);document.getElementById('guardian-feedback').textContent='No todavía. '+q.lesson;return true;}
+   this.game.sfx('success');this.game.fx.burst(585,174,'dash',27);this.phase++;this.game.updateObjective();this.clock=0;this.warning=0;this.pulse=0;
+   if(this.phase===QUESTIONS.length){this.game.save.guardianDefeated=true;this.game.persist();document.getElementById('guardian-feedback').textContent='✓ ¡Escudo desactivado!';this.game.flashCaption('✦ CENTINELA NEUTRALIZADO · 3/3 condiciones',3);this.game.sfx('gate');this.leave();}
+   else this.display();return true;
+  }
+  leave(){if(!this.active)return;const g=this.game;this.active=false;document.getElementById('guardian-hud').hidden=true;
+   const scene=this.returnScene==='guardian'?'archive':this.returnScene;g.scene=scene;g.player=root.Physics.spawn(Math.min(root.Physics.levels[scene]?.width-40||900,this.returnX),280);g.energy=g.save.energy||0;g.input.reset();g.locked=false;g.persist();g.updateHud();g.updateObjective();g.camera.x=Math.max(0,g.player.x-220);
+   if(this.replay){g.el.menu.hidden=false;g.locked=true;g.updateMenuState();}
+   else if(g.save.guardianDefeated)g.toast('✦ El Centinela reconoce tu lógica. Nueva memoria registrada.');
+  }
+ }
+ root.Guardian=Guardian;root.GuardianQuestions=QUESTIONS;
+})(typeof window!=='undefined'?(window.Lumina=window.Lumina||{}):(globalThis.Lumina=globalThis.Lumina||{}));
+
+</script><script>
 /* LÚMINA · adventure director. The three rooms are authored as platforming spaces. */
 (function(root){'use strict';
 const ORBS={
@@ -2488,7 +2663,7 @@ class Game{
   this.input=new root.Input();this.last=0;this.frameLast=0;this.targetFps=60;this.measuredFps=0;this.renderCount=0;this.renderWindow=0;this.occlusionWait=0;this.locked=true;this.dialogue=[];this.onDialogueEnd=null;
   this.editor=new root.Editor(this);this.touchLayout=new root.TouchLayout(this);root.touchLayout=this.touchLayout;this.shake=0;this.walk=0;this.audioOn=true;this.audio=null;this.toastTimer=0;
   this.el={menu:document.getElementById('menu'),story:document.getElementById('story'),storyText:document.getElementById('story-text'),storyButton:document.getElementById('story-next'),objective:document.getElementById('objective'),prompt:document.getElementById('prompt'),toast:document.getElementById('toast'),sceneName:document.getElementById('scene-name'),assist:document.getElementById('assist')};
-  this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
+  this.el.assist.checked=this.save.assist;this.academy=new root.Academy(this);this.prologue=new root.Prologue(this);this.controlsTutorial=new root.ControlsTutorial(this);this.guardian=new root.Guardian(this);this.nixX=2018;this.cityHintCooldown=0;this.cityCameraReady=false;
   const startBtn=document.getElementById('start');const startGame=()=>{if(!this.el.menu.hidden){this.unlockAudio();this.sfx('start');this.start(false)}};
   startBtn.addEventListener('click',startGame);
   // Some mobile embedded viewers drop the synthetic click after touch. Pointerup
@@ -2515,10 +2690,11 @@ class Game{
   document.getElementById('audio-button').addEventListener('click',()=>{this.audioOn=!this.audioOn;document.getElementById('audio-button').textContent=this.audioOn?'♪ Sonido: activado':'♫ Sonido: desactivado';if(this.audioOn){this.unlockAudio();this.sfx('confirm')}});
   document.getElementById('audio-button').textContent=this.audioOn?'♪ Sonido: activado':'♫ Sonido: desactivado';
   this.setupDisplay();this.refreshNotebook();this.updateObjective();this.updateHud();this.el.menu.hidden=false;this.updateMenuState();
+  if(!this.save.controlsOffered)this.controlsTutorial.offer();
   requestAnimationFrame(ts=>this.frame(ts));
  }
  safeStorage(){try{const store=window.localStorage;const probe='lumina-storage-check';store.setItem(probe,'1');store.removeItem(probe);return store}catch{{const pill=document.querySelector('.save-pill');if(pill)pill.textContent='GUARDADO NO DISPONIBLE';}return {getItem:()=>null,setItem:()=>{},removeItem:()=>{}}}}
- spawn(scene){const p=scene==='archive'?root.Physics.spawn(96,280):scene==='district'?root.Physics.spawn(82,280):scene==='metro'?root.Physics.spawn(95,280):scene==='rooftops'?root.Physics.spawn(96,280):scene==='bridge'?root.Physics.spawn(this.save.bridgeCheckpoint?800:this.save.bridgeMiniCheckpoint?428:52,this.save.bridgeCheckpoint?265:this.save.bridgeMiniCheckpoint?275:277):scene==='tower'?root.Physics.spawn(90,281):scene==='workshop'?root.Physics.spawn(142,280):root.Physics.spawn(this.save.spawn.x>0?Math.min(this.save.spawn.x===393?473:this.save.spawn.x,1130):80,280);
+ spawn(scene){const p=scene==='training'?root.Physics.spawn(74,280):scene==='guardian'?root.Physics.spawn(118,280):scene==='archive'?root.Physics.spawn(96,280):scene==='district'?root.Physics.spawn(82,280):scene==='metro'?root.Physics.spawn(95,280):scene==='rooftops'?root.Physics.spawn(96,280):scene==='bridge'?root.Physics.spawn(this.save.bridgeCheckpoint?800:this.save.bridgeMiniCheckpoint?428:52,this.save.bridgeCheckpoint?265:this.save.bridgeMiniCheckpoint?275:277):scene==='tower'?root.Physics.spawn(90,281):scene==='workshop'?root.Physics.spawn(142,280):root.Physics.spawn(this.save.spawn.x>0?Math.min(this.save.spawn.x===393?473:this.save.spawn.x,1130):80,280);
   if(scene==='bridge'&&this.save.bridgeCheckpoint){p.x=810;p.y=265}else if(scene==='bridge'&&this.save.bridgeMiniCheckpoint){p.x=428;p.y=275}return p}
  persist(){this.save.scene=this.scene;root.Save.save(this.storage,this.save)}
  start(restart){
@@ -2546,7 +2722,7 @@ class Game{
   if(resume)resume.textContent=this.save.started?'Continuar':'Comenzar aventura';
   if(summary)summary.textContent=this.save.started?('✦ PARTIDA GUARDADA · '+(this.scene==='district'?'Distrito Aurora':this.scene==='archive'?'Archivo de Ecos':this.scene==='metro'?'Estación Umbral':this.scene==='rooftops'?'Azoteas de Aurora':this.scene==='harbor'?'Puerto de la Bruma':this.scene==='workshop'?'Taller de NIX':this.scene==='bridge'?'Pasarela Boreal':'Faro del Silencio')):'✦ NUEVA EXPEDICIÓN · PRÓLOGO DISPONIBLE';
  }
- openMenu(){if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
+ openMenu(){if(this.controlsTutorial.active){this.controlsTutorial.finish(false);return;}if(this.guardian.active){this.guardian.leave();}if(this.editor.opened||!this.el.story.hidden||this.prologue.active)return;this.locked=true;this.el.menu.hidden=false;this.refreshNotebook();this.updateMenuState();this.sfx('menu')}
  say(lines,callback){this.dialogue=lines.slice();this.dialogueTotal=this.dialogue.length;this.dialogueShown=0;this.onDialogueEnd=callback||null;this.el.story.hidden=false;this.locked=true;this.nextDialogue()}
  nextDialogue(){if(this.dialogue.length){this.dialogueShown=(this.dialogueShown||0)+1;this.el.storyText.textContent=this.dialogue.shift();const counter=document.getElementById('dialogue-progress');if(counter)counter.textContent=this.dialogueShown+' / '+(this.dialogueTotal||this.dialogueShown);this.el.storyButton.textContent=this.dialogue.length?'Siguiente ›':'Continuar ›';this.beep(380,.035)}else{this.el.story.hidden=true;this.locked=false;const cb=this.onDialogueEnd;this.onDialogueEnd=null;if(cb)cb()}}
  toast(msg){this.el.toast.textContent=msg;this.el.toast.hidden=false;this.toastTimer=3}
@@ -2561,7 +2737,7 @@ class Game{
   }catch{}
  }
  beep(freq=450,duration=.1){if(!this.audioOn)return;try{this.audio=this.audio||new (window.AudioContext||window.webkitAudioContext)();const osc=this.audio.createOscillator(),gain=this.audio.createGain();osc.type='triangle';osc.frequency.value=freq;gain.gain.setValueAtTime(.045,this.audio.currentTime);gain.gain.exponentialRampToValueAtTime(.001,this.audio.currentTime+duration);osc.connect(gain).connect(this.audio.destination);osc.start();osc.stop(this.audio.currentTime+duration)}catch{}}
- updateObjective(){let key=this.scene==='archive'?('Archivo de Ecos: recupera las tres memorias y descubre qué conecta a Aurora con los faros. '+root.Regions.status(this.save,'archive')):this.scene==='metro'?('Activa los dos relés de la estación. '+root.Regions.status(this.save,'metro')+' · Después toma el tren hacia el Puerto de la Bruma.'):this.scene==='rooftops'?('Sincroniza las antenas de las azoteas. '+root.Regions.status(this.save,'rooftops')+' · Regresa a Aurora cuando termines.'):this.scene==='district'?(
+ updateObjective(){let key=this.scene==='training'?'Practica los controles sin perder tu partida.':this.scene==='guardian'?'Derrota al Centinela evaluando tres condiciones.':this.scene==='archive'?('Archivo de Ecos: recupera las tres memorias y descubre qué conecta a Aurora con los faros. '+root.Regions.status(this.save,'archive')):this.scene==='metro'?('Activa los dos relés de la estación. '+root.Regions.status(this.save,'metro')+' · Después toma el tren hacia el Puerto de la Bruma.'):this.scene==='rooftops'?('Sincroniza las antenas de las azoteas. '+root.Regions.status(this.save,'rooftops')+' · Regresa a Aurora cuando termines.'):this.scene==='district'?(
    this.save.cityCompleted?'El distrito funciona. Ve al acceso del este para viajar a Estación Umbral; también puedes explorar las azoteas.':
    this.save.cityVariableSolved?'El puente tiene energía. Conoce a NIX y llega a la plaza de datos.':
    this.save.cityPowered?'Camina al este hasta la estación de datos: aprenderás a usar una variable numérica.':
@@ -2570,11 +2746,11 @@ class Game{
   ):this.scene==='harbor'?(this.save.robot?'¡NIX está despierto! Cruza el arco de luz al este.':'Entra al taller bajo la nieve y descubre a NIX.'):this.scene==='workshop'?(this.save.robot?'NIX ha despertado. Regresa al exterior por la puerta izquierda.':'Acércate al banco de NIX y programa su recuperación.'):this.scene==='bridge'?'Cruza la pasarela: combina saltos, impulso y una baliza de guardado.':this.scene==='tower'?(this.save.beacon?'Entra al faro y devuelve la luz a las islas.':'Programa tres pulsos para despertar el faro.'):'¡El faro ha vuelto!';
   if(this.scene==='bridge')key=this.save.gateBroken?'Cruza el último arco. Fragmentos recogidos: '+this.save.shards.length+'/3.':'Usa saltos y plataformas para avanzar. La barrera de cristal se rompe con IMPULSO.';
   if(!this.save.orbs.includes('move')&&this.scene==='harbor')key='Recoge el orbe azul del sendero para aprender a moverte.';if(!this.save.orbs.includes('code')&&this.scene==='workshop')key='Encuentra el orbe violeta antes de programar a NIX.';if(!this.save.orbs.includes('jump')&&this.scene==='bridge')key='El orbe verde está sobre la primera repisa; debes recogerlo.';if(!this.save.orbs.includes('dash')&&this.scene==='bridge'&&this.player.x>1080)key='Recoge el orbe ámbar para cargar el impulso.';
-  this.el.objective.textContent=key;this.el.sceneName.textContent=this.scene==='archive'?'ARCHIVO DE ECOS':this.scene==='metro'?'ESTACIÓN UMBRAL':this.scene==='rooftops'?'AZOTEAS DE AURORA':this.scene==='district'?'DISTRITO AURORA · '+(this.save.cityDay?'Día':'Noche'):this.scene==='harbor'?'01 / Puerto de la Bruma':this.scene==='workshop'?'01B / Dentro del taller de NIX':this.scene==='bridge'?'02 / Pasarela Boreal':'03 / Faro del Silencio';
-  document.getElementById('story-progress').textContent=this.scene==='archive'?(this.save.archiveNodes.filter(Boolean).length+'/3'):this.scene==='metro'?(this.save.metroRelays.filter(Boolean).length+'/2'):this.scene==='rooftops'?(this.save.roofAntennas.filter(Boolean).length+'/2'):this.scene==='district'?(Number(this.save.cityGate)+Number(this.save.cityPowered)+Number(this.save.cityVariableSolved)+Number(this.save.cityCompleted))+'/4':(Number(this.save.robot)+Number(this.save.bridgeCheckpoint)+Number(this.save.beacon))+'/3';this.updateLearningProgress();this.refreshNotebook();this.updateJournal();
+  this.el.objective.textContent=key;this.el.sceneName.textContent=this.scene==='training'?'ACADEMIA DE IRIS · CONTROLES':this.scene==='guardian'?'ARCHIVO · CENTINELA':this.scene==='archive'?'ARCHIVO DE ECOS':this.scene==='metro'?'ESTACIÓN UMBRAL':this.scene==='rooftops'?'AZOTEAS DE AURORA':this.scene==='district'?'DISTRITO AURORA · '+(this.save.cityDay?'Día':'Noche'):this.scene==='harbor'?'01 / Puerto de la Bruma':this.scene==='workshop'?'01B / Dentro del taller de NIX':this.scene==='bridge'?'02 / Pasarela Boreal':'03 / Faro del Silencio';
+  document.getElementById('story-progress').textContent=this.scene==='training'?(this.controlsTutorial.step+1)+'/4':this.scene==='guardian'?this.guardian.phase+'/3':this.scene==='archive'?(this.save.archiveNodes.filter(Boolean).length+'/3'):this.scene==='metro'?(this.save.metroRelays.filter(Boolean).length+'/2'):this.scene==='rooftops'?(this.save.roofAntennas.filter(Boolean).length+'/2'):this.scene==='district'?(Number(this.save.cityGate)+Number(this.save.cityPowered)+Number(this.save.cityVariableSolved)+Number(this.save.cityCompleted))+'/4':(Number(this.save.robot)+Number(this.save.bridgeCheckpoint)+Number(this.save.beacon))+'/3';this.updateLearningProgress();this.refreshNotebook();this.updateJournal();
  }
  updateJournal(){const panel=document.querySelector('.journal');if(!panel)return;
-  const map={archive:['Archivo de Ecos','Los antiguos servidores guardan la señal que nos llevó a Aurora. Busca tres lectores para reconstruir la transmisión.',['Examinar el lector 1','Recuperar las tres memorias','Consultar el resultado en la pantalla del archivo'],'Una computadora conserva datos para que podamos analizarlos.'],district:['Distrito Aurora','Investiga el apagón y aprende a tomar decisiones mediante sensores.',['Leer la señal de auxilio','Abrir la puerta con una condición','Restaurar la energía y programar carga'],'La ciudad conecta con el metro y las azoteas.'],metro:['Estación Umbral','Dos relés deben activarse para autorizar el tren de las montañas.',['Activar el relé 1','Activar el relé 2','Abordar el tren al norte'],'El viaje conduce al Puerto de la Bruma.'],rooftops:['Azoteas de Aurora','Ruta opcional: sincroniza las antenas y descubre el origen de una señal.',['Subir a la primera plataforma','Activar las dos antenas','Regresar a la ciudad'],'Explora sin prisa: esta ruta no bloquea la campaña.'],harbor:['Puerto de la Bruma','El tren te ha llevado a las montañas. Busca al robot NIX.',['Recoger el orbe azul','Entrar al taller','Despertar a NIX'],'El arco del puerto lleva hasta la pasarela.'],workshop:['Taller de NIX','Aquí programarás movimientos y acciones por primera vez.',['Recoger memoria violeta','Trazar la ruta en el tablero','Recuperar la batería'],'RECOGER no es lo mismo que llegar a la casilla.'],bridge:['Pasarela Boreal','Una travesía helada exige saltos, impulso y checkpoints.',['Saltar las repisas','Usar la plataforma móvil','Romper el cristal con impulso'],'La última puerta conduce al faro.'],tower:['Faro del Silencio','El faro necesita tres pulsos: aprende a repetir instrucciones.',['Inspeccionar la terminal','Construir un bucle','Encender el faro'],'Cuando la lente brille, las memorias revelarán otro destino.']};
+  const map={training:['Academia de Iris','Entrenamiento breve y opcional. Mueve a Iris y prueba cada botón.',['Caminar','Saltar','Impulso y usar'],'Puedes volver desde el menú sin borrar tu progreso.'],guardian:['Centinela del Archivo','Evalúa tres expresiones booleanas mientras evitas las ondas de energía.',['NO alarma','energía Y red','red O energía'],'Las respuestas cambian el escudo del jefe.'],archive:['Archivo de Ecos','Los antiguos servidores guardan la señal que nos llevó a Aurora. Busca tres lectores para reconstruir la transmisión.',['Examinar el lector 1','Recuperar las tres memorias','Consultar el resultado en la pantalla del archivo'],'Una computadora conserva datos para que podamos analizarlos.'],district:['Distrito Aurora','Investiga el apagón y aprende a tomar decisiones mediante sensores.',['Leer la señal de auxilio','Abrir la puerta con una condición','Restaurar la energía y programar carga'],'La ciudad conecta con el metro y las azoteas.'],metro:['Estación Umbral','Dos relés deben activarse para autorizar el tren de las montañas.',['Activar el relé 1','Activar el relé 2','Abordar el tren al norte'],'El viaje conduce al Puerto de la Bruma.'],rooftops:['Azoteas de Aurora','Ruta opcional: sincroniza las antenas y descubre el origen de una señal.',['Subir a la primera plataforma','Activar las dos antenas','Regresar a la ciudad'],'Explora sin prisa: esta ruta no bloquea la campaña.'],harbor:['Puerto de la Bruma','El tren te ha llevado a las montañas. Busca al robot NIX.',['Recoger el orbe azul','Entrar al taller','Despertar a NIX'],'El arco del puerto lleva hasta la pasarela.'],workshop:['Taller de NIX','Aquí programarás movimientos y acciones por primera vez.',['Recoger memoria violeta','Trazar la ruta en el tablero','Recuperar la batería'],'RECOGER no es lo mismo que llegar a la casilla.'],bridge:['Pasarela Boreal','Una travesía helada exige saltos, impulso y checkpoints.',['Saltar las repisas','Usar la plataforma móvil','Romper el cristal con impulso'],'La última puerta conduce al faro.'],tower:['Faro del Silencio','El faro necesita tres pulsos: aprende a repetir instrucciones.',['Inspeccionar la terminal','Construir un bucle','Encender el faro'],'Cuando la lente brille, las memorias revelarán otro destino.']};
   const m=map[this.scene]||map.district;const items=m[2].map((v,i)=>`<div class="milestone"><span>${String(i+1).padStart(2,'0')}</span><div><b>${v}</b></div></div>`).join('');panel.innerHTML=`<div class="journal-header">OBJETIVO ACTUAL</div><h2>${m[0]}</h2><p>${(this.el.objective.textContent||m[1])}</p><details class="journal-more"><summary>Ver ruta y contexto</summary>${items}<p class="journal-note">${m[3]}</p></details>`;
  }
  updateLearningProgress(){const chip=document.getElementById('learning-progress');if(!chip)return;chip.hidden=!['district','metro','rooftops','archive'].includes(this.scene);if(chip.hidden)return;if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){chip.textContent='✦ '+(this.scene==='metro'?'CAPÍTULO 02 · 2 RELÉS':this.scene==='archive'?'MEMORIAS · 3 LECTORES':'RUTA OPCIONAL · ANTENAS');return;}const s=this.save;const index=s.cityCompleted?4:s.cityVariableSolved?3:s.cityPowered?2:s.cityGate?1:0;const names=['INVESTIGA','RED ELÉCTRICA','VARIABLES','COMPAÑERO','EXPLORACIÓN'];chip.textContent='✦ '+(index+1)+'/5 · '+names[index]+' · 📚 '+s.cityLessons.length+' temas';}
@@ -2602,7 +2778,9 @@ class Game{
   if(t.elapsed>=t.duration){this.transition=null;this.locked=false;if(t.dialogue)this.say(t.dialogue);else if(t.scene==='metro')this.introduceMetro();else if(t.scene==='rooftops')this.introduceRoofs();else if(t.scene==='archive')this.introduceArchive();}
  }
  near(x,range){return Math.abs(this.player.x-x)<range&&this.player.y>165}
- scenePrompt(){if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?'E · Revisar archivo restaurado':null;
+ scenePrompt(){if(this.scene==='training')return this.controlsTutorial.step===3&&this.near(790,65)?'E · Activar terminal de práctica':null;
+  if(this.scene==='guardian')return this.near(365,56)?'E · FALSO':this.near(535,56)?'E · VERDADERO':null;
+  if(this.scene==='archive')return this.near(68,70)?'E · Volver al metro':this.near(275,65)?'E · Leer memoria 1':this.near(520,65)?'E · Leer memoria 2':this.near(765,65)?'E · Leer memoria 3':this.near(925,85)?(this.save.guardianDefeated?'E · Consultar memoria':'E · Desafiar Centinela de lógica'):null;
   if(this.scene==='metro')return this.near(934,78)?(root.Regions.complete(this.save,'metro')?'E · Entrar al Archivo de Ecos':'Archivo cerrado · faltan relés'):this.near(58,60)?'E · Volver al Distrito Aurora':this.near(1230,95)?(root.Regions.complete(this.save,'metro')?'E · Tomar el tren al norte':'Primero activa ambos relés'):this.near(340,67)?'E · Activar relé uno':this.near(710,67)?'E · Activar relé dos':null;
   if(this.scene==='rooftops')return this.near(75,70)?'E · Regresar a la calle':this.near(420,70)?'E · Conectar antena uno':this.near(805,70)?'E · Conectar antena dos':null;
   if(this.scene==='district')return this.near(215,65)?'E · Leer registro de la ciudad':this.near(425,55)&&this.save.cityPowered?'E · Subir a las azoteas':this.near(606,75)?'E · Simular sensores (Y / NO)':this.near(766,48)?(this.save.cityGate?'Puerta autorizada':'Acceso bloqueado · usa la consola'):
@@ -2616,7 +2794,7 @@ class Game{
   if(this.scene==='workshop')return this.near(95,80)?'E · Salir al puerto':this.near(435,72)?'E · Usar banco de programación NIX':null;
   if(this.scene==='tower')return this.near(350,73)?'E · Programar los tres pulsos':this.near(975,90)?'E · Encender el faro':null;
   if(this.scene==='bridge')return this.player.x>1625?'E · Entrar a la torre':this.player.x>1330&&!this.save.gateBroken?'SHIFT · Rompe el cristal con impulso':this.player.x>560&&this.player.x<810?'Sube a la plataforma móvil':'ESPACIO / SALTAR · SHIFT / IMPULSO';return null}
- interact(){if(this.scene==='district'){this.interactDistrict();return;}if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){this.interactRegion();return;}
+ interact(){if(this.scene==='training'){this.controlsTutorial.action();return;}if(this.scene==='guardian'){this.guardian.action();return;}if(this.scene==='district'){this.interactDistrict();return;}if(this.scene==='metro'||this.scene==='rooftops'||this.scene==='archive'){this.interactRegion();return;}
   if(this.scene==='harbor'){
    if(this.near(65,55)&&this.save.metroVisited){this.startTransition('metro','VOLVIENDO A ESTACIÓN UMBRAL',1205);return;}
    if(this.near(473,69)){if(!this.save.orbs.includes('move')){this.say(['Antes de entrar, recoge el orbe azul: es la primera memoria de la expedición.']);return}this.startTransition('workshop','ENTRANDO AL TALLER',142,['NIX duerme. Busca su consola y la batería dorada.']);return}
@@ -2641,7 +2819,7 @@ class Game{
   }
   if(this.near(925,85)){
    if(!this.save.archiveNodes.every(Boolean)){this.flashCaption('Faltan '+this.save.archiveNodes.filter(x=>!x).length+' memorias',2);this.sfx?.('deny');return;}
-   this.say(['NIX: «La señal era mía… alguien cambió las órdenes del sistema».','Iris: «Tenemos las pruebas. Sigamos al faro».']);return;
+   if(!this.save.guardianDefeated){this.guardian.start();return;}this.say(['Iris: «El Centinela reconoció nuestras condiciones. Ahora podemos seguir al faro».']);return;
   }
  }
  interactDistrict(){
@@ -2669,11 +2847,11 @@ class Game{
  finish(){this.save.completed=true;this.persist();this.say(['PRIMER FARO REACTIVADO','NIX: «Iris… en las memorias del faro aparece la misma señal que nos atrajo hasta Aurora».',`Has aprendido lógica, variables, secuencias y bucles. Recuperaste ${this.save.shards.length}/3 fragmentos de la pasarela. El misterio todavía continúa.`],()=>{document.getElementById('ending').hidden=false;this.locked=true;this.beep(890,.23)})}
  solved(id){if(id==='cityNix'&&!this.save.cityNixAwake){this.save.cityNixAwake=true;this.nixX=2040;this.nixWake=3.1;this.sfx('robot');this.persist();this.updateObjective();this.fx.burst(2040,279,'dash',20);this.beep(880,.12);this.flashCaption('✓ NIX despierto · el orden de tus pasos funcionó',3);return;}if(id==='nix'&&!this.save.robot){this.save.robot=true;this.nixWake=3;this.sfx('robot');this.fx.burst(518,267,'dash',16);this.persist();this.updateObjective();this.flashCaption('✓ NIX listo · completaste una secuencia',3)}
   if(id==='beacon'&&!this.save.beacon){this.save.beacon=true;this.persist();this.updateObjective();this.lightFlash=1.9;this.flashCaption('✦ Faro encendido · tres pulsos completados',3);this.fx.burst(975,152,'dash',28);this.beep(900,.23)}}
- hint(){if(this.scene==='district'){const tip=!this.save.cityGate?'Primero: usa la consola del acceso y prueba energía Y red Y NO alarma.':!this.save.cityPowered?'Activa el nodo eléctrico detrás de la puerta.':!this.save.cityVariableSolved?'Estación de datos: programa carga hasta que valga 5, paso a paso.':!this.save.cityNixAwake?'Busca a NIX al otro lado del puente.':'Llega hasta la plaza al este.';this.flashCaption(tip,4);return;}this.say([this.scene==='harbor'?'Acércate a la puerta de madera bajo el cartel NIX y pulsa E para entrar al taller.':this.scene==='workshop'?'NIX duerme al fondo del taller. Pulsa E en la consola iluminada y construye el programa que recupera su batería.':this.scene==='bridge'?'Primer tramo: salta a una repisa alta. Segundo: usa la plataforma móvil. Después salta las cajas y utiliza SHIFT para romper la barrera de cristal. La baliza guarda tu avance.':'Ve a la consola naranja a la izquierda del faro. Dentro de REPETIR 3, coloca AVANZAR y ACTIVAR.'])}
+ hint(){if(this.scene==='training'){this.flashCaption('Sigue la marca dorada y practica el control indicado.',2);return;}if(this.scene==='guardian'){this.flashCaption('FALSO a la izquierda · VERDADERO a la derecha. Salta para esquivar ondas.',2.5);return;}if(this.scene==='district'){const tip=!this.save.cityGate?'Primero: usa la consola del acceso y prueba energía Y red Y NO alarma.':!this.save.cityPowered?'Activa el nodo eléctrico detrás de la puerta.':!this.save.cityVariableSolved?'Estación de datos: programa carga hasta que valga 5, paso a paso.':!this.save.cityNixAwake?'Busca a NIX al otro lado del puente.':'Llega hasta la plaza al este.';this.flashCaption(tip,4);return;}this.say([this.scene==='harbor'?'Acércate a la puerta de madera bajo el cartel NIX y pulsa E para entrar al taller.':this.scene==='workshop'?'NIX duerme al fondo del taller. Pulsa E en la consola iluminada y construye el programa que recupera su batería.':this.scene==='bridge'?'Primer tramo: salta a una repisa alta. Segundo: usa la plataforma móvil. Después salta las cajas y utiliza SHIFT para romper la barrera de cristal. La baliza guarda tu avance.':'Ve a la consola naranja a la izquierda del faro. Dentro de REPETIR 3, coloca AVANZAR y ACTIVAR.'])}
  updateHud(){
   const icons={move:'🔹',code:'🔮',jump:'🟢',dash:'🟠'};
   const list=['move','code','jump','dash'];const orbHud=document.getElementById('orb-hud');
-  const city=['district','metro','rooftops','archive'].includes(this.scene);orbHud.hidden=city;document.getElementById('energy-hud').hidden=city;document.getElementById('touch-dash').hidden=city;
+  const city=['district','metro','rooftops','archive'].includes(this.scene);orbHud.hidden=city||this.scene==='training'||this.scene==='guardian';document.getElementById('energy-hud').hidden=city;document.getElementById('touch-dash').hidden=city;
   orbHud.textContent=list.map(k=>this.save.orbs.includes(k)?icons[k]:'◇').join('  ');
   document.getElementById('energy-fill').style.width=`${this.energy}%`;
   document.getElementById('energy-number').textContent=`${Math.round(this.energy)}%`;
@@ -2702,8 +2880,10 @@ class Game{
   let p=root.Physics.step(this.player,axis,dt,jump,this.save.assist,this.scene,this.input.holdingJump(),dash,this.worldTime);
   if(p.justJumped){this.fx.burst(p.x+8,p.y+25,'jump',7);this.beep(580,.032)}
   if(p.landed){this.shake=.07;this.fx.burst(p.x+8,p.y+27,'land',p.impactSpeed>260?13:6);this.beep(180,.028)}
-  if(p.justDashed){this.energy=0;this.save.energy=0;this.persist();this.updateHud();this.shake=.10;this.fx.burst(p.x+8,p.y+14,'dash',12);this.beep(380,.045)}
+  if(p.justDashed){if(this.scene==='training'||this.scene==='guardian'){this.energy=100;}else{this.energy=0;this.save.energy=0;this.persist();this.updateHud();}this.shake=.10;this.fx.burst(p.x+8,p.y+14,'dash',12);this.beep(380,.045)}
   if(p.onGround&&Math.abs(p.vx)>8){this.walk+=dt;this.stepTimer+=dt;if(this.stepTimer>.19){this.fx.burst(p.x+8,p.y+26,'step',2);this.stepTimer=0}}else this.stepTimer=0;
+  if(this.scene==='training'){this.player=p;this.controlsTutorial.tick(p);return;}
+  if(this.scene==='guardian'){this.player=p;return;}
   // Physical gates make learning orbs mandatory, not the explanation dialog.
   this.checkOrbs(p);
   if(this.scene==='district'&&!this.save.cityPowered&&p.x+root.Physics.W>1285){p.x=1285-root.Physics.W;p.vx=0;if(this.gateHintCooldown<=0){this.flashCaption('La estación necesita energía: activa el nodo',2.3);this.gateHintCooldown=2.4;}}
@@ -2777,11 +2957,12 @@ class Game{
   }
   if(this.bridgeDeploying){this.bridgeProgress=Math.min(1,this.bridgeProgress+dt*.75);if(this.bridgeProgress>=1){this.bridgeDeploying=false;root.Physics.setDistrictBridge(true);this.sfx('success');this.flashCaption('✦ PUENTE DESPLEGADO · paso seguro',2.1);this.fx.burst(1770,299,'dash',24);}}
   if(!this.locked&&!this.editor.opened){this.move(dt);if(this.input.consumeAction())this.interact()}else{this.input.consumeAction();this.input.consumeJump();this.input.consumeDash()}
+  if(this.guardian.active&&!this.locked)this.guardian.update(dt);
   this.doorFailFlash=Math.max(0,this.doorFailFlash-dt*2);if(this.doorOpening){this.doorProgress=Math.min(1,this.doorProgress+dt*.95);if(this.doorProgress>=1){this.doorOpening=false;this.sfx('success')}}
   this.lightFlash=Math.max(0,this.lightFlash-dt*1.8);if(this.vignette){this.vignette.time-=dt;if(this.vignette.time<=0)this.vignette=null;}
   this.energyNotice=Math.max(0,this.energyNotice-dt);this.gateHintCooldown=Math.max(0,this.gateHintCooldown-dt);this.worldTime+=dt;this.updateTransition(dt);this.fx.update(dt);this.nixWake=Math.max(0,this.nixWake-dt);
   const w=root.Physics.levels[this.scene]?.width||1180,viewW=this.renderer.w||480;
-  if(['district','metro','rooftops','archive'].includes(this.scene)){
+  if(['district','metro','rooftops','archive','training','guardian'].includes(this.scene)){
    const zone=this.frameSafeZone();const frame=root.SafeCamera.calculate(viewW,w,this.player.x+root.Physics.W/2,zone.left,zone.right,document.body.classList.contains('touch-enabled'));
    // A camera may look slightly outside the world, so even players at x=0 or x=max
    // remain visible between custom-positioned virtual controls.
