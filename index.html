@@ -826,11 +826,15 @@ body.reduce-motion .menu-beam{opacity:.55}
  
  <div class="logic-switches"><label><span>⚡ energía <small>¿Hay electricidad?</small></span><input id="logic-power" type="checkbox"></label><label><span>◈ red <small>¿Hay conexión?</small></span><input id="logic-network" type="checkbox"></label><label><span>◇ alarma <small>¿Está bloqueado?</small></span><input id="logic-alarm" type="checkbox" checked></label></div>
 <div class="circuit-board" aria-label="Visualización de circuito lógico"><div class="circuit-inputs"><span id="wire-power">⚡ ENERGÍA <b>FALSO</b></span><span id="wire-network">◈ RED <b>FALSO</b></span><span id="wire-alarm">◇ NO ALARMA <b>FALSO</b></span></div><div id="circuit-combine" class="circuit-combine">Y<br/><small>TODO</small></div><div id="circuit-output" class="circuit-output">PUERTA<br/><b>CERRADA</b></div></div>
- <details class="explain-code"><summary>🔍 Ver el programa real</summary><pre>si (energia Y red Y NO alarma) {
-  abrirPuerta();
-} sino {
-  mantenerCerrada();
-}</pre><p>Los interruptores son una <b>simulación de valores</b> que el programa consulta. En una máquina real los leería de sensores.</p></details>
+ <details class="explain-code"><summary>📖 Cómo funciona la lógica de la puerta (pseudocódigo)</summary>
+ <p>Una condición es una pregunta VERDADERA o FALSA. <strong>Y</strong> necesita todas las respuestas verdaderas; <strong>NO</strong> invierte la alarma.</p>
+ <pre>INICIO
+ SI energía Y red Y NO alarma ENTONCES
+   ABRIR puerta
+ SINO
+   MANTENER puerta cerrada
+ FIN SI
+FIN</pre><p>Los interruptores son una <b>simulación de valores</b> que el programa consulta. En una máquina real los leería de sensores.</p></details>
  <p class="logic-result" id="logic-result" role="status">Configura los sensores y comprueba la condición.</p>
  <div class="logic-step-debug" id="logic-step-debug" hidden><b id="logic-step-title">Paso 1/4</b><p id="logic-step-text"></p><button id="logic-step-next" type="button">Siguiente evaluación →</button></div>
  <div class="logic-actions"><button id="logic-lesson" type="button" class="secondary">ⓘ Aprender</button><button id="logic-try" class="primary" type="button">▶ Probar condición</button><button id="logic-step" class="secondary" type="button">🔎 Paso a paso</button><button id="logic-help" class="secondary" type="button">¿Qué significa Y / NO?</button><button id="logic-skip" class="secondary" type="button">Salir</button></div>
@@ -838,11 +842,21 @@ body.reduce-motion .menu-beam{opacity:.55}
  <div id="variable-modal" class="modal backdrop" role="dialog" aria-modal="true" aria-labelledby="variable-title" hidden><section class="variable-card focus-ui">
   <div class="logic-top"><div><small>MISIÓN 02 · ESTACIÓN DE DATOS</small><h2 id="variable-title">Enciende el puente</h2></div><button id="variable-close" aria-label="Salir de la estación" type="button">×</button></div>
   <p class="variable-goal">🎯 Haz que <code>carga</code> pase de <b>1</b> a <b>5</b>.</p>
+  <p class="variable-goal" id="variable-teacher"><strong>🧠 NIX explica:</strong> «carga» es una cajita que guarda un número. Cada bloque modifica su contenido. Pulsa <b>Ejecutar un paso</b> para ver qué cambia en esa cajita. Primero usamos pseudocódigo, no un lenguaje concreto.</p>
   
   <div class="variable-workspace"><div class="variable-monitor"><small>MEMORIA DEL PROGRAMA</small><div class="variable-meter"><span>carga</span><strong id="variable-value">1</strong><span>/ 5</span></div><div class="variable-gauge"><i id="variable-fill"></i></div><small id="variable-stage">Inicial: carga = 1</small><div class="variable-status" id="variable-status">Añade una instrucción para comenzar.</div></div>
   <div class="variable-code"><div class="variable-code-header"><b>Tu programa</b><span id="variable-count">0/5 instrucciones</span></div><div id="variable-blocks" class="variable-blocks"></div><div class="variable-palette"><button type="button" data-operation="ADD1">+1</button><button type="button" data-operation="ADD2">+2</button><button type="button" data-operation="SUB1">−1</button><button type="button" data-operation="DOUBLE">×2</button></div></div></div>
-  <details class="variable-output-wrap"><summary>⌨ Ver código generado</summary><pre class="variable-output" id="variable-output">let carga = 1;
-// Agrega instrucciones para actualizarla.</pre></details>
+  <details class="variable-output-wrap"><summary>📖 ¿Cómo funciona? Ver el pseudocódigo explicado</summary>
+   <p>Una receta para la máquina: INICIO indica dónde empieza; ← guarda un valor en la cajita; SI toma una decisión; FIN termina la receta.</p>
+   <pre class="variable-output" id="variable-output">INICIO
+  carga ← 1
+  // Agrega bloques para transformar el valor
+  SI carga = 5 ENTONCES
+    ABRIR puente
+  FIN SI
+FIN</pre>
+   <p><strong>¿Dónde aparecen Python y C++?</strong> Después de aprender estos conceptos y las primeras prácticas con bloques, podrás elegir un lenguaje desde el Laboratorio de NIX.</p>
+  </details>
   <div class="variable-actions"><button id="variable-lesson" type="button" class="secondary">ⓘ Aprender</button><button id="variable-reset" class="secondary" type="button">↺ Limpiar</button><button id="variable-step" class="secondary" type="button">▸ Ejecutar un paso</button><button id="variable-run" class="primary" type="button">▶ Ejecutar todo</button></div>
  </section></div>
  <div id="city-ending" class="modal backdrop" role="dialog" aria-modal="true" hidden><section class="city-end-card"><span class="city-end-icon">✦</span><small>DISTRITO AURORA · CAPÍTULO DE PRUEBA</small><h2>La ciudad despierta</h2><p id="city-ending-text">Has ayudado a recuperar el barrio.</p><div class="city-end-stats"><b id="city-ending-lessons">0</b><span>temas encontrados</span><b id="city-ending-fragments">0/3</b><span>fragmentos de memoria</span></div><button id="city-end-close" type="button" class="primary">Siguiente capítulo · Estación Umbral →</button></section></div>
@@ -2675,7 +2689,9 @@ class Academy{
   el('variable-stage').textContent=this.stepIndex===0?'Inicio · carga = 1':`Paso ${this.stepIndex}: ${step.expression} → ${step.after}`;
   el('variable-count').textContent=program.length+'/5 instrucciones';
   el('variable-blocks').innerHTML=program.length?program.map((op,i)=>`<div class="variable-block ${this.stepIndex===i+1?'current':''}"><span>${i+1}.</span><code>${root.CityVariables.OPERATIONS[op].label}</code><div><button data-index="${i}" data-action="up" aria-label="Subir instrucción" ${i===0?'disabled':''}>↑</button><button data-index="${i}" data-action="down" aria-label="Bajar instrucción" ${i===program.length-1?'disabled':''}>↓</button><button data-index="${i}" data-action="remove" aria-label="Eliminar instrucción">×</button></div></div>`).join(''):'<div class="variable-empty">Elige una operación: +1, +2, −1 o ×2</div>';
-  el('variable-output').textContent='let carga = 1;\n'+program.map(op=>root.CityVariables.OPERATIONS[op].label+';').join('\n')+'\nif (carga === 5) { abrirPuente(); }';
+  el('variable-output').textContent='INICIO\n  carga ← 1\n'
+    +program.map(op=>'  '+root.CityVariables.OPERATIONS[op].label.replace(/carga\s*=\s*/,'carga ← ')).join('\n')
+    +'\n  SI carga = 5 ENTONCES\n    ABRIR puente\n  FIN SI\nFIN';
   let status=this.stepIndex===0?'Prueba órdenes y observa el número.':this.stepIndex<res.steps.length-1?`✓ Paso ${this.stepIndex}: ${step.expression}`:`${res.error}`;
   el('variable-status').textContent=status;
   const finished=this.stepIndex===res.steps.length-1&&program.length>0;
