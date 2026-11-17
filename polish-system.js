@@ -143,5 +143,21 @@
   this.text(effect.label,x+63,y-20,'#11354b',8,'center');
   this.glow(x+64,y-26,22,effect.color+'44');
  };
+ // Distinct audio warnings make the guardian's late phases readable without requiring perfect timing.
+ if(root.Guardian){
+  const update=root.Guardian.prototype.update;
+  root.Guardian.prototype.update=function(dt){
+   const oldWarning=!!this.warning||!!this.beamWarning,oldBeam=!!this.beamActive;
+   const result=update.call(this,dt);
+   if(this.active){
+    const warning=!!this.warning||!!this.beamWarning;
+    if(warning&&!oldWarning)this.game.sfx('hint');
+    if(this.beamActive&&!oldBeam)this.game.sfx('dash');
+   }
+   return result;
+  };
+  const attack=document.getElementById('guardian-attack');
+  if(attack)attack.setAttribute('aria-live','polite');
+ }
  root.PlayerTools=Object.freeze({pack,unpack,downloadBackup,importBackup,KEY_BACKUP});
 })(window.Lumina=window.Lumina||{});
