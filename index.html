@@ -3032,7 +3032,7 @@ root.Prologue=Prologue;
 
 /* Lúmina 0.6 — story missions + safe block interpreter. Never executes user JS. */
 (function(root){'use strict';
-const TASKS=Object.freeze([{"kind":"answer","title":"01 · Instrucciones en orden","story":"Iris encuentra dos baterías de 6 unidades. NIX le enseña a dar instrucciones en el orden correcto.","description":"Sigue la receta de instrucciones. ¿Qué valor muestra la máquina al final?","code":"INICIO\n  energía ← 6\n  energía ← energía + 6\n  MOSTRAR energía\nFIN","answer":12,"hint":"Primero guarda 6; después añade otras 6 unidades.","trace":"energía ← 6\nenergía ← 6 + 6\nMOSTRAR 12","success":"¡Bien! Un algoritmo es una secuencia de instrucciones en el orden correcto."},{"kind":"answer","title":"02 · Variables: cajitas de datos","story":"NIX necesita guardar y actualizar la carga de una máquina.","description":"La variable carga es una cajita. ¿Qué valor termina guardando?","code":"INICIO\n  carga ← 7\n  carga ← carga + 3\n  MOSTRAR carga\nFIN","answer":10,"hint":"La cajita tenía 7 y luego sumamos 3.","trace":"carga ← 7\ncarga ← 7 + 3 = 10\nMOSTRAR 10","success":"¡Correcto! Una variable guarda un valor que puedes cambiar."},{"kind":"answer","title":"03 · Condiciones: si sucede...","story":"Iris encuentra una compuerta. NIX le explica que una condición decide cuándo abrir.","description":"Sigue el valor de carga y completa el SI. ¿Qué número debe comprobar la compuerta?","code":"INICIO\n  carga ← 2\n  carga ← carga + 3\n  SI carga = ___ ENTONCES\n    ABRIR puerta\n  FIN SI\nFIN","answer":5,"hint":"La condición debe comparar con el valor final de la cajita.","trace":"carga ← 2\ncarga ← 2 + 3 = 5\nSI carga = 5 es VERDADERO\nABRIR puerta","success":"¡Puerta abierta! SI compara datos y toma una decisión."},{"kind":"program","title":"04 · Calentar el refugio","story":"NIX: «El refugio necesita energía. Tu programa debe funcionar aunque cambie la carga de entrada».","description":"Construye un programa que LEA la carga de la máquina, sume 3 y muestre el resultado. El mismo programa deberá superar dos estados: 2→5 y 4→7.","code":"INICIO\n  carga ← [bloque para obtener la entrada]\n  carga ← [transforma la carga]\n  MOSTRAR carga\nFIN\n\nPrueba A: comienza en 2 y debe llegar a 5.\nPrueba B: comienza en 4 y debe llegar a 7.","answer":5,"required":["ADD3","OUTPUT"],"options":["READ_CHARGE","SET2","SET3","ADD3","MUL2","OUTPUT"],"hint":"Prueba a LEER el número que trae la máquina en vez de escribir siempre el mismo. La operación que necesitas aumenta la carga en tres unidades.","success":"¡Dominio demostrado! Un único programa calentó el refugio con dos valores de entrada."},{"kind":"program","title":"05 · Faros repetidos","story":"NIX: «Tres pulsos iguales pueden programarse con una sola instrucción de repetición».","description":"Construye carga = 0, repite 3 veces sumar 2 y muestra 6.","code":"OBJETIVO: 3 pulsos de 2 unidades\nPrueba un bucle, no tres instrucciones copiadas.","answer":6,"required":["SET0","REPEAT3_ADD2","OUTPUT"],"options":["SET0","SET2","ADD2","REPEAT3_ADD2","OUTPUT"],"hint":"Un bucle REPETIR 3 debe ejecutar sumar 2 tres veces.","success":"Tres pulsos sincronizan las lámparas. ¡Entendiste un bucle!"},{"kind":"program","title":"06 · Sensores del hielo","story":"NIX: «El hielo está cambiando. Sumemos las lecturas de los dos primeros sensores».","description":"Usa el arreglo [3, 7, 11] y muestra la suma de posiciones 0 y 1.","code":"sensores = [3, 7, 11]\nOBJETIVO: sumar sensores[0] y sensores[1].","answer":10,"required":["SET0","SENSOR0","SENSOR1","OUTPUT"],"options":["SET0","SENSOR0","SENSOR1","SENSOR2","ADD3","OUTPUT"],"hint":"Empieza en 0 y lee los índices 0 y 1. Cada lectura se acumula.","success":"El hielo está controlado. ¡Has leído y combinado datos del arreglo!"},{"kind":"program","title":"07 · Compuerta lógica","story":"Iris: «La puerta solo abre con energía y red activas, y alarma desactivada».","description":"Combina sensores booleanos con Y. El resultado debe ser VERDADERO.","code":"energía = VERDADERO\nred = VERDADERO\nalarma = FALSO\nOBJETIVO: energía Y red Y NO alarma","answer":true,"required":["ENERGY","NETWORK","NOT_ALARM","AND","AND","OUTPUT"],"options":["ENERGY","NETWORK","NOT_ALARM","AND","OR","OUTPUT"],"hint":"Primero une energía Y red. Después une el resultado Y NO alarma.","success":"La compuerta reconoce tu condición booleana. ¡Acceso autorizado!"},{"kind":"program","title":"08 · Señal de Lúmina","story":"NIX: «Esta es la señal que une Aurora con el norte. Tú puedes corregirla».","description":"La variable empieza en 2. Súmale 3, compárala con 5 y muestra VERDADERO.","code":"carga = 2\ncarga = carga + 3\nOBJETIVO: comprobar que carga vale 5","answer":true,"required":["SET2","ADD3","TEST5","OUTPUT"],"options":["SET2","ADD2","ADD3","TEST4","TEST5","OUTPUT"],"hint":"Usa una variable, cambia su valor, compárala y finalmente muestra el resultado.","success":"✦ ¡Red del Norte reactivada! Iris y NIX han aprendido a leer la señal."}]);
+const TASKS=Object.freeze([{"kind":"answer","title":"01 · Instrucciones en orden","story":"Iris encuentra dos baterías de 6 unidades. NIX le enseña a dar instrucciones en el orden correcto.","description":"Sigue la receta de instrucciones. ¿Qué valor muestra la máquina al final?","code":"INICIO\n  energía ← 6\n  energía ← energía + 6\n  MOSTRAR energía\nFIN","answer":12,"hint":"Primero guarda 6; después añade otras 6 unidades.","trace":"energía ← 6\nenergía ← 6 + 6\nMOSTRAR 12","success":"¡Bien! Un algoritmo es una secuencia de instrucciones en el orden correcto."},{"kind":"answer","title":"02 · Variables: cajitas de datos","story":"NIX necesita guardar y actualizar la carga de una máquina.","description":"La variable carga es una cajita. ¿Qué valor termina guardando?","code":"INICIO\n  carga ← 7\n  carga ← carga + 3\n  MOSTRAR carga\nFIN","answer":10,"hint":"La cajita tenía 7 y luego sumamos 3.","trace":"carga ← 7\ncarga ← 7 + 3 = 10\nMOSTRAR 10","success":"¡Correcto! Una variable guarda un valor que puedes cambiar."},{"kind":"answer","title":"03 · Condiciones: si sucede...","story":"Iris encuentra una compuerta. NIX le explica que una condición decide cuándo abrir.","description":"Sigue el valor de carga y completa el SI. ¿Qué número debe comprobar la compuerta?","code":"INICIO\n  carga ← 2\n  carga ← carga + 3\n  SI carga = ___ ENTONCES\n    ABRIR puerta\n  FIN SI\nFIN","answer":5,"hint":"La condición debe comparar con el valor final de la cajita.","trace":"carga ← 2\ncarga ← 2 + 3 = 5\nSI carga = 5 es VERDADERO\nABRIR puerta","success":"¡Puerta abierta! SI compara datos y toma una decisión."},{"kind":"program","title":"04 · Calentar el refugio","story":"NIX: «El refugio necesita energía. Tu programa debe funcionar aunque cambie la carga de entrada».","description":"Construye un programa que LEA la carga de la máquina, sume 3 y muestre el resultado. El mismo programa deberá superar dos estados: 2→5 y 4→7.","code":"INICIO\n  carga ← [bloque para obtener la entrada]\n  carga ← [transforma la carga]\n  MOSTRAR carga\nFIN\n\nPrueba A: comienza en 2 y debe llegar a 5.\nPrueba B: comienza en 4 y debe llegar a 7.","answer":5,"required":["ADD3","OUTPUT"],"options":["READ_CHARGE","SET2","SET3","ADD3","MUL2","OUTPUT"],"hint":"Prueba a LEER el número que trae la máquina en vez de escribir siempre el mismo. La operación que necesitas aumenta la carga en tres unidades.","success":"¡Dominio demostrado! Un único programa calentó el refugio con dos valores de entrada."},{"kind":"program","title":"05 · Faros repetidos","story":"NIX: «Tres pulsos iguales pueden programarse con una sola instrucción de repetición».","description":"Construye carga = 0, repite 3 veces sumar 2 y muestra 6.","code":"OBJETIVO: 3 pulsos de 2 unidades\nPrueba un bucle, no tres instrucciones copiadas.","answer":6,"required":["REPEAT3_ADD2","OUTPUT"],"options":["READ_CHARGE","SET0","SET2","ADD2","REPEAT3_ADD2","OUTPUT"],"hint":"Un bucle REPETIR 3 debe ejecutar sumar 2 tres veces.","success":"Tres pulsos sincronizan las lámparas. ¡Entendiste un bucle!"},{"kind":"program","title":"06 · Sensores del hielo","story":"NIX: «El hielo está cambiando. Sumemos las lecturas de los dos primeros sensores».","description":"Usa el arreglo [3, 7, 11] y muestra la suma de posiciones 0 y 1.","code":"sensores = [3, 7, 11]\nOBJETIVO: sumar sensores[0] y sensores[1].","answer":10,"required":["SET0","SENSOR0","SENSOR1","OUTPUT"],"options":["SET0","SENSOR0","SENSOR1","SENSOR2","ADD3","OUTPUT"],"hint":"Empieza en 0 y lee los índices 0 y 1. Cada lectura se acumula.","success":"El hielo está controlado. ¡Has leído y combinado datos del arreglo!"},{"kind":"program","title":"07 · Compuerta lógica","story":"Iris: «La puerta solo abre con energía y red activas, y alarma desactivada».","description":"Combina sensores booleanos con Y. El resultado debe ser VERDADERO.","code":"energía = VERDADERO\nred = VERDADERO\nalarma = FALSO\nOBJETIVO: energía Y red Y NO alarma","answer":true,"required":["ENERGY","NETWORK","NOT_ALARM","AND","AND","OUTPUT"],"options":["ENERGY","NETWORK","NOT_ALARM","AND","OR","OUTPUT"],"hint":"Primero une energía Y red. Después une el resultado Y NO alarma.","success":"La compuerta reconoce tu condición booleana. ¡Acceso autorizado!"},{"kind":"program","title":"08 · Señal de Lúmina","story":"NIX: «Esta es la señal que une Aurora con el norte. Tú puedes corregirla».","description":"La variable empieza en 2. Súmale 3, compárala con 5 y muestra VERDADERO.","code":"carga = 2\ncarga = carga + 3\nOBJETIVO: comprobar que carga vale 5","answer":true,"required":["ADD3","TEST5","OUTPUT"],"options":["READ_CHARGE","SET2","ADD2","ADD3","TEST4","TEST5","OUTPUT"],"hint":"Usa una variable, cambia su valor, compárala y finalmente muestra el resultado.","success":"✦ ¡Red del Norte reactivada! Iris y NIX han aprendido a leer la señal."}]);
 const GUIDES=Object.freeze([["Instrucciones en orden","Programar es dar pasos exactos a una máquina, como escribir una receta. El orden importa.","← significa GUARDAR en una cajita; MOSTRAR indica enseñar el resultado de la operación.","Lee las instrucciones de arriba hacia abajo. No necesitas Python, C++ ni otro lenguaje."],["Variables: las cajitas","Una variable es un lugar con nombre que recuerda un dato. Puedes imaginarla como una cajita.","carga ← 7 guarda siete; carga ← carga + 3 lee el valor y reemplaza su contenido.","Calcula el dato final. Si te equivocas, vuelve a seguir cada línea."],["Condiciones: tomar decisiones","Una condición es una pregunta cuya respuesta es VERDADERO o FALSO.","SI carga = 5 ENTONCES abrir significa que la puerta se abre solo con ese valor.","Sigue la variable y responde qué número permite abrir la compuerta."],["Entrada variable: una receta para dos máquinas","Una instrucción no debe adivinar qué número trae el calefactor. LEER carga del entorno permite recibir datos diferentes sin cambiar el programa.","Ejemplo distinto: si una batería tiene 1 unidad y queremos añadir 2, primero leemos su carga y después la transformamos: 1 pasa a 3. No escribimos un 1 fijo en cada máquina.","Ahora las baterías son diferentes: una empieza en 2, otra en 4. Usa los bloques para crear UN programa que aumente la carga según la entrada y muestre el resultado."],["Bucle: repetir sin copiar","REPETIR permite hacer la misma acción varias veces, sin copiarla manualmente.","Empezando en cero, REPETIR 3 {+2} hace 0 → 2 → 4 → 6.","Construye un programa con un bucle que produzca tres pulsos."],["Arreglos: cajitas en un estante","Un arreglo guarda varios valores bajo un mismo nombre. Cada posición tiene un índice.","sensores ← [3,7,11]: [0] vale 3, [1] vale 7 y [2] vale 11.","Inicia el acumulador, suma los sensores solicitados y muestra el total."],["Booleanos y lógica","Un booleano vale VERDADERO o FALSO. Sirve para representar sensores o decisiones.","Y requiere dos condiciones verdaderas; O solo una; NO invierte la condición.","Combina energía Y red Y NO alarma con bloques booleanos."],["Depurar significa entender","Depurar no es adivinar: es seguir el estado de las variables hasta encontrar un error.","Después de cargar 2 y sumar 3, ¿qué devuelve la comparación carga = 5?","Construye y ejecuta las instrucciones, observa la traza y corrige si es necesario."]]);
 const OPS=Object.freeze({
  READ_CHARGE:'carga ← LEER carga del entorno',
@@ -3051,6 +3051,18 @@ function validateRefuge(program){
  const cases=REFUGE_CASES.map(env=>runProgram(3,program,env));
  return {passed:cases.every(x=>x.correct),cases};
 }
+const TRANSFER_CASES=Object.freeze({
+ 4:Object.freeze([{initialCharge:0,target:6},{initialCharge:4,target:10}]),
+ 5:Object.freeze([{sensors:[3,7,11],target:10},{sensors:[5,2,9],target:7}]),
+ 6:Object.freeze([{energy:true,network:true,alarm:false,target:true},{energy:false,network:true,alarm:false,target:false}]),
+ 7:Object.freeze([{initialCharge:2,target:true},{initialCharge:1,target:false}])
+});
+function validateTransfer(i,program){
+ if(i===3)return validateRefuge(program);
+ if(!Object.prototype.hasOwnProperty.call(TRANSFER_CASES,i))return {passed:false,cases:[]};
+ const cases=TRANSFER_CASES[i].map(env=>runProgram(i,program,env));
+ return {passed:cases.every(x=>x.correct),cases};
+}
 function evaluate(i,value){
  const task=TASKS[i],valid=!!task&&task.kind==='answer'&&String(value).trim()!==''&&Number.isInteger(Number(value));
  return {valid,correct:valid&&Number(value)===task.answer,trace:task?.trace||'',answer:task?.answer};
@@ -3059,9 +3071,12 @@ function evaluate(i,value){
 function runProgram(i,program,environment=null){
  const task=TASKS[i],trace=[],stack=[];let acc=null,output=null,error='',halted=false;
  const initialCharge=environment&&environment.initialCharge;
- if(environment!==null&&(!Number.isInteger(initialCharge)||initialCharge<0||initialCharge>20))
+ if(environment!==null&&Object.prototype.hasOwnProperty.call(environment,'initialCharge')&&(!Number.isInteger(initialCharge)||initialCharge<0||initialCharge>20))
   return {valid:false,correct:false,error:'La entrada de la máquina es inválida.',trace:[],value:null};
- const target=(i===3&&environment!==null)?initialCharge+3:task?.answer;
+ const target=environment!==null&&Object.prototype.hasOwnProperty.call(environment,'target')?environment.target:(i===3&&environment!==null)?initialCharge+3:task?.answer;
+ const sensors=environment&&environment.sensors!==undefined?environment.sensors:[3,7,11];
+ if(!Array.isArray(sensors)||sensors.length!==3||sensors.some(v=>!Number.isInteger(v)||v<0||v>50))return {valid:false,correct:false,error:'Sensores inválidos.',trace:[],value:null};
+ if(environment!==null&&i===6&&['energy','network','alarm'].some(k=>typeof environment[k]!=='boolean'))return {valid:false,correct:false,error:'Sensor lógico inválido.',trace:[],value:null};
  if(!task||task.kind!=='program'||!Array.isArray(program)||program.length>MAX_BLOCKS||!program.length)
   return {valid:false,correct:false,error:'Agrega instrucciones para formar un programa.',trace:[],value:null};
  const counts={};const valueName=v=>typeof v==='boolean'?(v?'VERDADERO':'FALSO'):String(v);
@@ -3082,11 +3097,13 @@ function runProgram(i,program,environment=null){
    for(let it=1;it<=3;it++){acc+=2;trace.push('vuelta '+it+'/3 → carga = '+acc);}
   }else if(op.startsWith('SENSOR')){
    if(typeof acc!=='number'){error='Inicia carga antes de leer sensores.';break;}
-   const idx=Number(op.slice(6)),sensor=[3,7,11][idx];
+   const idx=Number(op.slice(6)),sensor=sensors[idx];
    if(!Number.isInteger(idx)||sensor===undefined){error='Índice de sensor inválido.';break;}
    acc+=sensor;trace.push('sensores['+idx+'] = '+sensor+' → carga = '+acc);
   }else if(op==='ENERGY'||op==='NETWORK'||op==='NOT_ALARM'){
-   stack.push(true);trace.push(op==='NOT_ALARM'?'NO alarma = VERDADERO':(op==='ENERGY'?'energía':'red')+' = VERDADERO');
+   const env=environment===null?{energy:true,network:true,alarm:false}:environment;
+   const v=op==='ENERGY'?env.energy:op==='NETWORK'?env.network:!env.alarm;
+   stack.push(v);trace.push((op==='NOT_ALARM'?'NO alarma':op==='ENERGY'?'energía':'red')+' = '+valueName(v));
   }else if(op==='AND'||op==='OR'){
    if(stack.length<2){error='La condición necesita dos valores booleanos.';break;}
    const b=stack.pop(),a=stack.pop();
@@ -3253,23 +3270,25 @@ class LogicLab{
  }
  run(){
   if(this.guideOpen){this.feedback('Lee la explicación antes de ejecutar. Avanza con «Siguiente explicación».');return;}
-  if(this.index===3){
-   const report=validateRefuge(this.draft),[first,second]=report.cases,trace=document.getElementById('lab-step');
-   const row=(env,result,label)=>label+': entrada '+env.initialCharge+' → '+(result.value===null?'sin salida':result.value)
+  if(this.index>=3){
+   const report=validateTransfer(this.index,this.draft),[first,second]=report.cases,trace=document.getElementById('lab-step');
+   const row=(env,result,label)=>label+': '+(env.sensors?'sensores ['+env.sensors.join(', ')+']':env.energy!==undefined?'energía='+env.energy+', red='+env.network+', alarma='+env.alarm:'entrada '+env.initialCharge)+' → '+(result.value===null?'sin salida':result.value)
      +' / meta '+env.target+' · '+(result.correct?'✓ correcto':'✕ revisar')+'\n'+(result.trace||[]).join('\n')
      +(result.error?'\n'+result.error:'');
-   trace.hidden=false;trace.textContent=row(REFUGE_CASES[0],first,'PRUEBA A')+'\n\n'+row(REFUGE_CASES[1],second,'PRUEBA B');
+   const envs=this.index===3?REFUGE_CASES:TRANSFER_CASES[this.index];
+   trace.hidden=false;trace.textContent=row(envs[0],first,'PRUEBA A')+'\n\n'+row(envs[1],second,'PRUEBA B');
    document.getElementById('lab-transfer-status').textContent='A '+(first.correct?'✓':'✕')+' · B '+(second.correct?'✓':'✕');
    if(report.passed){
-    const justPowered=!this.game.save.refugePowered;
-    this.game.save.refugePowered=true;this.markSuccess();this.game.persist();
-    if(justPowered){this.game.lightFlash=.9;this.game.sfx('gate');
-      if(this.game.scene==='workshop')this.game.fx.burst(631,249,'dash',20);}
-    this.feedback('✓ ¡Las dos máquinas respondieron! El calefactor del taller está encendido. Puedes volver a mirar el cambio.',true);
+    if(this.index===3){
+     const justPowered=!this.game.save.refugePowered;
+     this.game.save.refugePowered=true;this.game.persist();
+     if(justPowered){this.game.lightFlash=.9;this.game.sfx('gate');
+       if(this.game.scene==='workshop')this.game.fx.burst(631,249,'dash',20);}
+    }
+    this.markSuccess();
+    this.feedback(this.index===3?'✓ ¡Las dos máquinas respondieron! El calefactor está encendido.':'✓ ¡Dominio demostrado! Una misma receta superó dos estados distintos.',true);
    }else{
-    this.feedback(!first.valid?('Prueba A: '+first.error):!first.correct?
-      'Prueba A no alcanzó 5. Revisa qué número quedó en la caja carga.':
-      '¡Prueba A superada! Pero al recibir 4, tu programa también debe llegar a 7. ¿Estás LEYENDO la entrada o fijando siempre un 2?',false);
+    this.feedback(!first.valid?'Prueba A: '+first.error:!first.correct?'Prueba A falló. Revisa la traza y el estado de la variable.':!second.valid?'Prueba B: '+second.error:'Prueba A superada, pero B cambió el entorno. No fijes un valor que deberías LEER o calcular.',false);
     this.game.sfx('deny');
    }
    this.drawMeter(second.value);this.updateWorldButton();this.renderNav();return;
@@ -3330,9 +3349,9 @@ class LogicLab{
   document.getElementById('lab-answer').value='';document.getElementById('lab-step').hidden=true;
   document.getElementById('lab-run').textContent=numeric?'▶ Comprobar':'▶ Ejecutar programa';
   this.feedback(this.game.save.labCompleted.includes(this.index)?'✓ Misión superada. Puedes volver a practicar.':'Construye la solución; la respuesta no está prellenada.',this.game.save.labCompleted.includes(this.index));
-  document.getElementById('lab-transfer').hidden=this.index!==3;
-  if(this.index===3)document.getElementById('lab-transfer-status').textContent=this.game.save.refugePowered?
-    '✓ Refugio activo · repite el reto cuando quieras':'El mismo programa debe superar las dos entradas sin copiar un valor fijo.';
+  document.getElementById('lab-transfer').hidden=this.index<3;
+  if(this.index>=3)document.getElementById('lab-transfer-status').textContent=this.index===3&&this.game.save.refugePowered?
+    '✓ Refugio activo · repite el reto cuando quieras':'Una sola receta debe superar dos condiciones sin memorizar una respuesta.';
   this.drawMeter(null);this.drawBlocks();this.renderNav();this.showGuide();this.updateCodePreview();this.updateWorldButton();
  }
 }
@@ -3344,7 +3363,7 @@ root.LabUnlock={
   visible(save,scene){return !!save.labDiscovered||this.canDiscover(save,scene);},
   enabled(save){return !!save.labDiscovered;}
 };
-root.LogicLab=LogicLab;root.LogicLabModel={TASKS,GUIDES,OPS,MAX_BLOCKS,REFUGE_CASES,evaluate,runProgram,validateRefuge,sanitizedDraft,translateProgram,LANGUAGE_NAMES};
+root.LogicLab=LogicLab;root.LogicLabModel={TASKS,GUIDES,OPS,MAX_BLOCKS,REFUGE_CASES,TRANSFER_CASES,evaluate,runProgram,validateRefuge,validateTransfer,sanitizedDraft,translateProgram,LANGUAGE_NAMES};
 })(window.Lumina=window.Lumina||{});
 
 /* First original teaching boss: answers are Boolean expressions; no random one-shot deaths. */
