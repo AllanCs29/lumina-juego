@@ -19,3 +19,4 @@ jobs:
           node tests/v050-progress-smoke.mjs
           node tests/v060-missions-smoke.mjs
           node tests/v070-refugio-smoke.mjs
+          node tests/v071-wayfinding-smoke.mjs
