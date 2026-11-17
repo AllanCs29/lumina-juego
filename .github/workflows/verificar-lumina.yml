@@ -21,3 +21,4 @@ jobs:
           node tests/v070-refugio-smoke.mjs
           node tests/v071-wayfinding-smoke.mjs
           node tests/v080-transfer-smoke.mjs
+          node tests/v090-story-smoke.mjs
