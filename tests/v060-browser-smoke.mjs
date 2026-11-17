@@ -90,15 +90,38 @@ try{
  const program=await evalJs(`(()=>{
   const g=window.Lumina.game,lab=g.logicLab;lab.index=3;lab.render();
   for(let n=0;n<3;n++)document.getElementById('lab-guide-next').click();
-  for(const op of ['SET2','ADD3','OUTPUT']){
-   const button=document.querySelector('#lab-palette button[data-op="'+op+'"]');
-   if(!button)throw Error('Missing palette operation '+op);button.click();
-  }
+  const add=op=>{const button=document.querySelector('#lab-palette button[data-op="'+op+'"]');
+   if(!button)throw Error('Missing palette operation '+op);button.click();};
+  for(const op of ['SET2','ADD3','OUTPUT'])add(op);
   document.getElementById('lab-run').click();
-  return {done:g.save.labCompleted.includes(3),blocks:document.querySelectorAll('#lab-blocks .lab-block').length,
-   text:document.getElementById('lab-feedback').textContent};
+  const fixedFails=!g.save.refugePowered&&!g.save.labCompleted.includes(3);
+  const fixedDetail=document.getElementById('lab-transfer-status').textContent;
+  const trace=document.getElementById('lab-step').textContent;
+  document.getElementById('lab-clear').click();
+  for(const op of ['READ_CHARGE','ADD3','OUTPUT'])add(op);
+  document.getElementById('lab-run').click();
+  const worldButton=!document.getElementById('lab-world-result').hidden;
+  const completed=g.save.labCompleted.includes(3),powered=g.save.refugePowered,blocks=document.querySelectorAll('#lab-blocks .lab-block').length;
+  document.getElementById('lab-world-result').click();
+  const returned=!lab.active&&!g.locked&&g.el.menu.hidden&&g.scene==='workshop';
+  g.player.x=631;g.player.y=280;
+  const physicalPrompt=g.scenePrompt();
+  const renderer=g.renderer,orig=renderer.refugeHeater;let renderState=null;
+  renderer.refugeHeater=function(x,y,active){renderState={x,y,active};return orig.call(this,x,y,active);};
+  try{renderer.world(g);}finally{renderer.refugeHeater=orig;}
+  lab.open(true);lab.index=3;lab.render();
+  return {fixedFails,fixedDetail,trace,completed,powered,blocks,worldButton,returned,physicalPrompt,renderState};
  })()`);
- assert.equal(program.done,true);assert.equal(program.blocks,3);
+ assert.equal(program.fixedFails,true,'Fixed output cannot pass both inputs');
+ assert.match(program.fixedDetail,/A ✓.*B ✕/,'First input passes but transfer fails');
+ assert.match(program.trace,/entrada 4.*meta 7/,'Second input is documented');
+ assert.equal(program.completed,true,'A generalized recipe completes mission 4');
+ assert.equal(program.powered,true,'Workshop heater is saved as active');
+ assert.equal(program.blocks,3);
+ assert.equal(program.worldButton,true,'Offer world return after success');
+ assert.equal(program.returned,true,'World resumes from the LAB without menu');
+ assert.match(program.physicalPrompt,/refugio encendido/,'Heater status appears in world');
+ assert.equal(program.renderState.active,true,'Renderer draws an opened warm refuge');
  const chosen=await evalJs(`(()=>{
   const game=window.Lumina.game,panel=document.getElementById('lab-language-panel'),select=document.getElementById('lab-language-select');
   const unlocked=!panel.hidden;select.value='python';select.dispatchEvent(new Event('change',{bubbles:true}));
@@ -106,7 +129,7 @@ try{
  })()`);
  assert.equal(chosen.unlocked,true,'Languages unlock after first four lessons');
  assert.equal(chosen.selected,'python','Preferred language is saved');
- assert.match(chosen.translated,/carga = 2/);
+ assert.match(chosen.translated,/carga = entrada/);
  // Complete the remaining exercises using the same palette clicks a player uses.
  const course=await evalJs(`(()=>{
   const game=window.Lumina.game,lab=game.logicLab;
@@ -150,10 +173,20 @@ try{
 
  await send('Emulation.setDeviceMetricsOverride',{width:844,height:390,deviceScaleFactor:2,mobile:true,screenOrientation:{type:'landscapePrimary',angle:90}});
  await delay(260);
- const fit=await evalJs(`(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,
-  modal:document.querySelector('#logic-lab .lab-panel').getBoundingClientRect().width,
-  close:!!document.getElementById('lab-exit')}))()`);
+ const fit=await evalJs(`(()=>{
+  const label=document.getElementById('lab-feedback'),button=document.querySelector('#lab-palette button'),scale=document.getElementById('reading-scale');
+  const base=parseFloat(getComputedStyle(label).fontSize),height=button.getBoundingClientRect().height;
+  scale.value='1.3';scale.dispatchEvent(new Event('change',{bubbles:true}));
+  const enlarged=parseFloat(getComputedStyle(label).fontSize);
+  return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,
+   modal:document.querySelector('#logic-lab .lab-panel').getBoundingClientRect().width,
+   close:!!document.getElementById('lab-exit'),base,enlarged,height,scale:localStorage.getItem('lumina-reading-scale-v1')};
+ })()`);
  assert.ok(fit.modal<=fit.viewport,'Lab modal fits mobile horizontal width');
+ assert.ok(fit.base>=14,'Instructional text at least 14px');
+ assert.ok(fit.height>=44,'Instruction block has 44px touch target');
+ assert.ok(fit.enlarged>fit.base,'Text scale visibly enlarges mission text');
+ assert.equal(fit.scale,'1.3','Text-scale preference is stored');
  mkdirSync('artifacts',{recursive:true});
  const img=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
  writeFileSync('artifacts/lumina-v060-laboratorio-movil.png',Buffer.from(img.data,'base64'));
@@ -190,10 +223,12 @@ try{
  await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await send('Page.reload',{ignoreCache:false});
  await until(async()=>await evalJs("document.documentElement.dataset.luminaReady==='true'"),12000);
- const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered})");
+ const offline=await evalJs("({ready:!!window.Lumina.game,levels:window.Lumina.game.save.labCompleted.slice(),language:window.Lumina.game.save.learningLanguage,discovered:window.Lumina.game.save.labDiscovered,refuge:window.Lumina.game.save.refugePowered,reading:document.getElementById('reading-scale').value})");
  assert.equal(offline.ready,true,'Lúmina should start without network');
  assert.equal(offline.language,'python','Chosen language survives offline restart');
  assert.equal(offline.discovered,true,'Laboratory discovery remains stored offline');
+ assert.equal(offline.refuge,true,'Workshop heater survives offline reloading');
+ assert.equal(offline.reading,'1.3','Reading scale survives offline reloading');
  assert.equal(offline.levels.includes(3),true,'Lab progress survives offline restart');
  assert.equal(offline.levels.length,8,'All missions survive offline reload');
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
