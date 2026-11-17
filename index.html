@@ -1498,6 +1498,10 @@ function nix(r,x,y,awake,time,wake=0){
  r.r(x-10,yy-6,20,11,'#597b8c');r.r(x-7,yy-3,14,8,'#aeced0');
  r.r(x-10,yy-2+(awake?kick:0),4,7,'#436b80');r.r(x+7,yy-2-(awake?kick:0),4,7,'#44697e');
  r.r(x-7,yy+5,7,4,'#203d55');r.r(x+1,yy+5,7,4,'#203d55');
+  if(awake){const cycle=Math.sin(time*5.6);r.r(x-7,yy+7+Math.max(0,cycle),5,2,'#a5d8d1');
+   r.r(x+3,yy+7+Math.max(0,-cycle),5,2,'#a5d8d1');
+   if(cycle>.88)r.r(x+11,yy-8,3,3,'#89f5da');
+   r.r(x-8,yy-21,2,5,'#f1dac0');r.r(x+8,yy-20,2,4,'#f1dac0');}
  r.r(x-7,yy-3,14,2,'#e5f1e6');r.r(x-6,yy,11,2,'#c3e5de');
  r.r(x-2,yy-30,4,6,'#90b7bb');r.r(x-4,yy-32+Math.sin(time*4),8,3,awake?'#8dffe2':'#566f88');
  if(!awake){
@@ -1648,6 +1652,14 @@ class Renderer{
    for(let i=first;i<=last;i++){const x=i*220-scroll,peak=b-55-(Math.abs(i)%2)*16;
     this.poly([[x,b+65],[x+21,b-2],[x+57,peak],[x+86,b-30],[x+115,b-66],[x+157,b-9],[x+202,b+8],[x+220,b+65]],c);
     this.poly([[x+38,b-24],[x+57,peak],[x+72,b-41],[x+63,b-42],[x+56,b-47],[x+47,b-31]],'#8298ab')}
+  }
+ }
+ // Original slow parallax snow haze in open winter scenes, always behind gameplay.
+ windDepth(cam,scene){if(!['bridge','harbor','tower'].includes(scene))return;
+  const base=scene==='bridge'?219:227,shift=(cam*.17+this.t*1.7)%(this.w+220);
+  for(let k=-1;k<4;k++){const x=k*260-shift;
+   this.poly([[x,base+21],[x+60,base-12],[x+98,base-10],[x+130,base-28],[x+205,base+23]],scene==='bridge'?'#778ca627':'#9b9dad19');
+   this.r(x+28,base-11,38,2,'#d8edf71c');
   }
  }
  // Shared visual grammar: scenery is muted, collision geometry is sharp, objects touch the ground.
@@ -1930,6 +1942,10 @@ class Renderer{
    this.text('Z',x+32,y-34-((rise+10)%29),'#c9ebdf',13);
    this.text('Z',x+40,y-49-((rise+17)%31),'#f9e0b0',15);this.ctx.restore();
   }
+  if(active){const wave=Math.round(Math.sin(t*4.2)*2),energy=(Math.sin(t*3.3)+1)/2;
+   this.r(x+22,y-1+wave,4,6,'#cfb28f');this.r(x-3,y+17,6,2,'#8ce5cb');
+   if(energy>.76)this.r(x-4,y-29+breath,3,3,'#f5dca1');
+  }
   // Asymmetric antenna and expressive ear flaps.
   this.r(x-5,y-21+breath,4,9,'#b0c2bf');this.r(x-9,y-24+breath,12,4,c);
   this.poly([[x-12,y-11+breath],[x-21,y-17+breath],[x-22,y-5+breath]],'#b9c7bd');
@@ -1999,7 +2015,7 @@ class Renderer{
   const pose=root.Poses.forPlayer(p);
   const {lead,trail,bob,arm,lean,stretch,squash,mode}=pose;
   this.ctx.save();this.ctx.translate(x+8,y);if(f<0)this.ctx.scale(-1,1);
-  if(p.onGround){this.contactShadow(0,26,13,3,.60);this.r(-5,26,12,1,'#d9ecdf55')}
+  if(p.onGround){this.contactShadow(0,26,13+Math.min(3,Math.abs(p.vx||0)/80),3,.60);this.r(-5,26,12,1,'#d9ecdf55')}
   if(mode==='dash'){
    for(let i=1;i<=3;i++){this.ctx.globalAlpha=.18/i;this.r(-i*8,4,13,19,'#b3f4e3')}
    this.ctx.globalAlpha=1;this.r(-22,12,14,2,'#d3fae6');this.r(-16,18,10,2,'#75e4d2')
@@ -2007,13 +2023,23 @@ class Renderer{
   // Original explorer atlas: eight poses in 96px cells. Visual dimensions
   // are anchored to the unchanging 17 × 27 collision box, feet at Y + 27.
   if(this.hero.complete&&this.hero.naturalWidth>=768&&!this.heroFailed){
-   const walk=[1,2,3,2];const stride=Math.floor(((p.gait||0)%(Math.PI*2))/(Math.PI/2))%4;
+   const walk=[1,2,3,2],stride=Math.floor(((p.gait||0)%(Math.PI*2))/(Math.PI/2))%4;
    const poseIndex=mode==='dash'?7:mode==='jump'?5:mode==='fall'?6:mode==='run'?walk[stride]:(p.jumpTimer||0)>.08?4:0;
-   const dw=mode==='dash'?48:41,dh=mode==='dash'?41:43;
-   const ybob=mode==='idle'?Math.sin(this.t*1.8)*.3:0;
-   this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2,27-dh+ybob,dw,dh);
-   if(mode==='dash'){this.r(-27,18,12,2,'#80e9ed');this.r(-34,24,13,2,'#8bf6df')}
-   // One save in player(): an extra restore used to discard world translation.
+   // Sprite deformation is visual only: physics feet always remain at y+27.
+   const land=Math.min(1,Math.max(0,(p.landTimer||0)/.16)),speed=Math.min(1,Math.abs(p.vx||0)/180);
+   const bounce=mode==='run'?Math.abs(Math.sin(p.gait||0))*.8*speed:0;
+   const breath=mode==='idle'?Math.sin(this.t*2.5)*.6:0;
+   const dw=mode==='dash'?47:mode==='jump'?39:mode==='fall'?40:41+Math.round(land*3);
+   const dh=mode==='dash'?40:mode==='jump'?46:mode==='fall'?45:43-Math.round(land*4)+breath;
+   const wind=mode==='dash'?13:mode==='run'?6*speed:mode==='jump'?5:2;
+   const flutter=Math.round(Math.sin(this.t*(mode==='run'?16:5))*2);
+   this.poly([[9,4],[14+wind,3+flutter],[12+wind,7+flutter],[7,10]],'#8d5c67');
+   this.poly([[8,3],[12+wind,3+flutter],[11+wind,5+flutter],[8,7]],'#edb985');
+   if(mode==='dash')for(let i=2;i<=4;i++){this.ctx.save();this.ctx.globalAlpha=.11/i;
+    this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2-i*8,27-dh,dw,dh);this.ctx.restore();}
+   this.ctx.drawImage(this.hero,poseIndex*96,0,96,96,-dw/2,27-dh-bounce,dw,dh);
+   if(mode==='dash'){this.r(-28,17,13,2,'#80e9ed');this.r(-35,23,14,2,'#8bf6df');}
+   if(land>.08){this.r(-12,26,6+land*3,2,'#d4f0e07d');this.r(7,26,6+land*3,2,'#d4f0e07d');}
    this.ctx.restore();return;
   }
   // Fallback if a browser blocks loading of the sprite sheet.
@@ -2090,7 +2116,16 @@ class Renderer{
   this.poly([[x,y-9+bob],[x+7,y+bob],[x,y+10+bob],[x-7,y+bob]],'#e6b5ff');
   this.poly([[x,y-7+bob],[x+4,y+bob],[x,y+6+bob]],'#fcf5ff');
  }
- atmosphere(){for(const s of this.snow){const xx=((s.x+this.t*s.speed)%500),yy=((s.y+this.t*s.speed*1.4)%270);this.r(xx,yy,s.r,s.r,'#e3f1f280')} }
+ atmosphere(game){const cam=game?.camera?.x||0,scene=game?.scene||'bridge';
+  const density=this.quality==='retro'?35:scene==='workshop'?25:66;
+  for(let i=0;i<density;i++){const flake=this.snow[i],layer=i%3,scale=layer===0?.4:layer===1?.75:1.2;
+   const width=this.w+20,x=((flake.x+this.t*flake.speed*scale-cam*(layer===0?.035:layer===1?.07:.11))%width+width)%width-10;
+   const y=((flake.y+this.t*flake.speed*scale*1.5)%280+280)%280-5;
+   const warm=scene==='workshop'||scene==='district'&&game.save?.cityDay;
+   this.r(x,y,layer===2?flake.r:1,layer===2?3:1,warm?'#ffe3bb37':layer===2?'#e8f6f5a0':'#aecfdf4f');
+   if(layer===2&&i%5===0)this.r(x-3,y+1,3,1,warm?'#ffbd8540':'#b6dfe377');
+  }
+ }
  // Two new self-contained locations share the same physics and camera as the campaign.
  trainingWorld(game){
   const cam=game.camera.x,level=root.Physics.levels.training;
@@ -2154,13 +2189,17 @@ class Renderer{
   this.r(x-15,y-60+bob,9,5,'#192e44');this.r(x+6,y-60+bob,9,5,'#192e44');
   this.r(x-34,y-111+bob,68,5,'#c0d5ca');this.r(x-4,y-122+bob,8,16,'#e8c889');
   for(let i=0;i<3;i++)this.r(x-22+i*18,y-25+bob,12,5,i<stage?'#4f736c':'#eebc85');
+  const sway=Math.sin(t*3.5)*3;
+  this.r(x-57,y-75+bob+sway,7,21,warning?'#eaa0a1':'#7892a0');
+  this.r(x+51,y-75+bob-sway,7,21,warning?'#eaa0a1':'#7892a0');
+  if(warning)this.r(x-15,y-104+bob,31,3,'#ffc4a6');
   this.glow(x,y-66+bob,warning?70:42,warning?'#ff738859':'#83ebe52c');
   if(warning)this.text('!',x,y-145+bob,'#ffe0a2',20,'center');
  }
  world(game){const level=root.Physics.levels[game.scene]||root.Physics.levels.tower,camX=game.camera.x,camY=game.camera.y;
   if(game.scene==='training'){this.trainingWorld(game);return;}if(game.scene==='guardian'){this.guardianWorld(game);return;}
   if(game.scene==='district'){root.City.draw(this,game);return;}if(['metro','rooftops','archive'].includes(game.scene)){root.Regions.draw(this,game);return;}
-  if(game.scene!=='workshop')this.sky(camX);else this.r(0,0,this.w,270,'#1d2639');
+  if(game.scene!=='workshop'){this.sky(camX);this.windDepth(camX,game.scene);}else this.r(0,0,this.w,270,'#1d2639');
   this.ctx.save();this.ctx.translate(-Math.round(camX),-Math.round(camY));
   if(game.scene==='workshop'){
     this.workshopInterior();if(!game.save.orbs.includes('code'))this.orb(292,287,'code');this.bot(518,238,game.save.robot,game.nixWake);
@@ -2192,7 +2231,7 @@ class Renderer{
     }
     this.player(game.player,this.t);game.fx.draw(this);
   }
-  this.ctx.restore();this.atmosphere();
+  this.ctx.restore();this.atmosphere(game);
   if(game.shake>0)this.r(0,0,this.w,270,game.shake>.20?'#f8e8ef0d':'#ffffff04');
  }
  floorAt(level,x){for(const f of level.ground)if(x>=f.x&&x<=f.x+f.w)return f.y;return 355}
