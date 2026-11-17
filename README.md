@@ -12,7 +12,7 @@ Aventura educativa de plataformas para aprender programación desde cero. Explor
 - Mejora global en ciudad, metro, archivo, azoteas, puerto, taller y paisaje nevado.
 - Se conservan los guardados, los controles móviles, NIX y las misiones anteriores.
 
-**Validación:** 119 pruebas unitarias aprobadas, recorrido completo del faro y diez escenas verificadas en Chromium. **Pendiente:** Safari físico.
+**Validación:** 120 pruebas unitarias aprobadas, recorrido completo del faro y diez escenas verificadas en Chromium. **Pendiente:** Safari físico.
 
 - [Registro de cambios](CHANGELOG-v0.4.6.md)
 - [Dirección de arte](GUIA-ARTE-Y-PROFUNDIDAD.md)
