@@ -1,27 +1,24 @@
 # Lúmina — Señales del Norte
 
-**Versión 0.4.0** · Videojuego de exploración y aprendizaje de programación desde cero para iPhone horizontal y PC.
+**v0.4.2** · Videojuego educativo de programación desde cero para iPhone horizontal y PC.
 
-[**Jugar desde Safari o PC**](https://allancs29.github.io/lumina-juego/)
+## Jugar
+https://allancs29.github.io/lumina-juego/
 
-## La aventura
-Iris, estudiante de informática, llega a una ciudad sin energía. Investigará sensores y condiciones, aprenderá a asignar variables y recuperará un robot. El tren la llevará a las islas heladas, donde podrá explorar un puerto, programar NIX y reactivar un faro.
+## Historia
+Iris llega al Distrito Aurora persiguiendo una señal desconocida. Debe restaurar la energía, entender las instrucciones que controlan las máquinas y recuperar a NIX. La ruta atraviesa una estación de metro, un puerto helado y un faro. El **Archivo de Ecos**, mapa opcional nuevo, contiene tres registros que explican parte del misterio.
 
-**Ruta principal:** Distrito Aurora → Estación Umbral → Puerto de la Bruma → Taller de NIX → Pasarela Boreal → Faro del Silencio.
+## Programación en la aventura
+Condiciones Y/NO y sensores; variable numérica `carga` y su puente mecánico; secuencias para NIX; bucle del faro; Datos en el Archivo de Ecos. El Cuaderno solo muestra lecciones descubiertas. Introducción original de seis escenas.
 
-**Desvío opcional:** Azoteas de Aurora, con dos antenas y una señal misteriosa.
+## Controles
+Móvil horizontal: joystick y botones personalizables. PC: A/D o flechas, Espacio, E y Shift. Audio activado por defecto (Safari requiere el primer toque). 60 FPS estándar; 120 FPS experimental.
 
-## Aprender durante la historia
-La introducción animada cuenta el problema; las misiones enseñan condiciones booleanas, variables numéricas, secuencias y bucles. El **Cuaderno** solo permite repasar lo que Iris descubrió jugando, sin mostrar temas futuros. Las explicaciones pueden omitirse.
+## Estructura
+- `index.html` — página generada para GitHub Pages.
+- [Cambios v0.4.2](CHANGELOG-v0.4.2.md)
+- [Lista de pruebas v0.4.2](QUE-PROBAR-v0.4.2.md)
 
-## Móvil
-Usa Safari en horizontal. Los controles son ajustables. Frecuencia por defecto 60 FPS, opción experimental 120 FPS si el navegador la soporta; el contador indica los FPS efectivos.
+El proyecto modular, las pruebas y los sprites se distribuyen en el ZIP de la entrega de ChatGPT.
 
-## Archivos
-- `index.html` — juego completo listo para GitHub Pages.
-- [Cambios de v0.4.0](CHANGELOG-v0.4.0.md)
-- [Pruebas de v0.4.0](QUE-PROBAR-v0.4.0.md)
-
-Código modular y batería de pruebas disponibles también en el ZIP de esta entrega de ChatGPT.
-
-**Validado:** 83 pruebas unitarias + recorrido de navegador en Chromium. **Pendiente:** Safari físico.
+**Validación:** 92 pruebas unitarias aprobadas y pruebas de navegador en Chromium PC y móvil emulado. Pendiente validación en Safari físico.
