@@ -3,6 +3,7 @@
 ## Cambios realizados
 - **Faro del Silencio:** arquitectura reconstruida con volumen 3/4, paredes frontal y lateral, acceso retranqueado, escalones, cimientos, contrafuertes, lente y sombras sobre el suelo. Iluminación contextual al activarlo.
 - **Personaje:** sombra de contacto únicamente cuando Iris está en el suelo (sin sombra suspendida en el aire).
+- **HUD móvil:** indicador de impulso a la izquierda, separado de Pista y Menú.
 - **Montañas y árboles:** nieve y vegetación de fondo más suaves, menos contraste; se conservan posiciones estables y anclaje al terreno.
 - **Plataformas nevadas:** grosor, borde iluminado, soportes, vigas e hielo inferior, para separarlas del decorado.
 - **Suelo:** capas de nieve, hielo y piedra diferenciadas y bordes claros para detectar las superficies jugables.
@@ -11,7 +12,7 @@
 - Se mantienen la campaña, los desafíos, NIX, la cinemática, los controles personalizables, el editor y los guardados anteriores.
 
 ## Verificaciones
-- **119 pruebas unitarias aprobadas**.
+- **120 pruebas unitarias aprobadas**.
 - Prueba completa del capítulo nevado en Chromium: orbes, NIX, taller, impulso, cristales, programación del faro y final.
 - Prueba móvil horizontal: contador de historia y panel de NIX sin desplazamiento de botones.
 - **10 escenarios** inspeccionados visualmente en Chromium, sin errores de JavaScript.
