@@ -27,7 +27,7 @@ try{
  await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>document.documentElement.dataset.luminaReady==='true',null,{timeout:25000});
  const boot=await page.evaluate(()=>({
-  game:!!window.Lumina?.game,hero:window.LuminaHeroAtlas?.startsWith('data:image/png;base64,'),
+  game:!!window.Lumina?.game,hero:window.Lumina?.game?.renderer?.hero?.src.endsWith('/hero-atlas.png'),
   physics:!!window.Lumina?.Physics?.step,help:!!window.Lumina?.GuidedHelp?.key,
   transfer:!!window.Lumina?.PlayerTools?.pack,modal:!!document.getElementById('world-code-modal')
  }));
