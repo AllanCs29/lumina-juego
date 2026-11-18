@@ -25,6 +25,8 @@ jobs:
           node tests/v091-audio-smoke.mjs
           node tests/v093-polish-smoke.mjs
           node tests/v094-physics-playtest.mjs
+          node tests/v094-guidance-smoke.mjs
+          node --check guided-help.js
           node --check physics-engine.js
           node --check hero-atlas.js
           node --check polish-system.js
