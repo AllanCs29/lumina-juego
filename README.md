@@ -19,7 +19,7 @@ Incluye checkpoints, guardado local, práctica de programación con bloques, opc
 | Interactuar | E |
 | Impulso | Shift |
 
-El tutorial de controles también está disponible desde el menú. En dispositivos táctiles se muestran controles en pantalla.
+El tutorial de controles también está disponible desde el menú. En dispositivos táctiles se muestran controles en pantalla. También se admiten mandos con distribución estándar: palanca o cruceta para moverse, A para saltar, B o RB para impulso, X/Y para interactuar y Start para abrir el menú. La conexión es opcional y no sustituye al teclado ni a los controles táctiles.
 
 ## Tecnología
 
