@@ -7,7 +7,10 @@ const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 assert.match(html,/<title>Lúmina — Juega para aprender \| v0\.9\.4<\/title>/);
 const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 assert.ok(scripts.length>=20,'Embedded game modules remain intact during modular extraction');
-for(const file of ['hero-atlas.js','physics-engine.js']){
+assert.ok(html.includes("hero-atlas.png"),'The hero uses the PNG resource');
+const atlasPng=readFileSync(new URL('../hero-atlas.png',import.meta.url));
+assert.equal(atlasPng.subarray(0,8).toString('hex'),'89504e470d0a1a0a','PNG header remains valid');
+for(const file of ['physics-engine.js']){
  assert.ok(html.includes('src="./'+file+'"'),file+' is loaded');
  assert.doesNotThrow(()=>new vm.Script(readFileSync(new URL('../'+file,import.meta.url),'utf8')));
 }
