@@ -85,6 +85,7 @@ try{
   const g=window.Lumina.game,tools=window.Lumina.PlayerTools;
   const pack=tools.pack(g.save),raw=JSON.stringify(pack),copy=tools.unpack(JSON.parse(raw));
   let invalid=false;try{tools.unpack({app:'other',format:1,data:g.save});}catch{invalid=true;}
+  let incomplete=false;try{tools.unpack({app:'lumina',format:1,data:{version:1,scene:'district',started:true}});}catch{incomplete=true;}
   const exported=pack.app==='lumina'&&pack.format===1&&copy.version===1;
   const importButton=!!document.getElementById('save-import');
   const exportButton=!!document.getElementById('save-export');
@@ -95,12 +96,13 @@ try{
   const noSpoilers=document.querySelectorAll('#journey-recap-entries .recap-entry').length===1;
   const recapTitle=document.getElementById('journey-recap-title').textContent;
   document.getElementById('journey-recap-close').click();
-  return {exported,invalid,importButton,exportButton,replayInitiallyHidden,visible,noSpoilers,
+  return {exported,invalid,incomplete,importButton,exportButton,replayInitiallyHidden,visible,noSpoilers,
    recapTitle,closed:modal.hidden};
  })()`);
  for(const [key,desc] of Object.entries({
   exported:'Save export and import round-trip validates the save format',
   invalid:'An unrelated file is rejected before replacing progress',
+  incomplete:'A truncated save cannot overwrite valid progress',
   importButton:'Menu provides manual import',
   exportButton:'Menu provides private export',
   replayInitiallyHidden:'Boss replay is unavailable until defeat',
