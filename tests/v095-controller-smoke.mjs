@@ -3,7 +3,7 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 
 const source=readFileSync(new URL('../controller-system.js',import.meta.url),'utf8');
-const listeners={},nodes={};
+const listeners={},nodes={},documentEvents={};
 class Input{
  constructor(){this.keys=new Set();this.pad={x:0,y:0};this.jumpQueued=false;this.dashQueued=false;this.action=false;}
  isEditing(){return false;}
@@ -16,7 +16,7 @@ class Input{
 }
 class Game{frame(){return 'ok';}openMenu(){this.opened=true;}}
 const env={
- navigator:{getGamepads:()=>[]},document:{querySelector:()=>null},
+ navigator:{getGamepads:()=>[]},document:{querySelector:()=>null,visibilityState:'visible',addEventListener:(event,fn)=>{documentEvents[event]=fn;}},
  window:{Lumina:{Input,Game},addEventListener:(event,fn)=>{listeners[event]=fn;}},
  console
 };
@@ -63,4 +63,20 @@ input.reset();assert.equal(input.consumeJump(),false,'Reset clears queued contro
 env.navigator.getGamepads=()=>[];
 assert.equal(input.axis().x,0,'Disconnecting returns the axis to neutral');
 assert.equal(input.holdingJump(),false,'Disconnected controller releases jump');
+// Backgrounding releases held input and pauses without affecting story dialogs.
+env.window.Lumina.game=game;
+game.input=input;game.locked=false;game.opened=false;
+game.el={story:{hidden:true}};game.transition=null;
+game.editor={opened:false};game.controlsTutorial={active:false};game.guardian={active:false};
+let persisted=0;game.recordWorldCheckpoint=()=>{persisted++;};
+input.action=true;
+env.document.visibilityState='hidden';
+documentEvents.visibilitychange();
+assert.equal(game.opened,true,'Switching applications pauses active gameplay');
+assert.equal(persisted,1,'Stable position is checkpointed before pausing');
+assert.equal(input.consumeAction(),false,'Stuck interaction is cleared on background');
+game.opened=false;game.locked=true;
+documentEvents.visibilitychange();
+assert.equal(game.opened,false,'Background event does not override an existing dialog');
+
 console.log('CONTROLLER PASS: deadzones, directions, edges, held jump, dash, interact, pause, locked dialogs, disconnect');
