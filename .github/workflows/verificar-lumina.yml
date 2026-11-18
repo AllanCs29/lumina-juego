@@ -28,6 +28,6 @@ jobs:
           node tests/v094-guidance-smoke.mjs
           node --check guided-help.js
           node --check physics-engine.js
-          node --check hero-atlas.js
+          # PNG signature and availability are checked in v048-art-smoke.mjs
           node --check polish-system.js
           node --check audio-system.js
