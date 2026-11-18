@@ -1871,7 +1871,7 @@ root.Regions={REGIONS,draw,status,complete};
   if(scene==='workshop'){
    if(!orbs.includes('code'))return goal(292,'Orbe violeta');
    if(!save.robot)return goal(435,'Banco de NIX');
-   if(!save.labDiscovered&&save.cityVariableSolved)return goal(733,'Conocer el laboratorio','discovery');
+   // The optional laboratory remains discoverable, but it must not block the main route.
    return goal(95,'Regresar al Puerto');
   }
   if(scene==='bridge'){
