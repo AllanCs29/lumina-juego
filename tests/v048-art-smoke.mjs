@@ -1,10 +1,10 @@
-// Smoke tests for the standalone GitHub Pages build of Lúmina v0.9.4.
+// Smoke tests for the standalone GitHub Pages build of Lúmina v0.9.5.
 // Run: node tests/v048-art-smoke.mjs   (Node.js 20+, no dependencies)
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-assert.match(html,/<title>Lúmina — Juega para aprender \| v0\.9\.4<\/title>/);
+assert.match(html,/<title>Lúmina — Juega para aprender \| v0\.9\.5<\/title>/);
 const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 assert.ok(scripts.length>=20,'Embedded game modules remain intact during modular extraction');
 assert.ok(html.includes("hero-atlas.png"),'The hero uses the PNG resource');
@@ -51,4 +51,4 @@ assert.ok(JSON.parse(sharp).length>JSON.parse(stamp('retro')).length,'Nítida ad
 assert.match(html,/controlsTutorial/);
 assert.match(html,/guardianWorld/);
 assert.match(html,/localStorage/);
-console.log('Lúmina v0.9.4: '+scripts.length+' scripts + visual smoke checks OK');
+console.log('Lúmina v0.9.5: '+scripts.length+' scripts + visual smoke checks OK');
