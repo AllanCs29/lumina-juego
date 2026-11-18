@@ -7,7 +7,7 @@ import {readFileSync,mkdirSync,mkdtempSync,writeFileSync,existsSync,rmSync} from
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 const root=path.resolve('.');
-const mime={'.html':'text/html;charset=utf-8','.svg':'image/svg+xml','.js':'application/javascript','.webmanifest':'application/manifest+json','.md':'text/plain;charset=utf-8'};
+const mime={'.html':'text/html;charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.js':'application/javascript','.webmanifest':'application/manifest+json','.md':'text/plain;charset=utf-8'};
 const app=http.createServer((req,res)=>{
  try{
   const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
