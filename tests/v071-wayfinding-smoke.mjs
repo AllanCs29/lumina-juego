@@ -37,7 +37,7 @@ assert.equal(next('harbor',{orbs:['move']}).x,473);
 assert.equal(next('harbor',{orbs:['move'],robot:true}).x,1140);
 assert.equal(next('workshop').x,292);
 assert.equal(next('workshop',{orbs:['code']}).x,435);
-assert.equal(next('workshop',{orbs:['code'],robot:true,cityVariableSolved:true}).x,733);
+assert.equal(next('workshop',{orbs:['code'],robot:true,cityVariableSolved:true}).x,95,'Optional LAB does not divert the main objective');
 assert.equal(next('workshop',{orbs:['code'],robot:true,cityVariableSolved:true,labDiscovered:true}).x,95);
 assert.equal(next('bridge').x,310);
 assert.equal(next('bridge',{orbs:['jump']}).x,432);
