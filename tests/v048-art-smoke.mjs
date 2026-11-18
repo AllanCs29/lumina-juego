@@ -1,12 +1,16 @@
-// Smoke tests for the standalone GitHub Pages build of Lúmina v0.9.3.
+// Smoke tests for the standalone GitHub Pages build of Lúmina v0.9.4.
 // Run: node tests/v048-art-smoke.mjs   (Node.js 20+, no dependencies)
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-assert.match(html,/<title>Lúmina — Juega para aprender \| v0\.9\.3<\/title>/);
+assert.match(html,/<title>Lúmina — Juega para aprender \| v0\.9\.4<\/title>/);
 const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
-assert.ok(scripts.length>=20,'All standalone game modules should remain embedded');
+assert.ok(scripts.length>=20,'Embedded game modules remain intact during modular extraction');
+for(const file of ['hero-atlas.js','physics-engine.js']){
+ assert.ok(html.includes('src="./'+file+'"'),file+' is loaded');
+ assert.doesNotThrow(()=>new vm.Script(readFileSync(new URL('../'+file,import.meta.url),'utf8')));
+}
 scripts.forEach((source,i)=>assert.doesNotThrow(()=>new vm.Script(source,{filename:'script-'+i+'.js'}),'JS syntax '+i));
 const rendererSource=scripts.find(source=>source.includes('class Renderer{'));
 assert.ok(rendererSource,'Renderer module should exist');
@@ -44,4 +48,4 @@ assert.ok(JSON.parse(sharp).length>JSON.parse(stamp('retro')).length,'Nítida ad
 assert.match(html,/controlsTutorial/);
 assert.match(html,/guardianWorld/);
 assert.match(html,/localStorage/);
-console.log('Lúmina v0.9.3: '+scripts.length+' scripts + visual smoke checks OK');
+console.log('Lúmina v0.9.4: '+scripts.length+' scripts + visual smoke checks OK');
