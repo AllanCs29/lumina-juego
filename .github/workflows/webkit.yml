@@ -1,0 +1,29 @@
+name: Lúmina · compatibilidad WebKit
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  webkit-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar WebKit de Playwright para pruebas de compatibilidad
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps webkit
+      - name: Probar juego, controles, respaldo y ajustes en WebKit
+        run: node tests/v094-webkit-smoke.mjs
+      - name: Capturas para regresión visual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumina-webkit-capturas
+          path: artifacts/lumina-webkit-*.png
+          if-no-files-found: ignore
