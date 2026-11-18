@@ -26,6 +26,8 @@ jobs:
           node tests/v093-polish-smoke.mjs
           node tests/v094-physics-playtest.mjs
           node tests/v094-guidance-smoke.mjs
+          node tests/v095-controller-smoke.mjs
+          node --check controller-system.js
           node --check guided-help.js
           node --check physics-engine.js
           # PNG signature and availability are checked in v048-art-smoke.mjs
