@@ -57,6 +57,20 @@ try{
  assert.equal(during.axis,1,'WebKit input becomes the actual game movement axis');
  assert.equal(during.locked,false,'The adventure is not blocked by an overlay');
  assert.ok(during.x>startX+45,'Holding an arrow advances Iris with real physics: '+JSON.stringify({startX,during}));
+ const touchAvailable=await page.evaluate(()=>document.body.classList.contains('touch-enabled'));
+ assert.equal(touchAvailable,true,'WebKit mobile device exposes touch controls');
+ const zone=await page.locator('#touch-pad').boundingBox();
+ assert.ok(zone&&zone.width>=55,'Joystick has a usable physical hit area on the phone');
+ const cx=zone.x+zone.width/2,cy=zone.y+zone.height/2;
+ await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+zone.width*.27,cy,{steps:4});
+ const stick=await page.evaluate(()=>{
+  const g=window.Lumina.game,before=g.player.x,axis=g.input.axis().x;
+  for(let i=0;i<25;i++)g.move(1/60);
+  return {axis,delta:g.player.x-before};
+ });
+ await page.mouse.up();
+ assert.ok(stick.axis>.18,'Virtual joystick communicates a positive direction');
+ assert.ok(stick.delta>20,'Virtual joystick actually walks Iris, not just animates a button');
  await page.evaluate(()=>{const g=window.Lumina.game;g.scene='bridge';g.player=window.Lumina.Physics.spawn(240,277);g.locked=false;});
  const worldHints=await page.evaluate(()=>{
   const g=window.Lumina.game;g.guidanceMode='hint';g.worldTime=50;
