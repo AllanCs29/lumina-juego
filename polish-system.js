@@ -4,7 +4,7 @@
  if(!Game||!Renderer||!Save)throw Error('Player tools require the game engine.');
  const KEY_BACKUP='lumina-previous-save-before-import-v1';
  function pack(save){
-  return {app:'lumina',format:1,version:'0.9.3',exportedAt:new Date().toISOString(),data:Save.clean(save)};
+  return {app:'lumina',format:1,version:'0.9.5',exportedAt:new Date().toISOString(),data:Save.clean(save)};
  }
  function unpack(json){
   if(!json||typeof json!=='object'||Array.isArray(json)||json.app!=='lumina'||json.format!==1||
