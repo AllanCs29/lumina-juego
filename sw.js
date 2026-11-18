@@ -1,5 +1,5 @@
 /* Lúmina v0.9.5 — same-origin offline app shell, no tracking or external requests. */
-const CACHE='lumina-app-v095';
+const CACHE='lumina-app-v095b';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./story-finale.js','./audio-system.js','./gameplay-core.js','./polish-system.js','./hero-atlas.png','./physics-engine.js','./guided-help.js','./controller-system.js'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
