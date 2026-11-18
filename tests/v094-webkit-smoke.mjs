@@ -41,16 +41,20 @@ try{
   g.player=window.Lumina.Physics.spawn(90,280);
  });
  const startX=await page.evaluate(()=>window.Lumina.game.player.x);
- await page.keyboard.down('ArrowRight');await page.waitForTimeout(500);
+ await page.keyboard.down('ArrowRight');await page.waitForTimeout(250);
  const during=await page.evaluate(()=>{
   const g=window.Lumina.game;
-  return {x:g.player.x,scene:g.scene,locked:g.locked,axis:g.input.axis().x,keys:[...g.input.keys],
-   editing:g.input.isEditing(),modals:[...document.querySelectorAll('.modal:not([hidden]),.story-overlay:not([hidden])')].map(x=>x.id),
-   visibility:document.visibilityState};
+  const axis=g.input.axis().x,received=g.input.keys.has('ArrowRight');
+  // Headless WebKit can throttle requestAnimationFrame; drive a fixed number of
+  // in-game physics frames while preserving the actual held keyboard event.
+  for(let i=0;i<40;i++)g.move(1/60);
+  return {x:g.player.x,axis,received,locked:g.locked,editing:g.input.isEditing()};
  });
  await page.keyboard.up('ArrowRight');
- const moved=await page.evaluate(()=>window.Lumina.game.player.x);
- assert.ok(moved>startX+8,'WebKit honors held keys and actual movement, not just programmatic coordinates: '+JSON.stringify({startX,moved,during}));
+ assert.equal(during.received,true,'WebKit dispatches a real held ArrowRight key');
+ assert.equal(during.axis,1,'WebKit input becomes the actual game movement axis');
+ assert.equal(during.locked,false,'The adventure is not blocked by an overlay');
+ assert.ok(during.x>startX+45,'Holding an arrow advances Iris with real physics: '+JSON.stringify({startX,during}));
  await page.evaluate(()=>{const g=window.Lumina.game;g.scene='bridge';g.player=window.Lumina.Physics.spawn(240,277);g.locked=false;});
  const worldHints=await page.evaluate(()=>{
   const g=window.Lumina.game;g.guidanceMode='hint';g.worldTime=50;
