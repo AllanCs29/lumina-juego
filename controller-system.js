@@ -101,6 +101,18 @@
  };
  window.addEventListener('gamepadconnected',show);
  window.addEventListener('gamepaddisconnected',show);
+ // Backgrounding a phone/tab releases stale touch and gamepad buttons and parks the game safely.
+ document.addEventListener?.('visibilitychange',()=>{
+  if(document.visibilityState!=='hidden')return;
+  const g=root.game;
+  if(!g)return;
+  g.input?.reset();
+  if(!g.locked&&!g.transition&&!g.editor?.opened&&!g.controlsTutorial?.active&&
+    !g.guardian?.active&&g.el?.story?.hidden){
+   g.recordWorldCheckpoint?.();
+   g.openMenu();
+  }
+ });
  show();
  root.Controller=Object.freeze({DEADZONE,normalize,read,connected});
 })(window.Lumina=window.Lumina||{});
