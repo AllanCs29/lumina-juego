@@ -6,7 +6,7 @@ import path from 'node:path';
 import {webkit} from 'playwright';
 
 const root=path.resolve('.');
-const types={'.html':'text/html;charset=utf-8','.js':'text/javascript;charset=utf-8','.svg':'image/svg+xml','.webmanifest':'application/manifest+json'};
+const types={'.html':'text/html;charset=utf-8','.js':'text/javascript;charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.webmanifest':'application/manifest+json'};
 const server=http.createServer((request,response)=>{
  try{
   const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname);
@@ -32,6 +32,8 @@ try{
   transfer:!!window.Lumina?.PlayerTools?.pack,modal:!!document.getElementById('world-code-modal')
  }));
  for(const [key,value] of Object.entries(boot))assert.equal(value,true,'WebKit boot: '+key);
+ await page.waitForFunction(()=>window.Lumina?.game?.renderer?.hero?.complete===true,null,{timeout:12000});
+ assert.ok(await page.evaluate(()=>window.Lumina.game.renderer.hero.naturalWidth>=768),'WebKit decodes the original pixel-art PNG');
  if(await page.locator('#training-offer-skip').isVisible())await page.locator('#training-offer-skip').click();
  await page.locator('#start').click();
  await page.evaluate(()=>{
