@@ -79,6 +79,37 @@
  .guidance-reader-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
  `;
  document.head.append(style);
+ // Optional visibility mode: higher text contrast, clearer input outlines, no gameplay advantage.
+ const settings=document.querySelector?.('#menu-settings .menu-settings-content');
+ if(settings){
+  const b=document.createElement('button');b.type='button';b.id='contrast-button';b.className='secondary';
+  let enabled=false;
+  try{
+   const saved=window.localStorage.getItem('lumina-contrast-v1');
+   enabled=saved==='on'||saved===null&&!!window.matchMedia?.('(prefers-contrast: more)').matches;
+  }catch{}
+  const sync=()=>{
+   document.body.classList.toggle('lumina-contrast',enabled);
+   b.textContent=enabled?'◈ Alto contraste: activado':'◈ Alto contraste: desactivado';
+   b.setAttribute('aria-pressed',String(enabled));
+  };
+  settings.append(b);sync();
+  b.addEventListener('click',()=>{
+   enabled=!enabled;sync();
+   try{window.localStorage.setItem('lumina-contrast-v1',enabled?'on':'off');}catch{}
+  });
+  const css=document.createElement('style');css.textContent=`
+   body.lumina-contrast .menu-panel,body.lumina-contrast .lab-panel,body.lumina-contrast .editor-panel,
+   body.lumina-contrast .world-code-panel,body.lumina-contrast .recap-card,body.lumina-contrast .feedback-panel,
+   body.lumina-contrast .route-panel{background:#071b2d!important;border-color:#e5fbec!important;color:#fff!important}
+   body.lumina-contrast .hud,body.lumina-contrast .prompt,body.lumina-contrast .orb-hud,
+   body.lumina-contrast .energy-hud,body.lumina-contrast .quick-actions button,
+   body.lumina-contrast .training-hud,body.lumina-contrast .guardian-hud{
+    background:#071b2df4!important;color:#fff!important;border:1px solid #ecf9e8!important;text-shadow:0 1px #000!important}
+   body.lumina-contrast button:focus-visible,body.lumina-contrast input:focus-visible,
+   body.lumina-contrast select:focus-visible{outline:3px solid #ffe29a!important;outline-offset:3px!important}
+  `;document.head.append(css);
+ }
  const originalHint=Game.prototype.hint;
  Game.prototype.hint=function(){
   if(this.locked||['training','guardian','ending'].includes(this.scene))return originalHint.call(this);
