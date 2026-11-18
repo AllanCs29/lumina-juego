@@ -109,6 +109,18 @@ try{
   closed:'Journal can be closed without interrupting the game'
  }))assert.equal(toolsUi[key],true,desc);
  assert.match(toolsUi.recapTitle,/Bitácora/);
+ const assistOptions=await evalJs(`(()=>{
+  const g=window.Lumina.game,input=document.getElementById('assist');
+  const button=document.getElementById('assist-mode-button');
+  const ready=!!button&&!button.hidden;
+  input.checked=false;input.dispatchEvent(new Event('change',{bubbles:true}));
+  button.click();const enabled=input.checked&&g.save.assist&&button.getAttribute('aria-pressed')==='true';
+  button.click();const disabled=!input.checked&&!g.save.assist&&button.getAttribute('aria-pressed')==='false';
+  return {ready,enabled,disabled};
+ })()`);
+ assert.equal(assistOptions.ready,true,'Jump assistance can be found in mobile Options');
+ assert.equal(assistOptions.enabled,true,'Optional assistance activates the actual movement setting');
+ assert.equal(assistOptions.disabled,true,'Player can disable assistance without restarting');
  const audioPrefs=await evalJs(`(()=>{
   const g=window.Lumina.game,score=g.soundEngine,defs=window.Lumina.Soundtrack;
   const music=document.getElementById('music-button'),effects=document.getElementById('audio-button');
