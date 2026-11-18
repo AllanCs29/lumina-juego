@@ -7,9 +7,23 @@
   return {app:'lumina',format:1,version:'0.9.3',exportedAt:new Date().toISOString(),data:Save.clean(save)};
  }
  function unpack(json){
-  if(!json||typeof json!=='object'||Array.isArray(json)||json.app!=='lumina'||json.format!==1||!json.data||json.data.version!==1)
+  if(!json||typeof json!=='object'||Array.isArray(json)||json.app!=='lumina'||json.format!==1||
+    !json.data||typeof json.data!=='object'||Array.isArray(json.data)||json.data.version!==1)
    throw Error('El archivo no es un respaldo compatible de Lúmina.');
-  return Save.clean(json.data);
+  const src=json.data,scenes=['district','metro','rooftops','archive','harbor','workshop','bridge','tower','ending'];
+  // Reject a structurally incomplete or tampered export; sanitizing alone would silently start a blank game.
+  if(!scenes.includes(src.scene)||typeof src.started!=='boolean'||typeof src.cityGate!=='boolean'||
+   !Array.isArray(src.orbs)||!Array.isArray(src.labCompleted)||!Array.isArray(src.metroRelays)||
+   src.metroRelays.length!==2||!src.drafts||typeof src.drafts!=='object'||
+   !src.checkpoints||typeof src.checkpoints!=='object'||!src.storyBeats||
+   typeof src.storyBeats!=='object'||!src.coreProofs||typeof src.coreProofs!=='object')
+   throw Error('El respaldo está incompleto o fue modificado. Tu partida actual se conservará.');
+  if(src.orbs.length>4||src.labCompleted.length>8||
+   JSON.stringify(json).length>125000||Object.keys(src).length>90)
+   throw Error('El respaldo tiene datos fuera de los límites permitidos.');
+  const restored=Save.clean(src);
+  if(src.started&&!restored.started)throw Error('La partida no pudo recuperarse íntegra.');
+  return restored;
  }
  const advance=document.querySelector('#menu-settings .menu-settings-content');
  const buttons={};
@@ -75,9 +89,18 @@
    const store=storage(),previous=store.getItem(Save.KEY);
    if(previous)store.setItem(KEY_BACKUP,previous);
    if(!Save.save(store,payload))throw Error('No se pudo escribir el progreso');
-   notify('✓ Partida importada. Recargando la aventura...');
+   const checked=Save.load(store);
+   if(checked.scene!==payload.scene||checked.started!==payload.started||
+    checked.labCompleted.length!==payload.labCompleted.length)
+    throw Error('No se pudo verificar la partida importada.');
+   notify('✓ Partida importada y verificada. Recargando...');
    window.location.reload();return true;
-  }catch{notify('No se pudo restaurar. Comprueba que el navegador permita guardar datos.');return false;}
+  }catch{
+   try{const store=storage(),previous=store.getItem(KEY_BACKUP);
+    if(previous){store.setItem(Save.KEY,previous);store.removeItem(KEY_BACKUP);}
+   }catch{}
+   notify('La importación falló. Intenté conservar la partida que estaba guardada.');return false;
+  }
  }
  exportBtn?.addEventListener('click',downloadBackup);
  importBtn?.addEventListener('click',()=>input.click());
