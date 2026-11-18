@@ -9,7 +9,7 @@
 
 
 <meta name="description" content="Lúmina: Distrito Aurora. Exploración urbana nocturna con Iris, programación y puzles interactivos."/>
-<title>Lúmina — Juega para aprender | v0.9.4</title>
+<title>Lúmina — Juega para aprender | v0.9.5</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="./icon.svg"/>
@@ -723,7 +723,7 @@ body.reduce-motion .menu-beam{opacity:.55}
 </head>
 <body>
 <div class="shell">
- <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.9.4</small></span></div>
+ <header class="site-header"><div class="brand"><span class="brand-mark">✦</span><span><strong>LÚMINA</strong><small>DISTRITO AURORA · ALFA 0.9.5</small></span></div>
  </header>
  <main class="game-layout"><div class="game-column">
   <div class="screen"><canvas id="game" width="480" height="270" aria-label="Mundo de Lúmina: Iris recorre Distrito Aurora y resuelve puertas mediante lógica"></canvas><div class="prompt" id="prompt" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -807,7 +807,7 @@ body.reduce-motion .menu-beam{opacity:.55}
   <div class="menu-hero">
    <p class="menu-eyebrow">UNA HISTORIA ESCRITA EN SEÑALES</p>
    <h1 id="menu-title">LÚMINA</h1>
-   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.9.4</span></p>
+   <p class="menu-subtitle">SEÑALES DEL NORTE <span>· ALFA 0.9.5</span></p>
    <div class="menu-art city-menu-art" aria-hidden="true">
     <span class="menu-moon"></span><span class="menu-skyline far"></span><span class="menu-skyline near"></span>
     <span class="menu-beam"></span><span class="menu-train"></span><span class="menu-iris">✦</span>
@@ -4046,7 +4046,8 @@ root.Game=Game;
 <script src="./audio-system.js"></script>
 <script src="./gameplay-core.js"></script>
 <script src="./guided-help.js"></script>
-<script src="./polish-system.js"></script><script>
+<script src="./polish-system.js"></script>
+<script src="./controller-system.js"></script><script>
 (function(){
  'use strict';
  function boot(){try{window.Lumina.device=new window.Lumina.Device();window.Lumina.game=new window.Lumina.Game(document.getElementById('game'));window.Lumina.device.refresh();const guard=document.getElementById('js-preview-guard');if(guard)guard.remove();document.documentElement.dataset.luminaReady='true';}
