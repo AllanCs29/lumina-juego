@@ -110,6 +110,34 @@
    body.lumina-contrast select:focus-visible{outline:3px solid #ffe29a!important;outline-offset:3px!important}
   `;document.head.append(css);
  }
+ // Accessibility cannot live only in the HUD: landscape phones hide that area.
+ const assistInput=document.getElementById?.('assist'),options=document.querySelector?.('#menu-settings .menu-settings-content');
+ if(assistInput&&options){
+  const b=document.createElement('button');b.type='button';b.id='assist-mode-button';b.className='secondary';
+  const sync=()=>{
+   const value=!!assistInput.checked;
+   b.textContent=value?'✦ Asistencia de salto: activada':'✦ Asistencia de salto: desactivada';
+   b.setAttribute('aria-pressed',String(value));
+  };
+  options.append(b);sync();
+  b.addEventListener('click',()=>{
+   assistInput.checked=!assistInput.checked;
+   assistInput.dispatchEvent(new Event('change',{bubbles:true}));
+   sync();
+  });
+  assistInput.addEventListener('change',sync);
+  const update=Game.prototype.updateMenuState;
+  Game.prototype.updateMenuState=function(){const r=update.call(this);sync();return r;};
+ }
+ const movement=Game.prototype.move;
+ Game.prototype.move=function(dt){
+  const previous=this.player?.y,scene=this.scene,result=movement.call(this,dt);
+  if(scene==='bridge'&&Number.isFinite(previous)&&previous>380&&this.player?.y<320&&this.save?.started&&!this.save?.assist){
+   this.fallStreak=(this.fallStreak||0)+1;
+   if(this.fallStreak===3)this.flashCaption('¿Te cuestan los saltos? Activa Asistencia en Opciones.',4);
+  }
+  return result;
+ };
  const originalHint=Game.prototype.hint;
  Game.prototype.hint=function(){
   if(this.locked||['training','guardian','ending'].includes(this.scene))return originalHint.call(this);
