@@ -24,5 +24,8 @@ jobs:
           node tests/v090-story-smoke.mjs
           node tests/v091-audio-smoke.mjs
           node tests/v093-polish-smoke.mjs
+          node tests/v094-physics-playtest.mjs
+          node --check physics-engine.js
+          node --check hero-atlas.js
           node --check polish-system.js
           node --check audio-system.js
