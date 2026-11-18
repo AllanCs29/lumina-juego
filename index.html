@@ -948,7 +948,7 @@ FIN</pre>
  <div id="city-ending" class="modal backdrop" role="dialog" aria-modal="true" hidden><section class="city-end-card"><span class="city-end-icon">✦</span><small>DISTRITO AURORA · RUTA RESTAURADA</small><h2>La ciudad despierta</h2><p id="city-ending-text">Has ayudado a recuperar el barrio.</p><div class="city-end-stats"><b id="city-ending-lessons">0</b><span>temas encontrados</span><b id="city-ending-fragments">0/3</b><span>fragmentos de memoria</span></div><button id="city-end-close" type="button" class="primary">Siguiente capítulo · Estación Umbral →</button></section></div>
 <p id="startup-error" class="startup-error" hidden></p>
 
-<script src="./hero-atlas.js"></script>
+
 <script>
 /* LÚMINA 0.3.4 — a small, sandboxed visual-programming interpreter.
    No evaluation of user JS. Cardinal directions are absolute and understandable. */
@@ -1909,7 +1909,7 @@ root.Regions={REGIONS,draw,status,complete};
 (function(root){'use strict';
 class Renderer{
  constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.ctx.imageSmoothingEnabled=false;this.w=480;this.h=270;this.t=0;this.quality=this.readQuality();this.pixelScale=1;
-  this.snow=Array.from({length:66},(_,i)=>({x:(i*163.41)%510,y:(i*97.13)%270,r:1+(i%7===0),speed:4+(i%4)*3}));this.spark=[];this.hero=new Image();this.hero.src=(window.LuminaHeroAtlas||'assets/iris-expedicion-atlas.png');this.hero.onerror=()=>{this.heroFailed=true}}
+  this.snow=Array.from({length:66},(_,i)=>({x:(i*163.41)%510,y:(i*97.13)%270,r:1+(i%7===0),speed:4+(i%4)*3}));this.spark=[];this.hero=new Image();this.hero.src='./hero-atlas.png';this.hero.onerror=()=>{this.heroFailed=true}}
  readQuality(){try{const choice=localStorage.getItem('lumina-render-quality-v0381');return ['retro','balanced','sharp'].includes(choice)?choice:'balanced'}catch{return 'balanced'}}
  setQuality(choice){if(!['retro','balanced','sharp'].includes(choice))return;this.quality=choice;try{localStorage.setItem('lumina-render-quality-v0381',choice)}catch{};const rect=this.canvas.getBoundingClientRect();this.resizeTo(rect.width,rect.height,document.body.classList.contains('touch-enabled')&&!document.body.classList.contains('portrait-device'));}
  resizeTo(cssW,cssH,adaptive){
@@ -2959,7 +2959,7 @@ const CHAPTERS=[
  {scene:'start',name:'UNA PREGUNTA ANTES DE PARTIR',speaker:'IRIS',text:'Si una regla pudo apagar los faros, otra puede distinguir qué es seguro encender. Empezaré por los sensores de Aurora.',lesson:''}
 ];
 class Prologue{
- constructor(game){this.game=game;this.el=document.getElementById('prologue');this.canvas=document.getElementById('prologue-canvas');this.ctx=this.canvas.getContext('2d');this.index=0;this.started=0;this.active=false;this.duration=5500;this.autoAdvance=true;this.after=null;this.raf=0;this.hero=new Image();this.hero.src=window.LuminaHeroAtlas||'assets/iris-expedicion-atlas.png';
+ constructor(game){this.game=game;this.el=document.getElementById('prologue');this.canvas=document.getElementById('prologue-canvas');this.ctx=this.canvas.getContext('2d');this.index=0;this.started=0;this.active=false;this.duration=5500;this.autoAdvance=true;this.after=null;this.raf=0;this.hero=new Image();this.hero.src='./hero-atlas.png';
   const act=id=>document.getElementById(id);
   act('prologue-next').addEventListener('click',()=>this.next());
   act('prologue-skip').addEventListener('click',()=>this.finish());
